@@ -30,7 +30,7 @@ const CommunityBoards = () => {
 		variables: { input: { ...searchCommunity, limit: 6, search: { articleCategory: BoardArticleCategory.NEWS } } },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setNewsArticles(data?.getBoardArticles?.list);
+			setNewsArticles(data?.getBoardArticles?.list ?? []);
 		},
 	});
 
@@ -44,7 +44,7 @@ const CommunityBoards = () => {
 		variables: { input: { ...searchCommunity, limit: 3, search: { articleCategory: BoardArticleCategory.FREE } } },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setFreeArticles(data?.getBoardArticles?.list);
+			setFreeArticles(data?.getBoardArticles?.list ?? []);
 		},
 	});
 

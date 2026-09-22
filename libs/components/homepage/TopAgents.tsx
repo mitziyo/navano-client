@@ -33,7 +33,7 @@ const TopAgents = (props: TopAgentsProps) => {
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setTopAgents(data?.getAgents?.list);
+			setTopAgents(data?.getAgents?.list ?? []);
 		},
 	});
 

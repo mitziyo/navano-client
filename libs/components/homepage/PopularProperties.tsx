@@ -34,7 +34,7 @@ const PopularProperties = (props: PopularPropertiesProps) => {
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setPopularProperties(data?.getProperties?.list);
+			setPopularProperties(data?.getProperties?.list ?? []);
 		},
 	});
 

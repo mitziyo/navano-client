@@ -37,7 +37,7 @@ const TopProperties = (props: TopPropertiesProps) => {
 		variables: { input: initialInput },
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
-			setTopProperties(data?.getProperties?.list);
+			setTopProperties(data?.getProperties?.list ?? []);
 		},
 	});
 	/** HANDLERS **/
