@@ -27,7 +27,7 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { GET_PROPERTIES, GET_PROPERTY } from '../../apollo/user/query';
+import { GET_COMMENTS, GET_PROPERTIES, GET_PROPERTY } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
 import { Direction, Message } from '../../libs/enums/common.enum';
 import { LIKE_TARGET_PROPERTY } from '../../apollo/user/mutation';
@@ -91,7 +91,7 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 				sort: 'createdAt',
 				direction: Direction.DESC,
 				search: {
-					locationList: [property?.propertyLocation],
+					locationList: property?.propertyLocation ? [property?.propertyLocation] : [],
 				},
 			},
 		},
@@ -99,6 +99,22 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 		notifyOnNetworkStatusChange: true,
 		onCompleted: (data: T) => {
 			if (data?.getProperties?.list) setDestinationProperties(data?.getProperties?.list ?? []);
+		},
+	});
+
+	const {
+		loading: getCommentsLoading,
+		data: getCommentsData,
+		error: getCommentsError,
+		refetch: getCommentsRefetch,
+	} = useQuery(GET_COMMENTS, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: initialComment },
+		skip: !commentInquiry.search.commentRefId,
+		notifyOnNetworkStatusChange: true,
+		onCompleted: (data: T) => {
+			if (data?.getComments?.list) setPropertyComments(data?.getProperties?.list ?? []);
+			setCommentTotal(data?.getComments?.metaCounter[0]?.total ?? 0);
 		},
 	});
 
@@ -119,7 +135,11 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 		}
 	}, [router]);
 
-	useEffect(() => {}, [commentInquiry]);
+	useEffect(() => {
+		if (commentInquiry.search.commentRefId) {
+			getCommentsRefetch({ input: commentInquiry });
+		}
+	}, [commentInquiry]);
 
 	/** HANDLERS **/
 	const changeImageHandler = (image: string) => {
@@ -132,11 +152,10 @@ const PropertyDetail: NextPage = ({ initialComment, ...props }: any) => {
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
 			await likeTargetProperty({
-				variables: { input: propertyId
-				 },
+				variables: { input: propertyId },
 			});
 
-			await getPropertyRefetch({input: id})
+			await getPropertyRefetch({ input: id });
 
 			await getPropertiesRefetch({
 				input: {
