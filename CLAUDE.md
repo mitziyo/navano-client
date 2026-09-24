@@ -2,10 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Working rules
+## Working rules (MUST FOLLOW — read before any other section)
 
-1. Never modify any code without the user's explicit permission first — no exceptions, even for changes that look obviously correct or trivial.
-2. After the user gives an instruction or reports a problem, first respond with an explanation of the issue and the possible solutions/options (trade-offs included) — do not implement anything until the user picks one.
+1. **Never change a single line of code without the user's explicit permission first.** No exceptions — not even for changes that look obviously correct, trivial, or purely cosmetic (typos, formatting, unused imports). Reading, analyzing, and explaining code is always allowed; writing or editing it is not, until the user says to.
+2. **When the user asks about a problem or bug, respond with an explanation and solution options first.** Lay out the root cause and the possible fixes (with trade-offs) — do not implement anything until the user picks one.
 
 ## Commands
 
