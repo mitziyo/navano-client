@@ -38,3 +38,13 @@ If anything in this client conflicts with those docs, the docs win (`DECISIONS.m
 4. Run typecheck (`npx tsc --noEmit`) after each phase.
 5. Do not remove working logic unless replaced safely.
 6. Update `navano/docs/ai/COMPLETED_TASKS.md` after major changes.
+
+## Package Manager
+
+- Use Yarn for all frontend commands.
+- Do not use npm or pnpm.
+- Install dependencies with:
+
+```bash
+yarn install
+```
