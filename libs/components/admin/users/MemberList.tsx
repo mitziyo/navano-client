@@ -102,7 +102,7 @@ const headCells: readonly HeadCell[] = [
 
 interface EnhancedTableProps {
 	numSelected: number;
-	onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
+	onRequestSort: (event: React.MouseEvent<unknown>, product: keyof Data) => void;
 	onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
 	order: Order;
 	orderBy: string;
@@ -182,7 +182,7 @@ export const MemberPanelList = (props: MemberPanelListType) => {
 
 										<TableCell align="center">
 											<Button onClick={(e: any) => menuIconClickHandler(e, index)} className={'badge success'}>
-												{member.memberType}
+												{member.memberType === MemberType.AGENT ? 'STORE' : member.memberType}
 											</Button>
 
 											<Menu
@@ -204,7 +204,7 @@ export const MemberPanelList = (props: MemberPanelListType) => {
 															key={type}
 														>
 															<Typography variant={'subtitle1'} component={'span'}>
-																{type}
+																{type === MemberType.AGENT ? 'STORE' : type}
 															</Typography>
 														</MenuItem>
 													))}
