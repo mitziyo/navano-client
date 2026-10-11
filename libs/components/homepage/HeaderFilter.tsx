@@ -3,7 +3,7 @@ import { Stack, Box, Modal, Divider, Button } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloseIcon from '@mui/icons-material/Close';
-import { ProductLocation, ProductType } from '../../enums/product.enum';
+import { ProductLocation, ProductOccasion, ProductType } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -37,12 +37,15 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	const { t, i18n } = useTranslation('common');
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(initialInput);
 	const locationRef: any = useRef();
+	const occasionRef: any = useRef();
 	const typeRef: any = useRef();
 	const router = useRouter();
 	const [openAdvancedFilter, setOpenAdvancedFilter] = useState(false);
 	const [openLocation, setOpenLocation] = useState(false);
+	const [openOccasion, setOpenOccasion] = useState(false);
 	const [openType, setOpenType] = useState(false);
 	const [productLocation, setProductLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
+	const [productOccasion, setProductOccasion] = useState<ProductOccasion[]>(Object.values(ProductOccasion));
 	const [productType, setProductType] = useState<ProductType[]>(Object.values(ProductType));
 
 	/** LIFECYCLES **/
@@ -50,6 +53,10 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 		const clickHandler = (event: MouseEvent) => {
 			if (!locationRef?.current?.contains(event.target)) {
 				setOpenLocation(false);
+			}
+
+			if (!occasionRef?.current?.contains(event.target)) {
+				setOpenOccasion(false);
 			}
 
 			if (!typeRef?.current?.contains(event.target)) {
@@ -67,22 +74,32 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	/** HANDLERS **/
 	const advancedFilterHandler = (status: boolean) => {
 		setOpenLocation(false);
+		setOpenOccasion(false);
 		setOpenType(false);
 		setOpenAdvancedFilter(status);
 	};
 
 	const locationStateChangeHandler = () => {
 		setOpenLocation((prev) => !prev);
+		setOpenOccasion(false);
+		setOpenType(false);
+	};
+
+	const occasionStateChangeHandler = () => {
+		setOpenOccasion((prev) => !prev);
+		setOpenLocation(false);
 		setOpenType(false);
 	};
 
 	const typeStateChangeHandler = () => {
 		setOpenType((prev) => !prev);
 		setOpenLocation(false);
+		setOpenOccasion(false);
 	};
 
 	const disableAllStateHandler = () => {
 		setOpenType(false);
+		setOpenOccasion(false);
 		setOpenLocation(false);
 	};
 
@@ -96,9 +113,27 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						locationList: [value],
 					},
 				});
-				typeStateChangeHandler();
+				occasionStateChangeHandler();
 			} catch (err: any) {
 				console.log('ERROR, productLocationSelectHandler:', err);
+			}
+		},
+		[searchFilter],
+	);
+
+	const productOccasionSelectHandler = useCallback(
+		async (value: any) => {
+			try {
+				setSearchFilter({
+					...searchFilter,
+					search: {
+						...searchFilter.search,
+						occasionList: [value],
+					},
+				});
+				typeStateChangeHandler();
+			} catch (err: any) {
+				console.log('ERROR, productOccasionSelectHandler:', err);
 			}
 		},
 		[searchFilter],
@@ -132,6 +167,10 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 				delete searchFilter.search.locationList;
 			}
 
+			if (searchFilter?.search?.occasionList?.length == 0) {
+				delete searchFilter.search.occasionList;
+			}
+
 			if (searchFilter?.search?.typeList?.length == 0) {
 				delete searchFilter.search.typeList;
 			}
@@ -156,8 +195,12 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 							<span>{searchFilter?.search?.locationList ? searchFilter?.search?.locationList[0] : t('Location')} </span>
 							<ExpandMoreIcon />
 						</Box>
+						<Box className={`box ${openOccasion ? 'on' : ''}`} onClick={occasionStateChangeHandler}>
+							<span>{searchFilter?.search?.occasionList ? searchFilter?.search?.occasionList[0] : t('Occasion')} </span>
+							<ExpandMoreIcon />
+						</Box>
 						<Box className={`box ${openType ? 'on' : ''}`} onClick={typeStateChangeHandler}>
-							<span> {searchFilter?.search?.typeList ? searchFilter?.search?.typeList[0] : t('Product type')} </span>
+							<span> {searchFilter?.search?.typeList ? searchFilter?.search?.typeList[0] : t('Category')} </span>
 							<ExpandMoreIcon />
 						</Box>
 					</Stack>
@@ -179,6 +222,16 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 									<img src={`img/banner/cities/${location}.webp`} alt="" />
 									<span>{location}</span>
 								</div>
+							);
+						})}
+					</div>
+
+					<div className={`filter-occasion ${openOccasion ? 'on' : ''}`} ref={occasionRef}>
+						{productOccasion.map((occasion: string) => {
+							return (
+								<span onClick={() => productOccasionSelectHandler(occasion)} key={occasion}>
+									{occasion}
+								</span>
 							);
 						})}
 					</div>
