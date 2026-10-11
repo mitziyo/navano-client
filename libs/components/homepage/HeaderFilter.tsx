@@ -20,13 +20,6 @@ const style = {
 	boxShadow: 24,
 };
 
-// Temporary background until the type banner images (flower/chocolate/cake.webp) are added
-const typeFallbackColor: Record<string, string> = {
-	FLOWER: '#F8D7DA',
-	CHOCOLATE: '#D7B9A3',
-	CAKE: '#FCE8C8',
-};
-
 interface HeaderFilterProps {
 	initialInput: ProductsInquiry;
 }
@@ -122,16 +115,13 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	);
 
 	const productOccasionSelectHandler = useCallback(
-		async (value: any) => {
+		async (value: ProductOccasion | null) => {
 			try {
-				setSearchFilter({
-					...searchFilter,
-					search: {
-						...searchFilter.search,
-						occasionList: [value],
-					},
-				});
-				typeStateChangeHandler();
+				const search = { ...searchFilter.search };
+				if (value) search.occasionList = [value];
+				else delete search.occasionList;
+				setSearchFilter({ ...searchFilter, search });
+				value ? typeStateChangeHandler() : disableAllStateHandler();
 			} catch (err: any) {
 				console.log('ERROR, productOccasionSelectHandler:', err);
 			}
@@ -140,15 +130,12 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	);
 
 	const productTypeSelectHandler = useCallback(
-		async (value: any) => {
+		async (value: ProductType | null) => {
 			try {
-				setSearchFilter({
-					...searchFilter,
-					search: {
-						...searchFilter.search,
-						typeList: [value],
-					},
-				});
+				const search = { ...searchFilter.search };
+				if (value) search.typeList = [value];
+				else delete search.typeList;
+				setSearchFilter({ ...searchFilter, search });
 				disableAllStateHandler();
 			} catch (err: any) {
 				console.log('ERROR, productTypeSelectHandler:', err);
@@ -195,14 +182,40 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 							<span>{searchFilter?.search?.locationList ? searchFilter?.search?.locationList[0] : t('Location')} </span>
 							<ExpandMoreIcon />
 						</Box>
-						<Box className={`box ${openOccasion ? 'on' : ''}`} onClick={occasionStateChangeHandler}>
-							<span>{searchFilter?.search?.occasionList ? searchFilter?.search?.occasionList[0] : t('Occasion')} </span>
-							<ExpandMoreIcon />
-						</Box>
-						<Box className={`box ${openType ? 'on' : ''}`} onClick={typeStateChangeHandler}>
-							<span> {searchFilter?.search?.typeList ? searchFilter?.search?.typeList[0] : t('Category')} </span>
-							<ExpandMoreIcon />
-						</Box>
+						<div className={'select-item'} ref={occasionRef}>
+							<Box className={`box ${openOccasion ? 'on' : ''}`} onClick={occasionStateChangeHandler}>
+								<span>{searchFilter?.search?.occasionList ? searchFilter?.search?.occasionList[0] : t('Occasion')} </span>
+								<ExpandMoreIcon />
+							</Box>
+							<div className={`select-dropdown ${openOccasion ? 'on' : ''}`}>
+								{productOccasion.map((occasion: ProductOccasion) => (
+									<span
+										key={occasion}
+										className={searchFilter?.search?.occasionList?.[0] === occasion ? 'active' : ''}
+										onClick={() => productOccasionSelectHandler(occasion)}
+									>
+										{occasion}
+									</span>
+								))}
+							</div>
+						</div>
+						<div className={'select-item'} ref={typeRef}>
+							<Box className={`box ${openType ? 'on' : ''}`} onClick={typeStateChangeHandler}>
+								<span>{searchFilter?.search?.typeList ? searchFilter?.search?.typeList[0] : t('Category')} </span>
+								<ExpandMoreIcon />
+							</Box>
+							<div className={`select-dropdown ${openType ? 'on' : ''}`}>
+								{productType.map((type: ProductType) => (
+									<span
+										key={type}
+										className={searchFilter?.search?.typeList?.[0] === type ? 'active' : ''}
+										onClick={() => productTypeSelectHandler(type)}
+									>
+										{type}
+									</span>
+								))}
+							</div>
+						</div>
 					</Stack>
 					<Stack className={'search-box-other'}>
 						<Box className={'advanced-filter'} onClick={() => advancedFilterHandler(true)}>
@@ -221,33 +234,6 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 								<div onClick={() => productLocationSelectHandler(location)} key={location}>
 									<img src={`img/banner/cities/${location}.webp`} alt="" />
 									<span>{location}</span>
-								</div>
-							);
-						})}
-					</div>
-
-					<div className={`filter-occasion ${openOccasion ? 'on' : ''}`} ref={occasionRef}>
-						{productOccasion.map((occasion: string) => {
-							return (
-								<span onClick={() => productOccasionSelectHandler(occasion)} key={occasion}>
-									{occasion}
-								</span>
-							);
-						})}
-					</div>
-
-					<div className={`filter-type ${openType ? 'on' : ''}`} ref={typeRef}>
-						{productType.map((type: string) => {
-							return (
-								<div
-									style={{
-										backgroundImage: `url(/img/banner/types/${type.toLowerCase()}.webp)`,
-										backgroundColor: typeFallbackColor[type],
-									}}
-									onClick={() => productTypeSelectHandler(type)}
-									key={type}
-								>
-									<span>{type}</span>
 								</div>
 							);
 						})}
