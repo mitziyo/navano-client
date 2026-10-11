@@ -1,10 +1,11 @@
-import { ProductLocation, ProductStatus, ProductType } from '../../enums/product.enum';
+import { ProductLocation, ProductOccasion, ProductStatus, ProductType } from '../../enums/product.enum';
 import { Direction } from '../../enums/common.enum';
 
 export interface ProductInput {
 	productType: ProductType;
 	productLocation: ProductLocation;
 	productAddress: string;
+	productOccasion: ProductOccasion;
 	productTitle: string;
 	productPrice: number;
 	productItemCount: number;
@@ -17,6 +18,7 @@ interface PISearch {
 	memberId?: string;
 	locationList?: ProductLocation[];
 	typeList?: ProductType[];
+	occasionList?: ProductOccasion[];
 	pricesRange?: Range;
 	periodsRange?: PeriodsRange;
 	text?: string;

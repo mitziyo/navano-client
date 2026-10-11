@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Stack, Typography, Checkbox, OutlinedInput, Tooltip, IconButton } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { ProductLocation, ProductType } from '../../enums/product.enum';
+import { ProductLocation, ProductOccasion, ProductType } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { useRouter } from 'next/router';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
@@ -19,6 +19,7 @@ const Filter = (props: FilterType) => {
 	const router = useRouter();
 	const [productLocation, setProductLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
 	const [productType, setProductType] = useState<ProductType[]>(Object.values(ProductType));
+	const [productOccasion, setProductOccasion] = useState<ProductOccasion[]>(Object.values(ProductOccasion));
 	const [searchText, setSearchText] = useState<string>('');
 	const [showMore, setShowMore] = useState<boolean>(false);
 
@@ -48,6 +49,27 @@ const Filter = (props: FilterType) => {
 
 		if (searchFilter?.search?.typeList?.length == 0) {
 			delete searchFilter.search.typeList;
+			router
+				.push(
+					`/product?input=${JSON.stringify({
+						...searchFilter,
+						search: {
+							...searchFilter.search,
+						},
+					})}`,
+					`/product?input=${JSON.stringify({
+						...searchFilter,
+						search: {
+							...searchFilter.search,
+						},
+					})}`,
+					{ scroll: false },
+				)
+				.then();
+		}
+
+		if (searchFilter?.search?.occasionList?.length == 0) {
+			delete searchFilter.search.occasionList;
 			router
 				.push(
 					`/product?input=${JSON.stringify({
@@ -164,6 +186,51 @@ const Filter = (props: FilterType) => {
 				console.log('productTypeSelectHandler:', e.target.value);
 			} catch (err: any) {
 				console.log('ERROR, productTypeSelectHandler:', err);
+			}
+		},
+		[searchFilter],
+	);
+
+	const productOccasionSelectHandler = useCallback(
+		async (e: any) => {
+			try {
+				const isChecked = e.target.checked;
+				const value = e.target.value;
+				if (isChecked) {
+					await router.push(
+						`/product?input=${JSON.stringify({
+							...searchFilter,
+							search: { ...searchFilter.search, occasionList: [...(searchFilter?.search?.occasionList || []), value] },
+						})}`,
+						`/product?input=${JSON.stringify({
+							...searchFilter,
+							search: { ...searchFilter.search, occasionList: [...(searchFilter?.search?.occasionList || []), value] },
+						})}`,
+						{ scroll: false },
+					);
+				} else if (searchFilter?.search?.occasionList?.includes(value)) {
+					await router.push(
+						`/product?input=${JSON.stringify({
+							...searchFilter,
+							search: {
+								...searchFilter.search,
+								occasionList: searchFilter?.search?.occasionList?.filter((item: string) => item !== value),
+							},
+						})}`,
+						`/product?input=${JSON.stringify({
+							...searchFilter,
+							search: {
+								...searchFilter.search,
+								occasionList: searchFilter?.search?.occasionList?.filter((item: string) => item !== value),
+							},
+						})}`,
+						{ scroll: false },
+					);
+				}
+
+				console.log('productOccasionSelectHandler:', e.target.value);
+			} catch (err: any) {
+				console.log('ERROR, productOccasionSelectHandler:', err);
 			}
 		},
 		[searchFilter],
@@ -318,6 +385,25 @@ const Filter = (props: FilterType) => {
 							/>
 							<label style={{ cursor: 'pointer' }}>
 								<Typography className="product_type">{type}</Typography>
+							</label>
+						</Stack>
+					))}
+				</Stack>
+				<Stack className={'find-your-home'} mb={'30px'}>
+					<Typography className={'title'}>Occasion</Typography>
+					{productOccasion.map((occasion: string) => (
+						<Stack className={'input-box'} key={occasion}>
+							<Checkbox
+								id={occasion}
+								className="product-checkbox"
+								color="default"
+								size="small"
+								value={occasion}
+								onChange={productOccasionSelectHandler}
+								checked={(searchFilter?.search?.occasionList || []).includes(occasion as ProductOccasion)}
+							/>
+							<label style={{ cursor: 'pointer' }}>
+								<Typography className="product_type">{occasion}</Typography>
 							</label>
 						</Stack>
 					))}

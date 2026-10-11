@@ -1,4 +1,4 @@
-import { ProductLocation, ProductStatus, ProductType } from '../../enums/product.enum';
+import { ProductLocation, ProductOccasion, ProductStatus, ProductType } from '../../enums/product.enum';
 import { Member } from '../member/member';
 
 export interface MeLiked {
@@ -17,6 +17,7 @@ export interface Product {
 	productStatus: ProductStatus;
 	productLocation: ProductLocation;
 	productAddress: string;
+	productOccasion: ProductOccasion;
 	productTitle: string;
 	productPrice: number;
 	productItemCount: number;

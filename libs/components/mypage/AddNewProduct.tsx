@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Button, Stack, Typography } from '@mui/material';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { ProductLocation, ProductType } from '../../enums/product.enum';
+import { ProductLocation, ProductOccasion, ProductType } from '../../enums/product.enum';
 import { REACT_APP_API_URL } from '../../config';
 import { ProductInput } from '../../types/product/product.input';
 import axios from 'axios';
@@ -20,6 +20,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 	const [insertProductData, setInsertProductData] = useState<ProductInput>(initialValues);
 	const [productType, setProductType] = useState<ProductType[]>(Object.values(ProductType));
 	const [productLocation, setProductLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
+	const [productOccasion, setProductOccasion] = useState<ProductOccasion[]>(Object.values(ProductOccasion));
 	const token = getJwtToken();
 	const user = useReactiveVar(userVar);
 
@@ -46,6 +47,7 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 			productType: getProductData?.getProduct ? getProductData?.getProduct?.productType : '',
 			productLocation: getProductData?.getProduct ? getProductData?.getProduct?.productLocation : '',
 			productAddress: getProductData?.getProduct ? getProductData?.getProduct?.productAddress : '',
+			productOccasion: getProductData?.getProduct ? getProductData?.getProduct?.productOccasion : '',
 			productItemCount: getProductData?.getProduct ? getProductData?.getProduct?.productItemCount : 0,
 			productDesc: getProductData?.getProduct ? getProductData?.getProduct?.productDesc : '',
 			productImages: getProductData?.getProduct ? getProductData?.getProduct?.productImages : [],
@@ -111,7 +113,8 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 			insertProductData.productPrice === 0 || // @ts-ignore
 			insertProductData.productType === '' || // @ts-ignore
 			insertProductData.productLocation === '' || // @ts-ignore
-			insertProductData.productAddress === '' ||
+			insertProductData.productAddress === '' || // @ts-ignore
+			insertProductData.productOccasion === '' ||
 			insertProductData.productItemCount === 0 ||
 			insertProductData.productDesc === '' ||
 			insertProductData.productImages.length === 0
@@ -275,6 +278,31 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 										}
 									/>
 								</Stack>
+								<Stack className="price-year-after-price">
+									<Typography className="title">Select Occasion</Typography>
+									<select
+										className={'select-description'}
+										defaultValue={insertProductData.productOccasion || 'select'}
+										value={insertProductData.productOccasion || 'select'}
+										onChange={({ target: { value } }) =>
+											// @ts-ignore
+											setInsertProductData({ ...insertProductData, productOccasion: value })
+										}
+									>
+										<>
+											<option selected={true} disabled={true} value={'select'}>
+												Select
+											</option>
+											{productOccasion.map((occasion: any) => (
+												<option value={`${occasion}`} key={occasion}>
+													{occasion}
+												</option>
+											))}
+										</>
+									</select>
+									<div className={'divider'}></div>
+									<img src={'/img/icons/Vector.svg'} className={'arrow-down'} />
+								</Stack>
 							</Stack>
 
 							<Typography className="product-title">Product Description</Typography>
@@ -407,6 +435,7 @@ AddProduct.defaultProps = {
 		productType: '',
 		productLocation: '',
 		productAddress: '',
+		productOccasion: '',
 		productItemCount: 0,
 		productDesc: '',
 		productImages: [],

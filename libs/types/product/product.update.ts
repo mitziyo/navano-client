@@ -1,4 +1,4 @@
-import { ProductLocation, ProductStatus, ProductType } from '../../enums/product.enum';
+import { ProductLocation, ProductOccasion, ProductStatus, ProductType } from '../../enums/product.enum';
 
 export interface ProductUpdate {
 	_id: string;
@@ -6,6 +6,7 @@ export interface ProductUpdate {
 	productStatus?: ProductStatus;
 	productLocation?: ProductLocation;
 	productAddress?: string;
+	productOccasion?: ProductOccasion;
 	productTitle?: string;
 	productPrice?: number;
 	productItemCount?: number;

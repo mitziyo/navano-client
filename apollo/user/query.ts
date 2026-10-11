@@ -90,6 +90,7 @@ export const GET_PRODUCT = gql`
 			productStatus
 			productLocation
 			productAddress
+			productOccasion
 			productTitle
 			productPrice
 			productItemCount
@@ -141,6 +142,7 @@ export const GET_PRODUCTS = gql`
 				productStatus
 				productLocation
 				productAddress
+				productOccasion
 				productTitle
 				productPrice
 				productItemCount
@@ -198,6 +200,7 @@ export const GET_AGENT_PRODUCTS = gql`
 				productStatus
 				productLocation
 				productAddress
+				productOccasion
 				productTitle
 				productPrice
 				productItemCount
@@ -227,6 +230,7 @@ export const GET_FAVORITES = gql`
 				productStatus
 				productLocation
 				productAddress
+				productOccasion
 				productTitle
 				productPrice
 				productItemCount
@@ -285,6 +289,7 @@ export const GET_VISITED = gql`
 				productStatus
 				productLocation
 				productAddress
+				productOccasion
 				productTitle
 				productPrice
 				productItemCount

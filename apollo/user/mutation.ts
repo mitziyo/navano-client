@@ -130,6 +130,7 @@ export const CREATE_PRODUCT = gql`
 			productStatus
 			productLocation
 			productAddress
+			productOccasion
 			productTitle
 			productPrice
 			productItemCount
@@ -154,6 +155,7 @@ export const UPDATE_PRODUCT = gql`
 			productStatus
 			productLocation
 			productAddress
+			productOccasion
 			productTitle
 			productPrice
 			productItemCount
@@ -178,6 +180,7 @@ export const LIKE_TARGET_PRODUCT = gql`
 			productStatus
 			productLocation
 			productAddress
+			productOccasion
 			productTitle
 			productPrice
 			productItemCount

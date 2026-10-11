@@ -51,6 +51,7 @@ export const GET_ALL_PRODUCTS_BY_ADMIN = gql`
 				productStatus
 				productLocation
 				productAddress
+				productOccasion
 				productTitle
 				productPrice
 				productItemCount

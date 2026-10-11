@@ -22,3 +22,10 @@ export enum ProductLocation {
 	DAEJON = 'DAEJON',
 	JEJU = 'JEJU',
 }
+
+export enum ProductOccasion {
+	BIRTHDAY = 'BIRTHDAY',
+	WEDDING = 'WEDDING',
+	ANNIVERSARY = 'ANNIVERSARY',
+	HOLIDAY = 'HOLIDAY',
+}
