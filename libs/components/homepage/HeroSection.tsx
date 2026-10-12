@@ -5,11 +5,11 @@ import HeaderFilter from './HeaderFilter';
 
 const SLIDE_INTERVAL = 6000;
 
-// One photo per category; the copy stays the same across slides
+// The copy stays the same across slides; position keeps the subject in the wide crop
 const slides = [
-	{ src: '/img/fiber/img4.jpg', alt: 'Celebration cake with red berries' },
-	{ src: '/img/fiber/img1.jpg', alt: 'Bouquet of pink roses' },
-	{ src: '/img/fiber/img3.jpg', alt: 'Handmade chocolates in a gift box' },
+	{ src: '/img/banner/hero-atelier.jpg', alt: 'Tiered wedding cake with roses and truffles', position: 'center 8%' },
+	{ src: '/img/fiber/img1.jpg', alt: 'Bouquet of pink roses', position: 'center' },
+	{ src: '/img/fiber/img3.jpg', alt: 'Handmade chocolates in a gift box', position: 'center' },
 ];
 
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -37,6 +37,7 @@ const HeroSection = () => {
 							alt={index === active ? t(slide.alt) : ''}
 							aria-hidden={index !== active}
 							className={`hero-slide ${index === active ? 'is-active' : ''}`}
+							style={{ objectPosition: slide.position }}
 							loading={index === 0 ? 'eager' : 'lazy'}
 						/>
 					))}
