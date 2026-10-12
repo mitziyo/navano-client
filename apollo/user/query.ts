@@ -16,19 +16,18 @@ export const GET_AGENTS = gql`
 				memberNick
 				memberFullName
 				memberImage
+				memberCover
 				memberAddress
 				memberDesc
-				memberWarnings
-				memberBlocks
 				memberProducts
 				memberRank
 				memberPoints
 				memberLikes
 				memberViews
+				memberComments
 				deletedAt
 				createdAt
 				updatedAt
-				accessToken
 				meLiked {
 					memberId
 					likeRefId
@@ -53,6 +52,7 @@ query GetMember($input: String!) {
         memberNick
         memberFullName
         memberImage
+        memberCover
         memberAddress
         memberDesc
         memberProducts
@@ -128,6 +128,26 @@ export const GET_PRODUCT = gql`
 				memberId
 				likeRefId
 				myFavorite
+			}
+		}
+	}
+`;
+
+export const GET_PRODUCT_FACETS = gql`
+	query GetProductFacets {
+		getProductFacets {
+			total
+			locations {
+				value
+				count
+			}
+			types {
+				value
+				count
+			}
+			occasions {
+				value
+				count
 			}
 		}
 	}

@@ -41,3 +41,15 @@ export interface Products {
 	list: Product[];
 	metaCounter: TotalCounter[];
 }
+
+export interface FacetCount {
+	value: string;
+	count: number;
+}
+
+export interface ProductFacets {
+	total: number;
+	locations: FacetCount[];
+	types: FacetCount[];
+	occasions: FacetCount[];
+}

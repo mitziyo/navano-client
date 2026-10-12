@@ -9,6 +9,7 @@ export interface MemberUpdate {
 	memberPassword?: string;
 	memberFullName?: string;
 	memberImage?: string;
+	memberCover?: string;
 	memberAddress?: string;
 	memberDesc?: string;
 	deletedAt?: Date;

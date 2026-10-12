@@ -1,20 +1,31 @@
-import React, { ChangeEvent, MouseEvent, useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NextPage } from 'next';
+import Link from 'next/link';
+import { Pagination } from '@mui/material';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useMutation, useQuery } from '@apollo/client';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
+import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Stack, Box, Button, Pagination } from '@mui/material';
-import { Menu, MenuItem } from '@mui/material';
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import AgentCard from '../../libs/components/common/AgentCard';
-import { useRouter } from 'next/router';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { CardSkeletons } from '../../libs/components/homepage/SectionState';
+import { toLabel } from '../../libs/components/homepage/productLabels';
 import { Member } from '../../libs/types/member/member';
-import { useMutation, useQuery } from '@apollo/client';
+import { AgentsInquiry } from '../../libs/types/member/member.input';
+import { ProductFacets } from '../../libs/types/product/product';
+import { Direction } from '../../libs/enums/common.enum';
+import { ProductLocation, ProductType } from '../../libs/enums/product.enum';
 import { LIKE_TARGET_MEMBER } from '../../apollo/user/mutation';
-import { GET_AGENTS } from '../../apollo/user/query';
-import { T } from '../../libs/types/common';
+import { GET_AGENTS, GET_PRODUCT_FACETS } from '../../apollo/user/query';
 import { Messages } from '../../libs/config';
-import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
+import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -22,204 +33,332 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-const AgentList: NextPage = ({ initialInput, ...props }: any) => {
+const DEFAULT_INPUT: AgentsInquiry = {
+	page: 1,
+	limit: 6,
+	sort: 'memberLikes',
+	direction: Direction.DESC,
+	search: {},
+};
+
+const SORTS = [
+	{ id: 'liked', label: 'Most liked', sort: 'memberLikes', direction: Direction.DESC },
+	{ id: 'products', label: 'Most products', sort: 'memberProducts', direction: Direction.DESC },
+	{ id: 'viewed', label: 'Most viewed', sort: 'memberViews', direction: Direction.DESC },
+	{ id: 'new', label: 'Newest', sort: 'createdAt', direction: Direction.DESC },
+];
+
+// ?input= comes from links and the address bar, so a broken value falls back to the defaults
+const parseInput = (raw: unknown): AgentsInquiry => {
+	if (typeof raw !== 'string') return DEFAULT_INPUT;
+	try {
+		const parsed = JSON.parse(raw);
+		return {
+			...DEFAULT_INPUT,
+			...parsed,
+			page: Math.max(1, Number(parsed?.page) || 1),
+			search: { ...(parsed?.search ?? {}) },
+		};
+	} catch (err) {
+		return DEFAULT_INPUT;
+	}
+};
+
+const AgentList: NextPage = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
-	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
-	const [filterSortName, setFilterSortName] = useState('Recent');
-	const [sortingOpen, setSortingOpen] = useState(false);
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [searchFilter, setSearchFilter] = useState<any>(
-		router?.query?.input ? JSON.parse(router?.query?.input as string) : initialInput,
-	);
-	const [agents, setAgents] = useState<Member[]>([]);
-	const [total, setTotal] = useState<number>(0);
-	const [currentPage, setCurrentPage] = useState<number>(1);
+	const { t } = useTranslation('common');
+	const searchFilter = useMemo(() => parseInput(router.query.input), [router.query.input]);
 	const [searchText, setSearchText] = useState<string>('');
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
 
-	const {
-		loading: getAgentsLoading,
-		data: getAgentsData,
-		error: getAgentsError,
-		refetch: getAgentsRefetch,
-	} = useQuery(GET_AGENTS, {
-		fetchPolicy: 'network-only',
+	const { loading, data } = useQuery(GET_AGENTS, {
+		fetchPolicy: 'cache-and-network',
 		variables: { input: searchFilter },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setAgents(data?.getAgents?.list);
-			setTotal(data?.getAgents?.metaCounter[0]?.total);
-		},
+		skip: !router.isReady,
 	});
+	const agents: Member[] = data?.getAgents?.list ?? [];
+	const total: number = data?.getAgents?.metaCounter?.[0]?.total ?? 0;
+
+	const { data: allData } = useQuery(GET_AGENTS, {
+		fetchPolicy: 'cache-first',
+		variables: { input: { page: 1, limit: 1, sort: 'createdAt', direction: Direction.DESC, search: {} } },
+	});
+	const storeCount: number = allData?.getAgents?.metaCounter?.[0]?.total ?? 0;
+
+	const { data: facetsData } = useQuery(GET_PRODUCT_FACETS, { fetchPolicy: 'cache-and-network' });
+	const facets: ProductFacets | undefined = facetsData?.getProductFacets;
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (router.query.input) {
-			const input_obj = JSON.parse(router?.query?.input as string);
-			setSearchFilter(input_obj);
-		} else
-			router.replace(`/agent?input=${JSON.stringify(searchFilter)}`, `/agent?input=${JSON.stringify(searchFilter)}`);
-
-		setCurrentPage(searchFilter.page === undefined ? 1 : searchFilter.page);
-	}, [router]);
+		setSearchText(searchFilter.search.text ?? '');
+	}, [searchFilter.search.text]);
 
 	/** HANDLERS **/
-	const sortingClickHandler = (e: MouseEvent<HTMLElement>) => {
-		setAnchorEl(e.currentTarget);
-		setSortingOpen(true);
+	const pushFilter = async (next: AgentsInquiry) => {
+		await router.push({ pathname: '/agent', query: { input: JSON.stringify(next) } }, undefined, { scroll: false });
 	};
 
-	const sortingCloseHandler = () => {
-		setSortingOpen(false);
-		setAnchorEl(null);
+	// Any filter or sort change starts again from page 1
+	const applySearch = (search: AgentsInquiry['search']) => pushFilter({ ...searchFilter, page: 1, search });
+
+	const setList = (key: 'locationList' | 'typeList', value: string) => {
+		const search: any = { ...searchFilter.search };
+		if (value) search[key] = [value];
+		else delete search[key];
+		applySearch(search);
 	};
 
-	const sortingHandler = (e: React.MouseEvent<HTMLLIElement>) => {
-		switch (e.currentTarget.id) {
-			case 'recent':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: 'DESC' });
-				setFilterSortName('Recent');
-				break;
-			case 'old':
-				setSearchFilter({ ...searchFilter, sort: 'createdAt', direction: 'ASC' });
-				setFilterSortName('Oldest order');
-				break;
-			case 'likes':
-				setSearchFilter({ ...searchFilter, sort: 'memberLikes', direction: 'DESC' });
-				setFilterSortName('Likes');
-				break;
-			case 'views':
-				setSearchFilter({ ...searchFilter, sort: 'memberViews', direction: 'DESC' });
-				setFilterSortName('Views');
-				break;
-		}
-		setSortingOpen(false);
-		setAnchorEl2(null);
+	const submitText = () => {
+		const search: any = { ...searchFilter.search, text: searchText.trim() };
+		if (!search.text) delete search.text;
+		applySearch(search);
 	};
 
-	const paginationChangeHandler = async (event: ChangeEvent<unknown>, value: number) => {
-		searchFilter.page = value;
-		await router.push(`/agent?input=${JSON.stringify(searchFilter)}`, `/agent?input=${JSON.stringify(searchFilter)}`, {
-			scroll: false,
-		});
-		setCurrentPage(value);
+	const sortHandler = (id: string) => {
+		const option = SORTS.find((item) => item.id === id) ?? SORTS[0];
+		pushFilter({ ...searchFilter, page: 1, sort: option.sort, direction: option.direction });
 	};
 
+	const pageHandler = (_: unknown, page: number) => {
+		pushFilter({ ...searchFilter, page });
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	};
+
+	// The mutation returns memberLikes + meLiked, so Apollo updates the card in the cache
 	const likeMemberHandler = async (user: any, id: string) => {
 		try {
 			if (!id) return;
-			if (!user._id) throw new Error(Messages.error2);
-
-			await likeTargetMember({
-				variables: {
-					input: id,
-				},
-			});
-
-			await getAgentsRefetch({ input: searchFilter });
-			await sweetTopSmallSuccessAlert('success', 800);
+			if (!user?._id) throw new Error(Messages.error2);
+			await likeTargetMember({ variables: { input: id } });
 		} catch (err: any) {
-			console.log('ERROR, likeProductHandler:', err.message);
+			console.log('ERROR, likeMemberHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
 
 	if (device === 'mobile') {
 		return <h1>AGENTS PAGE MOBILE</h1>;
-	} else {
-		return (
-			<Stack className={'agent-list-page'}>
-				<Stack className={'container'}>
-					<Stack className={'filter'}>
-						<Box component={'div'} className={'left'}>
+	}
+
+	const { search } = searchFilter;
+	const location = search.locationList?.[0] ?? '';
+	const type = search.typeList?.[0] ?? '';
+	const currentSort =
+		SORTS.find((item) => item.sort === searchFilter.sort && item.direction === searchFilter.direction) ?? SORTS[0];
+	const pageCount = Math.max(1, Math.ceil(total / searchFilter.limit));
+	const from = total ? (searchFilter.page - 1) * searchFilter.limit + 1 : 0;
+	const to = Math.min(total, searchFilter.page * searchFilter.limit);
+	const chips = [
+		...(search.text ? [{ key: 'text', label: `“${search.text}”`, onRemove: () => applySearch({ ...search, text: undefined }) }] : []),
+		...(location ? [{ key: 'loc', label: t(toLabel(location)), onRemove: () => setList('locationList', '') }] : []),
+		...(type ? [{ key: 'type', label: t(toLabel(type)), onRemove: () => setList('typeList', '') }] : []),
+	];
+
+	return (
+		<div id="store-list-page">
+			<div className="container">
+				<section className={'store-hero'}>
+					<div className={'store-hero-copy'}>
+						<nav className={'breadcrumb'} aria-label={'breadcrumb'}>
+							<Link href={'/'}>{t('Home')}</Link>
+							<span aria-hidden>/</span>
+							<span>{t('Stores')}</span>
+							<span aria-hidden>/</span>
+							<span className={'current'}>{t('All stores')}</span>
+						</nav>
+						<span className={'hero-badge'}>
+							<span className={'pulse'} aria-hidden />
+							{t('Local florists, chocolatiers and bakers')}
+						</span>
+						<h1>
+							{t('Stores &')} <em>{t('local ateliers')}</em>
+						</h1>
+						<p>
+							{t(
+								'Buy directly from the people who make it — florists, pâtissiers and chocolatiers in cities across Korea',
+							)}
+						</p>
+						<dl className={'hero-stats'}>
+							<div>
+								<dt>{t('Stores')}</dt>
+								<dd>{storeCount}</dd>
+							</div>
+							<div>
+								<dt>{t('Products')}</dt>
+								<dd>{facets?.total ?? 0}</dd>
+							</div>
+							<div>
+								<dt>{t('Cities')}</dt>
+								<dd>{facets?.locations?.length ?? 0}</dd>
+							</div>
+							<div>
+								<dt>{t('Categories')}</dt>
+								<dd>{Object.values(ProductType).length}</dd>
+							</div>
+						</dl>
+					</div>
+
+					<aside className={'network-card'}>
+						<header>
+							<StorefrontOutlinedIcon aria-hidden />
+							<span>{t('Store network')}</span>
+							<small>{t('Live')}</small>
+						</header>
+						<dl>
+							{Object.values(ProductType).map((value) => (
+								<div key={value}>
+									<dt>{t(toLabel(value))}</dt>
+									<dd>
+										{facets?.types?.find((item) => item.value === value)?.count ?? 0} {t('products')}
+									</dd>
+								</div>
+							))}
+							<div>
+								<dt>{t('Busiest city')}</dt>
+								<dd>{facets?.locations?.[0] ? t(toLabel(facets.locations[0].value)) : '—'}</dd>
+							</div>
+						</dl>
+						<footer>
+							<span>{t('Updated from live store data')}</span>
+						</footer>
+						<span className={'network-watermark'} aria-hidden>
+							NAVANO
+						</span>
+					</aside>
+				</section>
+
+				<section className={'store-toolbar'} aria-label={t('Search stores')}>
+					<div className={'toolbar-row'}>
+						<form
+							className={'toolbar-search'}
+							role={'search'}
+							onSubmit={(e) => {
+								e.preventDefault();
+								submitText();
+							}}
+						>
+							<SearchIcon aria-hidden />
 							<input
 								type="text"
-								placeholder={'Search for a store'}
 								value={searchText}
-								onChange={(e: any) => setSearchText(e.target.value)}
-								onKeyDown={(event: any) => {
-									if (event.key == 'Enter') {
-										setSearchFilter({
-											...searchFilter,
-											search: { ...searchFilter.search, text: searchText },
-										});
-									}
-								}}
+								placeholder={t('Search stores by name')}
+								aria-label={t('Search stores by name')}
+								onChange={(e) => setSearchText(e.target.value)}
 							/>
-						</Box>
-						<Box component={'div'} className={'right'}>
-							<span>Sort by</span>
-							<div>
-								<Button onClick={sortingClickHandler} endIcon={<KeyboardArrowDownRoundedIcon />}>
-									{filterSortName}
-								</Button>
-								<Menu anchorEl={anchorEl} open={sortingOpen} onClose={sortingCloseHandler} sx={{ paddingTop: '5px' }}>
-									<MenuItem onClick={sortingHandler} id={'recent'} disableRipple>
-										Recent
-									</MenuItem>
-									<MenuItem onClick={sortingHandler} id={'old'} disableRipple>
-										Oldest
-									</MenuItem>
-									<MenuItem onClick={sortingHandler} id={'likes'} disableRipple>
-										Likes
-									</MenuItem>
-									<MenuItem onClick={sortingHandler} id={'views'} disableRipple>
-										Views
-									</MenuItem>
-								</Menu>
-							</div>
-						</Box>
-					</Stack>
-					<Stack className={'card-wrap'}>
-						{agents?.length === 0 ? (
-							<div className={'no-data'}>
-								<img src="/img/icons/icoAlert.svg" alt="" />
-								<p>No Stores found!</p>
-							</div>
-						) : (
-							agents.map((agent: Member) => {
-								return <AgentCard agent={agent} key={agent._id} likeMemberHandler={likeMemberHandler} />;
-							})
-						)}
-					</Stack>
-					<Stack className={'pagination'}>
-						<Stack className="pagination-box">
-							{agents.length !== 0 && Math.ceil(total / searchFilter.limit) > 1 && (
-								<Stack className="pagination-box">
-									<Pagination
-										page={currentPage}
-										count={Math.ceil(total / searchFilter.limit)}
-										onChange={paginationChangeHandler}
-										shape="circular"
-										color="primary"
-									/>
-								</Stack>
+						</form>
+						<label className={'toolbar-select'}>
+							<span className={'sr-only'}>{t('City')}</span>
+							<select value={location} onChange={(e) => setList('locationList', e.target.value)}>
+								<option value="">{t('All cities')}</option>
+								{Object.values(ProductLocation).map((value) => (
+									<option key={value} value={value}>
+										{t(toLabel(value))}
+									</option>
+								))}
+							</select>
+							<ExpandMoreIcon aria-hidden />
+						</label>
+						<label className={'toolbar-select'}>
+							<span className={'sr-only'}>{t('Category')}</span>
+							<select value={type} onChange={(e) => setList('typeList', e.target.value)}>
+								<option value="">{t('All categories')}</option>
+								{Object.values(ProductType).map((value) => (
+									<option key={value} value={value}>
+										{t(toLabel(value))}
+									</option>
+								))}
+							</select>
+							<ExpandMoreIcon aria-hidden />
+						</label>
+						<label className={'toolbar-select sort'}>
+							<span className={'select-prefix'}>{t('Sort')}:</span>
+							<select value={currentSort.id} onChange={(e) => sortHandler(e.target.value)}>
+								{SORTS.map((option) => (
+									<option key={option.id} value={option.id}>
+										{t(option.label)}
+									</option>
+								))}
+							</select>
+							<ExpandMoreIcon aria-hidden />
+						</label>
+					</div>
+					<div className={'toolbar-row meta'}>
+						<div className={'active-filters'}>
+							<span className={'toolbar-label'}>{t('Active filters')}:</span>
+							{chips.length === 0 ? (
+								<span className={'filter-chip muted'}>{t('All stores')}</span>
+							) : (
+								chips.map((chip) => (
+									<button type="button" key={chip.key} className={'filter-chip'} onClick={chip.onRemove}>
+										<span>{chip.label}</span>
+										<CloseIcon aria-label={t('Remove filter')} />
+									</button>
+								))
 							)}
-						</Stack>
+						</div>
+						<span className={'showing'}>
+							{t('Showing')} <strong>{agents.length}</strong> {t('of')} <strong>{total}</strong> {t('stores')}
+						</span>
+					</div>
+				</section>
 
-						{agents.length !== 0 && (
-							<span>
-								Total {total} agent{total > 1 ? 's' : ''} available
-							</span>
-						)}
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
-};
+				{/* Server render and the first client render both show skeletons, so hydration matches */}
+				{(!router.isReady || loading) && agents.length === 0 ? (
+					<CardSkeletons count={6} variant={'store'} />
+				) : agents.length === 0 ? (
+					<div className={'store-empty'}>
+						<p>{t('No stores match these filters')}</p>
+						<button type="button" className={'reset-link'} onClick={() => pushFilter(DEFAULT_INPUT)}>
+							{t('Reset all')}
+						</button>
+					</div>
+				) : (
+					<div className={'store-grid'}>
+						{agents.map((agent: Member) => (
+							<AgentCard agent={agent} likeMemberHandler={likeMemberHandler} key={agent._id} />
+						))}
+					</div>
+				)}
 
-AgentList.defaultProps = {
-	initialInput: {
-		page: 1,
-		limit: 10,
-		sort: 'createdAt',
-		direction: 'DESC',
-		search: {},
-	},
+				<section className={'join-banner'}>
+					<div>
+						<span className={'join-eyebrow'}>
+							<WorkspacePremiumOutlinedIcon aria-hidden />
+							{t('For florists, bakers and chocolatiers')}
+						</span>
+						<h2>{t('Open your store on Navano')}</h2>
+						<p>{t('List your bouquets, cakes and chocolates, reach customers in your city and manage orders from My Page')}</p>
+					</div>
+					<div className={'join-actions'}>
+						<Link href={'/cs?tab=faq'} className={'join-btn ghost'}>
+							{t('How it works')}
+						</Link>
+						<Link href={'/account/join'} className={'join-btn primary'}>
+							<span>{t('Join as a store')}</span>
+							<ArrowForwardIcon />
+						</Link>
+					</div>
+				</section>
+
+				{total > 0 && (
+					<footer className={'store-pagination'}>
+						<p>
+							{t('Total')} <strong>{total}</strong> {t('stores')} ({from}–{to})
+						</p>
+						<Pagination
+							page={Math.min(searchFilter.page, pageCount)}
+							count={pageCount}
+							onChange={pageHandler}
+							shape="rounded"
+						/>
+					</footer>
+				)}
+			</div>
+		</div>
+	);
 };
 
 export default withLayoutBasic(AgentList);

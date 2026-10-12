@@ -1,443 +1,178 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Stack, Typography, Checkbox, OutlinedInput, Tooltip, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import SearchIcon from '@mui/icons-material/Search';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductLocation, ProductOccasion, ProductType } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
-import { useRouter } from 'next/router';
-import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
-import RefreshIcon from '@mui/icons-material/Refresh';
+import { FacetCount, ProductFacets } from '../../types/product/product';
+import { toLabel } from '../homepage/productLabels';
 
-interface FilterType {
+export const DEFAULT_PRICE_RANGE = { start: 0, end: 2000000 };
+
+type Search = ProductsInquiry['search'];
+type ListKey = 'locationList' | 'typeList' | 'occasionList';
+
+interface FilterProps {
 	searchFilter: ProductsInquiry;
-	setSearchFilter: any;
-	initialInput: ProductsInquiry;
+	facets?: ProductFacets;
+	onApply: (search: Search) => void;
+	onReset: () => void;
 }
 
-const Filter = (props: FilterType) => {
-	const { searchFilter, setSearchFilter, initialInput } = props;
+const countOf = (list: FacetCount[] | undefined, value: string) => list?.find((item) => item.value === value)?.count ?? 0;
+
+const Filter = (props: FilterProps) => {
+	const { searchFilter, facets, onApply, onReset } = props;
 	const device = useDeviceDetect();
-	const router = useRouter();
-	const [productLocation, setProductLocation] = useState<ProductLocation[]>(Object.values(ProductLocation));
-	const [productType, setProductType] = useState<ProductType[]>(Object.values(ProductType));
-	const [productOccasion, setProductOccasion] = useState<ProductOccasion[]>(Object.values(ProductOccasion));
-	const [searchText, setSearchText] = useState<string>('');
-	const [showMore, setShowMore] = useState<boolean>(false);
+	const { t } = useTranslation('common');
+	// Edits stay in a draft until "Apply filters"
+	const [draft, setDraft] = useState<Search>(searchFilter.search);
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (searchFilter?.search?.locationList?.length == 0) {
-			delete searchFilter.search.locationList;
-			setShowMore(false);
-			router
-				.push(
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-						},
-					})}`,
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-						},
-					})}`,
-					{ scroll: false },
-				)
-				.then();
-		}
-
-		if (searchFilter?.search?.typeList?.length == 0) {
-			delete searchFilter.search.typeList;
-			router
-				.push(
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-						},
-					})}`,
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-						},
-					})}`,
-					{ scroll: false },
-				)
-				.then();
-		}
-
-		if (searchFilter?.search?.occasionList?.length == 0) {
-			delete searchFilter.search.occasionList;
-			router
-				.push(
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-						},
-					})}`,
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-						},
-					})}`,
-					{ scroll: false },
-				)
-				.then();
-		}
-
-		if (searchFilter?.search?.locationList) setShowMore(true);
+		setDraft(searchFilter.search);
 	}, [searchFilter]);
 
 	/** HANDLERS **/
-	const productLocationSelectHandler = useCallback(
-		async (e: any) => {
-			try {
-				const isChecked = e.target.checked;
-				const value = e.target.value;
-				if (isChecked) {
-					await router.push(
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, locationList: [...(searchFilter?.search?.locationList || []), value] },
-						})}`,
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, locationList: [...(searchFilter?.search?.locationList || []), value] },
-						})}`,
-						{ scroll: false },
-					);
-				} else if (searchFilter?.search?.locationList?.includes(value)) {
-					await router.push(
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								locationList: searchFilter?.search?.locationList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								locationList: searchFilter?.search?.locationList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						{ scroll: false },
-					);
-				}
-
-				if (searchFilter?.search?.typeList?.length == 0) {
-					alert('error');
-				}
-
-				console.log('productLocationSelectHandler:', e.target.value);
-			} catch (err: any) {
-				console.log('ERROR, productLocationSelectHandler:', err);
-			}
-		},
-		[searchFilter],
-	);
-
-	const productTypeSelectHandler = useCallback(
-		async (e: any) => {
-			try {
-				const isChecked = e.target.checked;
-				const value = e.target.value;
-				if (isChecked) {
-					await router.push(
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, typeList: [...(searchFilter?.search?.typeList || []), value] },
-						})}`,
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, typeList: [...(searchFilter?.search?.typeList || []), value] },
-						})}`,
-						{ scroll: false },
-					);
-				} else if (searchFilter?.search?.typeList?.includes(value)) {
-					await router.push(
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								typeList: searchFilter?.search?.typeList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								typeList: searchFilter?.search?.typeList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						{ scroll: false },
-					);
-				}
-
-				if (searchFilter?.search?.typeList?.length == 0) {
-					alert('error');
-				}
-
-				console.log('productTypeSelectHandler:', e.target.value);
-			} catch (err: any) {
-				console.log('ERROR, productTypeSelectHandler:', err);
-			}
-		},
-		[searchFilter],
-	);
-
-	const productOccasionSelectHandler = useCallback(
-		async (e: any) => {
-			try {
-				const isChecked = e.target.checked;
-				const value = e.target.value;
-				if (isChecked) {
-					await router.push(
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, occasionList: [...(searchFilter?.search?.occasionList || []), value] },
-						})}`,
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: { ...searchFilter.search, occasionList: [...(searchFilter?.search?.occasionList || []), value] },
-						})}`,
-						{ scroll: false },
-					);
-				} else if (searchFilter?.search?.occasionList?.includes(value)) {
-					await router.push(
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								occasionList: searchFilter?.search?.occasionList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						`/product?input=${JSON.stringify({
-							...searchFilter,
-							search: {
-								...searchFilter.search,
-								occasionList: searchFilter?.search?.occasionList?.filter((item: string) => item !== value),
-							},
-						})}`,
-						{ scroll: false },
-					);
-				}
-
-				console.log('productOccasionSelectHandler:', e.target.value);
-			} catch (err: any) {
-				console.log('ERROR, productOccasionSelectHandler:', err);
-			}
-		},
-		[searchFilter],
-	);
-
-	const productPriceHandler = useCallback(
-		async (value: number, type: string) => {
-			if (type == 'start') {
-				await router.push(
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							pricesRange: { ...searchFilter.search.pricesRange, start: value * 1 },
-						},
-					})}`,
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							pricesRange: { ...searchFilter.search.pricesRange, start: value * 1 },
-						},
-					})}`,
-					{ scroll: false },
-				);
-			} else {
-				await router.push(
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							pricesRange: { ...searchFilter.search.pricesRange, end: value * 1 },
-						},
-					})}`,
-					`/product?input=${JSON.stringify({
-						...searchFilter,
-						search: {
-							...searchFilter.search,
-							pricesRange: { ...searchFilter.search.pricesRange, end: value * 1 },
-						},
-					})}`,
-					{ scroll: false },
-				);
-			}
-		},
-		[searchFilter],
-	);
-
-	const refreshHandler = async () => {
-		try {
-			setSearchText('');
-			await router.push(
-				`/product?input=${JSON.stringify(initialInput)}`,
-				`/product?input=${JSON.stringify(initialInput)}`,
-				{ scroll: false },
-			);
-		} catch (err: any) {
-			console.log('ERROR, refreshHandler:', err);
-		}
+	const toggleValue = (key: ListKey, value: string) => {
+		setDraft((prev) => {
+			const current: string[] = (prev[key] as string[] | undefined) ?? [];
+			const next = current.includes(value) ? current.filter((item) => item !== value) : [...current, value];
+			const search: any = { ...prev, [key]: next };
+			if (!next.length) delete search[key];
+			return search;
+		});
 	};
+
+	const priceHandler = (edge: 'start' | 'end', value: string) => {
+		setDraft((prev) => {
+			const current = prev.pricesRange ?? DEFAULT_PRICE_RANGE;
+			const parsed = value === '' ? DEFAULT_PRICE_RANGE[edge] : Math.max(0, Number(value));
+			return { ...prev, pricesRange: { ...current, [edge]: parsed } };
+		});
+	};
+
+	const applyHandler = () => {
+		const search: any = { ...draft };
+		if (!search.text?.trim()) delete search.text;
+		onApply(search);
+	};
+
+	const renderGroup = (title: string, hint: string, key: ListKey, values: string[], counts?: FacetCount[]) => (
+		<fieldset className={'filter-group'}>
+			<legend>
+				<span>{t(title)}</span>
+				<small>{t(hint)}</small>
+			</legend>
+			{values.map((value) => {
+				const checked = Boolean((draft[key] as string[] | undefined)?.includes(value));
+				return (
+					<label key={value} className={`filter-option ${checked ? 'checked' : ''}`}>
+						<input type="checkbox" checked={checked} onChange={() => toggleValue(key, value)} />
+						<span className={'check'} aria-hidden>
+							{checked && <CheckIcon />}
+						</span>
+						<span className={'option-label'}>{t(toLabel(value))}</span>
+						<span className={'option-count'}>{countOf(counts, value)}</span>
+					</label>
+				);
+			})}
+		</fieldset>
+	);
 
 	if (device === 'mobile') {
 		return <div>PRODUCTS FILTER</div>;
-	} else {
-		return (
-			<Stack className={'filter-main'}>
-				<Stack className={'find-your-home'} mb={'40px'}>
-					<Typography className={'title-main'}>Find Your Product</Typography>
-					<Stack className={'input-box'}>
-						<OutlinedInput
-							value={searchText}
-							type={'text'}
-							className={'search-input'}
-							placeholder={'What are you looking for?'}
-							onChange={(e: any) => setSearchText(e.target.value)}
-							onKeyDown={(event: any) => {
-								if (event.key == 'Enter') {
-									setSearchFilter({
-										...searchFilter,
-										search: { ...searchFilter.search, text: searchText },
-									});
-								}
-							}}
-							endAdornment={
-								<>
-									<CancelRoundedIcon
-										onClick={() => {
-											setSearchText('');
-											setSearchFilter({
-												...searchFilter,
-												search: { ...searchFilter.search, text: '' },
-											});
-										}}
-									/>
-								</>
-							}
-						/>
-						<img src={'/img/icons/search_icon.png'} alt={''} />
-						<Tooltip title="Reset">
-							<IconButton onClick={refreshHandler}>
-								<RefreshIcon />
-							</IconButton>
-						</Tooltip>
-					</Stack>
-				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
-					<p className={'title'} style={{ textShadow: '0px 3px 4px #b9b9b9' }}>
-						Location
-					</p>
-					<Stack
-						className={`product-location`}
-						style={{ height: showMore ? '253px' : '115px' }}
-						onMouseEnter={() => setShowMore(true)}
-						onMouseLeave={() => {
-							if (!searchFilter?.search?.locationList) {
-								setShowMore(false);
-							}
-						}}
-					>
-						{productLocation.map((location: string) => {
-							return (
-								<Stack className={'input-box'} key={location}>
-									<Checkbox
-										id={location}
-										className="product-checkbox"
-										color="default"
-										size="small"
-										value={location}
-										checked={(searchFilter?.search?.locationList || []).includes(location as ProductLocation)}
-										onChange={productLocationSelectHandler}
-									/>
-									<label htmlFor={location} style={{ cursor: 'pointer' }}>
-										<Typography className="product-type">{location}</Typography>
-									</label>
-								</Stack>
-							);
-						})}
-					</Stack>
-				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Product Type</Typography>
-					{productType.map((type: string) => (
-						<Stack className={'input-box'} key={type}>
-							<Checkbox
-								id={type}
-								className="product-checkbox"
-								color="default"
-								size="small"
-								value={type}
-								onChange={productTypeSelectHandler}
-								checked={(searchFilter?.search?.typeList || []).includes(type as ProductType)}
-							/>
-							<label style={{ cursor: 'pointer' }}>
-								<Typography className="product_type">{type}</Typography>
-							</label>
-						</Stack>
-					))}
-				</Stack>
-				<Stack className={'find-your-home'} mb={'30px'}>
-					<Typography className={'title'}>Occasion</Typography>
-					{productOccasion.map((occasion: string) => (
-						<Stack className={'input-box'} key={occasion}>
-							<Checkbox
-								id={occasion}
-								className="product-checkbox"
-								color="default"
-								size="small"
-								value={occasion}
-								onChange={productOccasionSelectHandler}
-								checked={(searchFilter?.search?.occasionList || []).includes(occasion as ProductOccasion)}
-							/>
-							<label style={{ cursor: 'pointer' }}>
-								<Typography className="product_type">{occasion}</Typography>
-							</label>
-						</Stack>
-					))}
-				</Stack>
-				<Stack className={'find-your-home'}>
-					<Typography className={'title'}>Price Range</Typography>
-					<Stack className="square-year-input">
-						<input
-							type="number"
-							placeholder="$ min"
-							min={0}
-							value={searchFilter?.search?.pricesRange?.start ?? 0}
-							onChange={(e: any) => {
-								if (e.target.value >= 0) {
-									productPriceHandler(e.target.value, 'start');
-								}
-							}}
-						/>
-						<div className="central-divider"></div>
-						<input
-							type="number"
-							placeholder="$ max"
-							value={searchFilter?.search?.pricesRange?.end ?? 0}
-							onChange={(e: any) => {
-								if (e.target.value >= 0) {
-									productPriceHandler(e.target.value, 'end');
-								}
-							}}
-						/>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
 	}
+
+	const price = draft.pricesRange ?? DEFAULT_PRICE_RANGE;
+
+	return (
+		<div className={'filter-panel'}>
+			<section className={'filter-card'}>
+				<h2 className={'filter-title'}>{t('Find your product')}</h2>
+				<div className={'filter-search'}>
+					<SearchIcon aria-hidden />
+					<input
+						type="text"
+						value={draft.text ?? ''}
+						placeholder={t('What are you looking for?')}
+						aria-label={t('Search products')}
+						onChange={(e) => setDraft((prev) => ({ ...prev, text: e.target.value }))}
+						onKeyDown={(e) => e.key === 'Enter' && applyHandler()}
+					/>
+					{draft.text && (
+						<button
+							type="button"
+							aria-label={t('Clear search')}
+							onClick={() => setDraft((prev) => ({ ...prev, text: '' }))}
+						>
+							<CloseIcon />
+						</button>
+					)}
+				</div>
+
+				{renderGroup('Location', 'Cities', 'locationList', Object.values(ProductLocation), facets?.locations)}
+				{renderGroup('Product type', 'Categories', 'typeList', Object.values(ProductType), facets?.types)}
+				{renderGroup('Occasion', 'Moments', 'occasionList', Object.values(ProductOccasion), facets?.occasions)}
+
+				<fieldset className={'filter-group'}>
+					<legend>
+						<span>{t('Price range')}</span>
+						<small>USD</small>
+					</legend>
+					<div className={'price-inputs'}>
+						<label>
+							<span>$</span>
+							<input
+								type="number"
+								min={0}
+								value={price.start}
+								aria-label={t('Minimum price')}
+								onChange={(e) => priceHandler('start', e.target.value)}
+							/>
+						</label>
+						<span className={'dash'} aria-hidden>
+							–
+						</span>
+						<label>
+							<span>$</span>
+							<input
+								type="number"
+								min={0}
+								value={price.end}
+								aria-label={t('Maximum price')}
+								onChange={(e) => priceHandler('end', e.target.value)}
+							/>
+						</label>
+					</div>
+				</fieldset>
+
+				<div className={'filter-actions'}>
+					<button type="button" className={'apply-btn'} onClick={applyHandler}>
+						<CheckIcon />
+						<span>{t('Apply filters')}</span>
+					</button>
+					<button type="button" className={'reset-btn'} onClick={onReset}>
+						{t('Reset criteria')}
+					</button>
+				</div>
+			</section>
+
+			<aside className={'concierge-card'}>
+				<span className={'concierge-eyebrow'}>{t('Need something special?')}</span>
+				<h3>{t('Custom orders')}</h3>
+				<p>{t('Ask a store for a custom cake, a seasonal bouquet or a gift box for a big event')}</p>
+				<Link href={'/cs?tab=faq'} className={'concierge-link'}>
+					<span>{t('Contact support')}</span>
+					<ArrowForwardIcon />
+				</Link>
+			</aside>
+		</div>
+	);
 };
 
 export default Filter;

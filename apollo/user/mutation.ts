@@ -103,8 +103,6 @@ export const LIKE_TARGET_MEMBER = gql`
 			memberImage
 			memberAddress
 			memberDesc
-			memberWarnings
-			memberBlocks
 			memberProducts
 			memberRank
 			memberPoints
@@ -113,7 +111,11 @@ export const LIKE_TARGET_MEMBER = gql`
 			deletedAt
 			createdAt
 			updatedAt
-			accessToken
+			meLiked {
+				memberId
+				likeRefId
+				myFavorite
+			}
 		}
 	}
 `;

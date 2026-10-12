@@ -12,6 +12,7 @@ export interface Member {
 	memberPassword?: string;
 	memberFullName?: string;
 	memberImage?: string;
+	memberCover?: string;
 	memberAddress?: string;
 	memberDesc?: string;
 	memberProducts: number;

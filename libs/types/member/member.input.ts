@@ -1,5 +1,6 @@
 import { MemberAuthType, MemberStatus, MemberType } from '../../enums/member.enum';
 import { Direction } from '../../enums/common.enum';
+import { ProductLocation, ProductType } from '../../enums/product.enum';
 
 export interface MemberInput {
 	memberNick: string;
@@ -16,6 +17,8 @@ export interface LoginInput {
 
 interface AISearch {
 	text?: string;
+	locationList?: ProductLocation[];
+	typeList?: ProductType[];
 }
 
 export interface AgentsInquiry {
