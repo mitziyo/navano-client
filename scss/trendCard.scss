@@ -1,169 +1,143 @@
-/** TREND PRODUCT CARD (home → Trend Products) **/
+/** TREND PRODUCT CARD (home → Trend Products, pc grid + mobile carousel) **/
 
 .trend-card-box {
-	--ink: #1e1a17;
-	--muted: #6f6862;
-	--line: #ece7e1;
-	--accent: #{$coral};
-	--kind: var(--muted);
-
-	&[data-type='FLOWER'] {
-		--kind: #c2416b;
-	}
-	&[data-type='CHOCOLATE'] {
-		--kind: #6b4232;
-	}
-	&[data-type='CAKE'] {
-		--kind: #c77a2e;
-	}
-
 	position: relative;
-	padding: 8px;
 	width: 300px;
 	display: flex;
 	flex-direction: column;
 	box-sizing: border-box;
-	border: 1px solid var(--line);
-	border-radius: 22px;
-	background: #ffffff;
-	box-shadow: 0 1px 2px rgba(60, 40, 30, 0.04), 0 8px 24px -12px rgba(60, 40, 30, 0.12);
-	transition: box-shadow 0.25s ease, border-color 0.25s ease;
+	overflow: hidden;
+	border: 1px solid #ffe4e6;
+	border-radius: 16px;
+	background: #fff;
+	box-shadow: $nv-shadow-sm;
+	font-family: $nv-font-body;
+	transition: border-color 0.3s $nv-ease, box-shadow 0.3s $nv-ease, transform 0.3s $nv-ease;
 
 	&:hover {
-		border-color: #e2dbd3;
-		box-shadow: 0 2px 4px rgba(60, 40, 30, 0.05), 0 18px 36px -14px rgba(60, 40, 30, 0.22);
+		border-color: #fda4af;
+		box-shadow: 0 10px 25px -5px rgba(76, 5, 25, 0.08);
+		transform: translateY(-4px);
 		.card-media img {
-			transform: scale(1.04);
+			transform: scale(1.05);
+		}
+		.title {
+			color: $nv-primary;
 		}
 	}
 
 	.card-media {
 		position: relative;
 		width: 100%;
-		aspect-ratio: 4 / 3;
+		height: 224px;
 		overflow: hidden;
-		border-radius: 16px;
-		background: #f3efea;
+		background: $nv-primary-light;
 		cursor: pointer;
 		img {
 			width: 100%;
 			height: 100%;
 			display: block;
 			object-fit: cover;
-			transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+			transition: transform 0.5s $nv-ease;
 		}
 		.occasion {
 			position: absolute;
-			top: 10px;
-			left: 10px;
-			padding: 5px 11px;
+			top: 12px;
+			left: 12px;
+			padding: 4px 10px;
 			border-radius: 999px;
-			color: var(--ink);
-			font-family: $font;
-			font-size: 12px;
-			font-weight: 500;
-			line-height: 16px;
-			background: rgba(255, 255, 255, 0.78);
-			-webkit-backdrop-filter: blur(10px) saturate(160%);
-			backdrop-filter: blur(10px) saturate(160%);
-			box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+			border: 1px solid #ffe4e6;
+			background: rgba(255, 255, 255, 0.9);
+			-webkit-backdrop-filter: blur(10px);
+			backdrop-filter: blur(10px);
+			box-shadow: $nv-shadow-sm;
+			font-family: $nv-font-label;
+			font-size: 10px;
+			font-weight: 600;
+			letter-spacing: 0.06em;
+			color: #292524;
 		}
 		.like-btn {
 			position: absolute;
-			top: 6px;
-			right: 6px;
+			top: 12px;
+			right: 12px;
+			width: 32px;
+			height: 32px;
 			padding: 0;
-			width: 44px;
-			height: 44px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			border: none;
 			border-radius: 50%;
-			color: var(--ink);
-			background: rgba(255, 255, 255, 0.78);
-			-webkit-backdrop-filter: blur(10px) saturate(160%);
-			backdrop-filter: blur(10px) saturate(160%);
-			box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6), 0 4px 12px rgba(0, 0, 0, 0.08);
+			border: 1px solid #ffe4e6;
+			background: rgba(255, 255, 255, 0.9);
+			-webkit-backdrop-filter: blur(10px);
+			backdrop-filter: blur(10px);
+			box-shadow: $nv-shadow-sm;
+			color: #a8a29e;
 			cursor: pointer;
-			transition: color 0.2s ease, background 0.2s ease;
+			transition: transform 0.2s $nv-ease, color 0.2s $nv-ease;
 			svg {
-				width: 20px;
-				height: 20px;
+				font-size: 18px;
 			}
 			&:hover {
-				background: #ffffff;
+				transform: scale(1.1);
+				color: $nv-primary;
 			}
 			&.liked {
-				color: var(--accent);
+				color: $nv-primary;
 			}
 			&:focus-visible {
-				outline: 2px solid var(--accent);
-				outline-offset: 2px;
+				@include nv-focus;
 			}
 		}
 	}
 
 	.card-body {
-		padding: 14px 10px 8px;
 		display: flex;
 		flex-direction: column;
 		flex: 1;
-		// keep air above the footer rule whether or not there is a description
-		> :nth-last-child(2) {
-			margin-bottom: 14px;
-		}
+		padding: 20px;
 	}
 
 	.kind {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		font-family: $font;
-		font-size: 12.5px;
-		line-height: 18px;
+		margin-bottom: 6px;
+		font-family: $nv-font-label;
+		font-size: 10px;
+		font-weight: 500;
+		letter-spacing: 0.06em;
+		color: #78716c;
 		.category {
-			display: inline-flex;
-			align-items: center;
-			gap: 7px;
-			color: var(--kind);
+			font-family: $nv-font-mono;
 			font-weight: 600;
-			.dot {
-				width: 7px;
-				height: 7px;
-				border-radius: 50%;
-				background: var(--kind);
-			}
-		}
-		.count {
-			color: var(--muted);
+			color: $nv-primary;
 		}
 	}
 
 	.title {
-		margin: 8px 0 0;
-		overflow: hidden;
-		color: var(--ink);
-		font-family: $font-display;
-		font-size: 19px;
+		margin: 0;
+		font-family: $nv-font-head;
+		font-size: 18px;
 		font-weight: 600;
-		line-height: 1.3;
+		line-height: 26px;
+		color: #1c1917;
+		cursor: pointer;
+		transition: color 0.2s $nv-ease;
+		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
-		cursor: pointer;
-		border-radius: 4px;
 		&:focus-visible {
-			outline: 2px solid var(--accent);
-			outline-offset: 2px;
+			@include nv-focus;
 		}
 	}
 
 	.desc {
-		margin: 6px 0 0;
-		color: var(--muted);
-		font-family: $font;
-		font-size: 13px;
-		line-height: 1.5;
+		margin: 4px 0 0;
+		font-size: 12px;
+		line-height: 18px;
+		color: #57534e;
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
@@ -171,47 +145,66 @@
 	}
 
 	.card-foot {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 8px;
 		margin-top: auto;
-		padding-top: 14px;
+		padding-top: 16px;
+		border-top: 1px solid #ffe4e6;
+	}
+	.card-body .desc + .card-foot,
+	.card-body .title + .card-foot {
+		margin-top: 16px;
+	}
+	.price-box {
+		display: flex;
+		flex-direction: column;
+	}
+	.price-label {
+		font-family: $nv-font-label;
+		font-size: 10px;
+		font-weight: 600;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #a8a29e;
+	}
+	.price {
+		font-family: $nv-font-head;
+		font-size: 20px;
+		font-weight: 700;
+		line-height: 26px;
+		color: #1c1917;
+		font-variant-numeric: tabular-nums;
+	}
+	.meta {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
-		border-top: 1px solid var(--line);
-		.price {
-			color: var(--ink);
-			font-family: $font-display;
-			font-size: 21px;
-			font-weight: 700;
-			line-height: 1;
-			font-variant-numeric: lining-nums;
-		}
-		.meta {
-			display: flex;
+		gap: 12px;
+		font-family: $nv-font-mono;
+		font-size: 11px;
+		color: #78716c;
+		span {
+			display: inline-flex;
 			align-items: center;
-			gap: 12px;
-			span {
-				display: inline-flex;
-				align-items: center;
-				gap: 4px;
-				color: var(--muted);
-				font-family: $font;
-				font-size: 12.5px;
-				line-height: 1;
-			}
-			svg {
-				width: 16px;
-				height: 16px;
-			}
+			gap: 3px;
+		}
+		svg {
+			font-size: 14px;
+			color: #a8a29e;
+		}
+		span:first-child svg {
+			color: #f43f5e;
 		}
 	}
+}
 
-	@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
+	.trend-card-box,
+	.trend-card-box .card-media img {
 		transition: none;
-		.card-media img {
-			transition: none;
-		}
-		&:hover .card-media img {
-			transform: none;
-		}
+	}
+	.trend-card-box:hover {
+		transform: none;
 	}
 }

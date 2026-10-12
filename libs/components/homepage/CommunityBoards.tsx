@@ -1,94 +1,80 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Stack, Typography } from '@mui/material';
 import CommunityCard from './CommunityCard';
+import { CardSkeletons, EmptyState } from './SectionState';
 import { BoardArticle } from '../../types/board-article/board-article';
 import { GET_BOARD_ARTICLES } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 import { BoardArticleCategory } from '../../enums/board-article.enum';
-import { T } from '../../types/common';
+
+const tabs = [
+	{ category: BoardArticleCategory.NEWS, label: 'News' },
+	{ category: BoardArticleCategory.FREE, label: 'Free' },
+];
 
 const CommunityBoards = () => {
 	const device = useDeviceDetect();
-	const [searchCommunity, setSearchCommunity] = useState({
-		page: 1,
-		sort: 'articleViews',
-		direction: 'DESC',
-	});
-	const [newsArticles, setNewsArticles] = useState<BoardArticle[]>([]);
-	const [freeArticles, setFreeArticles] = useState<BoardArticle[]>([]);
+	const { t } = useTranslation('common');
+	const [category, setCategory] = useState<BoardArticleCategory>(BoardArticleCategory.NEWS);
 
 	/** APOLLO REQUESTS **/
-	const {
-		loading: getNewsArticlesLoading,
-		data: getNewsArticlesData,
-		error: getNewsArticlesError,
-		refetch: getNewsArticlesRefetch,
-	} = useQuery(GET_BOARD_ARTICLES, {
-		fetchPolicy: 'network-only',
-		variables: { input: { ...searchCommunity, limit: 6, search: { articleCategory: BoardArticleCategory.NEWS } } },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setNewsArticles(data?.getBoardArticles?.list ?? []);
+	// One request for the selected tab instead of loading both boards up front
+	const { loading, data } = useQuery(GET_BOARD_ARTICLES, {
+		fetchPolicy: 'cache-and-network',
+		variables: {
+			input: { page: 1, limit: 4, sort: 'articleViews', direction: 'DESC', search: { articleCategory: category } },
 		},
 	});
+	const articles: BoardArticle[] = data?.getBoardArticles?.list ?? [];
 
-	const {
-		loading: getFreeArticlesLoading,
-		data: getFreeArticlesData,
-		error: getFreeArticlesError,
-		refetch: getFreeArticlesRefetch,
-	} = useQuery(GET_BOARD_ARTICLES, {
-		fetchPolicy: 'network-only',
-		variables: { input: { ...searchCommunity, limit: 3, search: { articleCategory: BoardArticleCategory.FREE } } },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setFreeArticles(data?.getBoardArticles?.list ?? []);
-		},
-	});
+	if (device === 'mobile') return null;
 
-	if (device === 'mobile') {
-		return <div>COMMUNITY BOARDS (MOBILE)</div>;
-	} else {
-		return (
-			<Stack className={'community-board'}>
-				<Stack className={'container'}>
-					<Stack>
-						<Typography variant={'h1'}>COMMUNITY BOARD HIGHLIGHTS</Typography>
-					</Stack>
-					<Stack className="community-main">
-						<Stack className={'community-left'}>
-							<Stack className={'content-top'}>
-								<Link href={'/community?articleCategory=NEWS'}>
-									<span>News</span>
-								</Link>
-								<img src="/img/icons/arrowBig.svg" alt="" />
-							</Stack>
-							<Stack className={'card-wrap'}>
-								{newsArticles.map((article, index) => {
-									return <CommunityCard vertical={true} article={article} index={index} key={article?._id} />;
-								})}
-							</Stack>
-						</Stack>
-						<Stack className={'community-right'}>
-							<Stack className={'content-top'}>
-								<Link href={'/community?articleCategory=FREE'}>
-									<span>Free</span>
-								</Link>
-								<img src="/img/icons/arrowBig.svg" alt="" />
-							</Stack>
-							<Stack className={'card-wrap vertical'}>
-								{freeArticles.map((article, index) => {
-									return <CommunityCard vertical={false} article={article} index={index} key={article?._id} />;
-								})}
-							</Stack>
-						</Stack>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
+	return (
+		<section className={'home-section community-section'} aria-labelledby="community-title">
+			<div className={'container'}>
+				<div className={'community-head'}>
+					<h2 id="community-title">{t('Community Board Highlights')}</h2>
+					<div className={'community-tabs'} role={'tablist'}>
+						{tabs.map((tab) => (
+							<button
+								key={tab.category}
+								type="button"
+								role={'tab'}
+								aria-selected={category === tab.category}
+								className={category === tab.category ? 'active' : ''}
+								onClick={() => setCategory(tab.category)}
+							>
+								<span>{t(tab.label)}</span>
+								<ChevronRightIcon />
+							</button>
+						))}
+					</div>
+				</div>
+				<div className={'community-list'} role={'tabpanel'}>
+					{loading && articles.length === 0 ? (
+						<CardSkeletons count={2} variant={'row'} />
+					) : articles.length === 0 ? (
+						<EmptyState
+							title={t('No posts yet')}
+							href={`/community?articleCategory=${category}`}
+							linkLabel={t('Go to community')}
+						/>
+					) : (
+						articles.map((article) => <CommunityCard article={article} key={article._id} />)
+					)}
+				</div>
+				<div className={'community-more'}>
+					<Link href={`/community?articleCategory=${category}`} className={'link-arrow'}>
+						<span>{t('View all posts')}</span>
+						<ChevronRightIcon />
+					</Link>
+				</div>
+			</div>
+		</section>
+	);
 };
 
 export default CommunityBoards;

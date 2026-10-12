@@ -5,42 +5,27 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'next-i18next';
 import { Product } from '../../types/product/product';
 import { REACT_APP_API_URL } from '../../config';
 import { useRouter } from 'next/router';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
+import { itemCountLabel, toLabel } from './productLabels';
 
 interface TrendProductCardProps {
 	product: Product;
 	likeProductHandler: any;
 }
 
-// FLOWER -> Flower, SEOUL -> Seoul
-const toLabel = (value?: string) => (value ? value.charAt(0) + value.slice(1).toLowerCase() : '');
-
-// How many of what the buyer gets, in the words of each category
-const itemCountLabel = (type: string, count: number) => {
-	switch (type) {
-		case 'FLOWER':
-			return `${count} ${count === 1 ? 'stem' : 'stems'}`;
-		case 'CHOCOLATE':
-			return `${count} ${count === 1 ? 'piece' : 'pieces'}`;
-		case 'CAKE':
-			return `${count} ${count === 1 ? 'cake' : 'cakes'}`;
-		default:
-			return `${count}`;
-	}
-};
-
 const TrendProductCard = (props: TrendProductCardProps) => {
 	const { product, likeProductHandler } = props;
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
-	const liked = Boolean(product?.meLiked && product?.meLiked[0]?.myFavorite);
+	const liked = Boolean(product?.meLiked?.[0]?.myFavorite);
 
 	/** HANDLERS **/
-
 	const pushDetailHandler = async (productId: string) => {
 		await router.push({ pathname: '/product/detail', query: { id: productId } });
 	};
@@ -49,7 +34,7 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 		<Box component={'article'} className="trend-card-box" data-type={product.productType}>
 			<div className={'card-media'} onClick={() => pushDetailHandler(product._id)}>
 				<img src={`${REACT_APP_API_URL}/${product?.productImages[0]}`} alt={product.productTitle} loading="lazy" />
-				{product.productOccasion && <span className={'occasion'}>{toLabel(product.productOccasion)}</span>}
+				{product.productOccasion && <span className={'occasion'}>{t(toLabel(product.productOccasion))}</span>}
 				<motion.button
 					type="button"
 					className={`like-btn ${liked ? 'liked' : ''}`}
@@ -69,10 +54,7 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 
 			<div className={'card-body'}>
 				<div className={'kind'}>
-					<span className={'category'}>
-						<i className={'dot'} />
-						{toLabel(product.productType)}
-					</span>
+					<span className={'category'}>{t(toLabel(product.productType))}</span>
 					<span className={'count'}>{itemCountLabel(product.productType, product.productItemCount)}</span>
 				</div>
 				<h3
@@ -86,7 +68,10 @@ const TrendProductCard = (props: TrendProductCardProps) => {
 				{product.productDesc && <p className={'desc'}>{product.productDesc}</p>}
 
 				<div className={'card-foot'}>
-					<strong className={'price'}>${product.productPrice}</strong>
+					<div className={'price-box'}>
+						<span className={'price-label'}>{t('Price')}</span>
+						<strong className={'price'}>${product.productPrice}</strong>
+					</div>
 					<div className={'meta'}>
 						<span>
 							<PlaceOutlinedIcon aria-hidden />

@@ -1,0 +1,233 @@
+/** FOOTER (all desktop pages) **/
+#pc-wrap {
+	#footer {
+		position: relative;
+		width: 100%;
+	}
+
+	.site-footer {
+		width: 100%;
+		background: #fff;
+		border-top: 1px solid #ffe4e6;
+		color: #57534e;
+		font-family: $nv-font-body;
+
+		> .container {
+			flex-direction: column;
+		}
+
+		.footer-top {
+			display: grid;
+			grid-template-columns: 5fr 7fr;
+			gap: 40px;
+			padding: 48px 0;
+			border-bottom: 1px solid #ffe4e6;
+		}
+
+		.footer-brand {
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+			.brand {
+				display: inline-flex;
+				align-items: center;
+				gap: 10px;
+				strong {
+					font-family: $nv-font-head;
+					font-size: 22px;
+					font-weight: 600;
+					letter-spacing: 0.18em;
+					color: #1c1917;
+				}
+			}
+		}
+
+		.contact {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+		.contact-label {
+			font-family: $nv-font-label;
+			font-size: 11px;
+			font-weight: 600;
+			color: #78716c;
+		}
+		.contact-phone {
+			font-family: $nv-font-mono;
+			font-size: 18px;
+			font-weight: 700;
+			color: #1c1917;
+			transition: color 0.2s $nv-ease;
+			&:hover {
+				color: $nv-primary;
+			}
+		}
+		.contact-link {
+			font-size: 13px;
+			font-weight: 600;
+			color: $nv-primary;
+			&:hover {
+				color: $nv-primary-hover;
+			}
+		}
+
+		.social {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			padding-top: 4px;
+			.contact-label {
+				text-transform: uppercase;
+				letter-spacing: 0.08em;
+				font-weight: 700;
+			}
+		}
+		.social-icons {
+			display: flex;
+			gap: 10px;
+		}
+		.social-icon {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 36px;
+			height: 36px;
+			border-radius: 12px;
+			border: 1px solid #fecdd3;
+			background: $nv-primary-light;
+			color: #be123c;
+			svg {
+				font-size: 18px;
+			}
+		}
+
+		.footer-right {
+			display: flex;
+			flex-direction: column;
+			gap: 32px;
+		}
+
+		.newsletter {
+			padding: 20px;
+			border-radius: 16px;
+			border: 1px solid #ffe4e6;
+			background: rgba(255, 241, 242, 0.6);
+			box-shadow: $nv-shadow-sm;
+			strong {
+				display: block;
+				font-family: $nv-font-head;
+				font-size: 18px;
+				font-weight: 600;
+				color: #1c1917;
+			}
+			p {
+				margin: 4px 0 16px;
+				font-size: 13px;
+				color: #57534e;
+			}
+		}
+		.newsletter-form {
+			display: flex;
+			gap: 8px;
+			input {
+				flex: 1;
+				height: 44px;
+				padding: 0 16px;
+				border-radius: 12px;
+				border: 1px solid #fecdd3;
+				background: #fff;
+				font-family: $nv-font-body;
+				font-size: 14px;
+				color: #1c1917;
+				outline: none;
+				transition: border-color 0.2s $nv-ease, box-shadow 0.2s $nv-ease;
+				&::placeholder {
+					color: #a8a29e;
+				}
+				&:focus {
+					border-color: #fb7185;
+					box-shadow: 0 0 0 3px #ffe4e6;
+				}
+			}
+			button {
+				height: 44px;
+				padding: 0 24px;
+				border: 0;
+				border-radius: 12px;
+				background: linear-gradient(90deg, #e11d48, #db2777);
+				box-shadow: 0 8px 18px -6px rgba(225, 29, 72, 0.4);
+				font-family: $nv-font-head;
+				font-size: 15px;
+				font-weight: 600;
+				color: #fff;
+				cursor: pointer;
+				transition: filter 0.2s $nv-ease, transform 0.15s $nv-ease;
+				&:hover {
+					filter: brightness(1.06);
+				}
+				&:active {
+					transform: scale(0.98);
+				}
+			}
+		}
+
+		.footer-columns {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 24px;
+			h4 {
+				margin-bottom: 12px;
+				font-family: $nv-font-label;
+				font-size: 11px;
+				font-weight: 700;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				color: #1c1917;
+			}
+			ul {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			a {
+				font-size: 13px;
+				color: #57534e;
+				transition: color 0.15s $nv-ease;
+				&:hover {
+					color: $nv-primary;
+				}
+				&:focus-visible {
+					@include nv-focus;
+				}
+			}
+		}
+
+		.footer-bottom {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 28px 0 32px;
+			font-family: $nv-font-label;
+			font-size: 11px;
+			color: #78716c;
+			p {
+				font-family: $nv-font-mono;
+				letter-spacing: 0.04em;
+			}
+		}
+		.footer-legal {
+			display: flex;
+			gap: 24px;
+			a {
+				color: #78716c;
+				&:hover {
+					color: $nv-primary;
+				}
+			}
+		}
+	}
+}

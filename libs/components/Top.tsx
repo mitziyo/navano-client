@@ -1,41 +1,50 @@
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter, withRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { getJwtToken, logOut, updateUserInfo } from '../auth';
-import { Stack, Box } from '@mui/material';
+import { Stack } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
-import Button from '@mui/material/Button';
-import { alpha, styled } from '@mui/material/styles';
-import Menu, { MenuProps } from '@mui/material/Menu';
+import Menu from '@mui/material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import { CaretDown } from 'phosphor-react';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { Logout } from '@mui/icons-material';
 import useDeviceDetect from '../hooks/useDeviceDetect';
 import Link from 'next/link';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
-import { Logout } from '@mui/icons-material';
 import { REACT_APP_API_URL } from '../config';
 import NavanoLogo from './common/NavanoLogo';
 import { motion, MotionConfig } from 'framer-motion';
 
 const glassSpring = { type: 'spring' as const, stiffness: 380, damping: 32 };
 
+const LANGUAGES = [
+	{ code: 'en', label: 'English', short: 'EN' },
+	{ code: 'kr', label: 'Korean', short: 'KR' },
+	{ code: 'ru', label: 'Russian', short: 'RU' },
+];
+
+const menuPaperSx = {
+	mt: '8px',
+	'& .MuiPaper-root': {
+		minWidth: 168,
+		borderRadius: '12px',
+		border: '1px solid #fce7f3',
+		boxShadow: '0 10px 30px -5px rgba(225, 29, 72, 0.12)',
+	},
+};
+
 const Top = () => {
 	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
-	const { t, i18n } = useTranslation('common');
+	const { t } = useTranslation('common');
 	const router = useRouter();
-	const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
-	const [lang, setLang] = useState<string | null>('en');
-	const drop = Boolean(anchorEl2);
-	const [colorChange, setColorChange] = useState(false);
-	const [anchorEl, setAnchorEl] = React.useState<any | HTMLElement>(null);
-	let open = Boolean(anchorEl);
-	const [bgColor, setBgColor] = useState<boolean>(false);
-	const [logoutAnchor, setLogoutAnchor] = React.useState<null | HTMLElement>(null);
-	const logoutOpen = Boolean(logoutAnchor);
+	const [lang, setLang] = useState<string>('en');
+	const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
+	const [userAnchor, setUserAnchor] = useState<null | HTMLElement>(null);
+	const [scrolled, setScrolled] = useState(false);
 	const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
 	const navLinks = [
@@ -48,25 +57,13 @@ const Top = () => {
 	];
 
 	const isActiveLink = (match: string) => (match === '/' ? router.pathname === '/' : router.pathname.startsWith(match));
+	const currentLang = LANGUAGES.find((item) => item.code === lang) ?? LANGUAGES[0];
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		if (localStorage.getItem('locale') === null) {
-			localStorage.setItem('locale', 'en');
-			setLang('en');
-		} else {
-			setLang(localStorage.getItem('locale'));
-		}
-	}, [router]);
-
-	useEffect(() => {
-		switch (router.pathname) {
-			case '/product/detail':
-				setBgColor(true);
-				break;
-			default:
-				break;
-		}
+		const saved = localStorage.getItem('locale');
+		if (saved === null) localStorage.setItem('locale', 'en');
+		setLang(saved ?? 'en');
 	}, [router]);
 
 	useEffect(() => {
@@ -74,86 +71,21 @@ const Top = () => {
 		if (jwt) updateUserInfo(jwt);
 	}, []);
 
+	// One scroll listener for the lifetime of the navbar
+	useEffect(() => {
+		const onScroll = () => setScrolled(window.scrollY >= 50);
+		onScroll();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		return () => window.removeEventListener('scroll', onScroll);
+	}, []);
+
 	/** HANDLERS **/
-	const langClick = (e: any) => {
-		setAnchorEl2(e.currentTarget);
+	const langChoice = async (code: string) => {
+		setLang(code);
+		localStorage.setItem('locale', code);
+		setLangAnchor(null);
+		await router.push(router.asPath, router.asPath, { locale: code });
 	};
-
-	const langClose = () => {
-		setAnchorEl2(null);
-	};
-
-	const langChoice = useCallback(
-		async (e: any) => {
-			setLang(e.target.id);
-			localStorage.setItem('locale', e.target.id);
-			setAnchorEl2(null);
-			await router.push(router.asPath, router.asPath, { locale: e.target.id });
-		},
-		[router],
-	);
-
-	const changeNavbarColor = () => {
-		if (window.scrollY >= 50) {
-			setColorChange(true);
-		} else {
-			setColorChange(false);
-		}
-	};
-
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
-
-	const handleHover = (event: any) => {
-		if (anchorEl !== event.currentTarget) {
-			setAnchorEl(event.currentTarget);
-		} else {
-			setAnchorEl(null);
-		}
-	};
-
-	const StyledMenu = styled((props: MenuProps) => (
-		<Menu
-			elevation={0}
-			anchorOrigin={{
-				vertical: 'bottom',
-				horizontal: 'right',
-			}}
-			transformOrigin={{
-				vertical: 'top',
-				horizontal: 'right',
-			}}
-			{...props}
-		/>
-	))(({ theme }) => ({
-		'& .MuiPaper-root': {
-			top: '109px',
-			borderRadius: 6,
-			marginTop: theme.spacing(1),
-			minWidth: 160,
-			color: theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
-			boxShadow:
-				'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-			'& .MuiMenu-list': {
-				padding: '4px 0',
-			},
-			'& .MuiMenuItem-root': {
-				'& .MuiSvgIcon-root': {
-					fontSize: 18,
-					color: theme.palette.text.secondary,
-					marginRight: theme.spacing(1.5),
-				},
-				'&:active': {
-					backgroundColor: alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
-				},
-			},
-		},
-	}));
-
-	if (typeof window !== 'undefined') {
-		window.addEventListener('scroll', changeNavbarColor);
-	}
 
 	if (device == 'mobile') {
 		return (
@@ -175,151 +107,138 @@ const Top = () => {
 				</Link>
 			</Stack>
 		);
-	} else {
-		return (
-			<MotionConfig reducedMotion="user">
-				<Stack className={'navbar'}>
-					<Stack className={`navbar-main ${colorChange ? 'transparent' : ''} ${bgColor ? 'transparent' : ''}`}>
-						<motion.div
-							className={'container nav-glass'}
-							initial={{ y: -24, opacity: 0 }}
-							animate={{ y: 0, opacity: 1 }}
-							transition={glassSpring}
-						>
-							<Box component={'div'} className={'logo-box'}>
-								<Link href={'/'}>
-									<NavanoLogo width={128} height={52} />
-								</Link>
-							</Box>
-							<Box component={'div'} className={'router-box'} onMouseLeave={() => setHoveredLink(null)}>
-								{navLinks.map((link) => {
-									const active = isActiveLink(link.match);
-									return (
-										<Link href={link.href} key={link.href}>
-											<div
-												className={`nav-link ${active ? 'active' : ''}`}
-												onMouseEnter={() => setHoveredLink(link.href)}
-											>
-												{active && (
-													<motion.span layoutId="nav-glass-pill" className={'nav-pill'} transition={glassSpring} />
-												)}
-												{!active && hoveredLink === link.href && (
-													<motion.span
-														layoutId="nav-glass-hover"
-														className={'nav-hover'}
-														initial={{ opacity: 0 }}
-														animate={{ opacity: 1 }}
-														transition={glassSpring}
-													/>
-												)}
-												<span className={'nav-label'}>{link.label}</span>
-											</div>
-										</Link>
-									);
-								})}
-							</Box>
-							<Box component={'div'} className={'user-box'}>
-								{user?._id ? (
-									<>
-										<motion.div
-											className={'login-user'}
-											whileHover={{ scale: 1.06 }}
-											whileTap={{ scale: 0.95 }}
-											onClick={(event: any) => setLogoutAnchor(event.currentTarget)}
-										>
-											<img
-												src={
-													user?.memberImage
-														? `${REACT_APP_API_URL}/${user?.memberImage}`
-														: '/img/profile/defaultUser.svg'
-												}
-												alt=""
-											/>
-										</motion.div>
-
-										<Menu
-											id="basic-menu"
-											anchorEl={logoutAnchor}
-											open={logoutOpen}
-											onClose={() => {
-												setLogoutAnchor(null);
-											}}
-											sx={{ mt: '5px' }}
-										>
-											<MenuItem onClick={() => logOut()}>
-												<Logout fontSize="small" style={{ color: 'blue', marginRight: '10px' }} />
-												Logout
-											</MenuItem>
-										</Menu>
-									</>
-								) : (
-									<Link href={'/account/join'}>
-										<motion.div className={'join-box'} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-											<AccountCircleOutlinedIcon />
-											<span>
-												{t('Login')} / {t('Register')}
-											</span>
-										</motion.div>
-									</Link>
-								)}
-
-								<div className={'lan-box'}>
-									{user?._id && <NotificationsOutlinedIcon className={'notification-icon'} />}
-									<Button
-										disableRipple
-										className="btn-lang"
-										onClick={langClick}
-										endIcon={<CaretDown size={14} color="#616161" weight="fill" />}
-									>
-										<Box component={'div'} className={'flag'}>
-											{lang !== null ? (
-												<img src={`/img/flag/lang${lang}.png`} alt={'usaFlag'} />
-											) : (
-												<img src={`/img/flag/langen.png`} alt={'usaFlag'} />
-											)}
-										</Box>
-									</Button>
-
-									<StyledMenu anchorEl={anchorEl2} open={drop} onClose={langClose} sx={{ position: 'absolute' }}>
-										<MenuItem disableRipple onClick={langChoice} id="en">
-											<img
-												className="img-flag"
-												src={'/img/flag/langen.png'}
-												onClick={langChoice}
-												id="en"
-												alt={'usaFlag'}
-											/>
-											{t('English')}
-										</MenuItem>
-										<MenuItem disableRipple onClick={langChoice} id="kr">
-											<img
-												className="img-flag"
-												src={'/img/flag/langkr.png'}
-												onClick={langChoice}
-												id="uz"
-												alt={'koreanFlag'}
-											/>
-											{t('Korean')}
-										</MenuItem>
-										<MenuItem disableRipple onClick={langChoice} id="ru">
-											<img
-												className="img-flag"
-												src={'/img/flag/langru.png'}
-												onClick={langChoice}
-												id="ru"
-												alt={'russiaFlag'}
-											/>
-											{t('Russian')}
-										</MenuItem>
-									</StyledMenu>
-								</div>
-							</Box>
-						</motion.div>
-					</Stack>
-				</Stack>
-			</MotionConfig>
-		);
 	}
+
+	return (
+		<MotionConfig reducedMotion="user">
+			<header className={`navbar ${scrolled ? 'is-scrolled' : ''}`}>
+				<div className={'container navbar-inner'}>
+					<Link href={'/'} className={'brand'} aria-label={'Navano home'}>
+						<NavanoLogo variant={'mark'} width={40} height={40} />
+						<span className={'brand-text'}>
+							<strong>NAVANO</strong>
+							<small>{t('Flowers · Chocolates · Cakes')}</small>
+						</span>
+					</Link>
+
+					<nav className={'nav-pills'} aria-label={'Main'} onMouseLeave={() => setHoveredLink(null)}>
+						{navLinks.map((link) => {
+							const active = isActiveLink(link.match);
+							return (
+								<Link
+									href={link.href}
+									key={link.href}
+									className={`nav-link ${active ? 'active' : ''}`}
+									aria-current={active ? 'page' : undefined}
+									onMouseEnter={() => setHoveredLink(link.href)}
+								>
+									{active && <motion.span layoutId="nav-active-pill" className={'nav-pill'} transition={glassSpring} />}
+									{!active && hoveredLink === link.href && (
+										<motion.span
+											layoutId="nav-hover-pill"
+											className={'nav-hover'}
+											initial={{ opacity: 0 }}
+											animate={{ opacity: 1 }}
+											transition={glassSpring}
+										/>
+									)}
+									<span className={'nav-label'}>{link.label}</span>
+								</Link>
+							);
+						})}
+					</nav>
+
+					<div className={'nav-actions'}>
+						{user?._id && (
+							<button type="button" className={'icon-btn'} aria-label={t('Notifications')}>
+								<NotificationsOutlinedIcon />
+							</button>
+						)}
+
+						<button
+							type="button"
+							className={'lang-btn'}
+							aria-haspopup="menu"
+							aria-expanded={Boolean(langAnchor)}
+							onClick={(e) => setLangAnchor(e.currentTarget)}
+						>
+							<img src={`/img/flag/lang${currentLang.code}.png`} alt="" />
+							<span>{currentLang.short}</span>
+							<ExpandMoreIcon />
+						</button>
+						<Menu
+							anchorEl={langAnchor}
+							open={Boolean(langAnchor)}
+							onClose={() => setLangAnchor(null)}
+							anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+							transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+							sx={menuPaperSx}
+						>
+							{LANGUAGES.map((item) => (
+								<MenuItem
+									key={item.code}
+									selected={item.code === lang}
+									onClick={() => langChoice(item.code)}
+									className={'lang-option'}
+								>
+									<img className="img-flag" src={`/img/flag/lang${item.code}.png`} alt="" />
+									{t(item.label)}
+								</MenuItem>
+							))}
+						</Menu>
+
+						{user?._id ? (
+							<>
+								<button
+									type="button"
+									className={'avatar-btn'}
+									aria-label={t('Account menu')}
+									aria-haspopup="menu"
+									aria-expanded={Boolean(userAnchor)}
+									onClick={(e) => setUserAnchor(e.currentTarget)}
+								>
+									<img
+										src={user?.memberImage ? `${REACT_APP_API_URL}/${user.memberImage}` : '/img/profile/defaultUser.svg'}
+										alt=""
+									/>
+									<span className={'online-dot'} aria-hidden />
+								</button>
+								<Menu
+									anchorEl={userAnchor}
+									open={Boolean(userAnchor)}
+									onClose={() => setUserAnchor(null)}
+									anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+									transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+									sx={menuPaperSx}
+								>
+									<MenuItem
+										onClick={() => {
+											setUserAnchor(null);
+											router.push('/mypage');
+										}}
+									>
+										<PersonOutlineIcon fontSize="small" style={{ marginRight: 10, color: '#e11d48' }} />
+										{t('My Page')}
+									</MenuItem>
+									<MenuItem onClick={() => logOut()}>
+										<Logout fontSize="small" style={{ marginRight: 10, color: '#e11d48' }} />
+										{t('Logout')}
+									</MenuItem>
+								</Menu>
+							</>
+						) : (
+							<Link href={'/account/join'} className={'join-btn'}>
+								<AccountCircleOutlinedIcon />
+								<span>
+									{t('Login')} / {t('Register')}
+								</span>
+							</Link>
+						)}
+					</div>
+				</div>
+			</header>
+		</MotionConfig>
+	);
 };
 
 export default withRouter(Top);

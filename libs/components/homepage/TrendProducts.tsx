@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
+import Link from 'next/link';
 import { Stack, Box } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import WestIcon from '@mui/icons-material/West';
-import EastIcon from '@mui/icons-material/East';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination } from 'swiper';
+import { Autoplay } from 'swiper';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Product } from '../../types/product/product';
 import { ProductsInquiry } from '../../types/product/product.input';
 import TrendProductCard from './TrendProductCard';
+import SectionHeading from './SectionHeading';
+import { CardSkeletons, EmptyState } from './SectionState';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { LIKE_TARGET_PRODUCT } from '../../../apollo/user/mutation';
-import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { sweetMixinErrorAlert } from '../../sweetAlert';
 import { T } from '../../types/common';
 import { Message } from '../../enums/common.enum';
 
@@ -22,58 +25,42 @@ interface TrendProductsProps {
 const TrendProducts = (props: TrendProductsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
-	const [trendProducts, setTrendProducts] = useState<Product[]>([]);
+	const { t } = useTranslation('common');
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
 
-	const {
-		loading: getProductsLoading,
-		data: getProductsData,
-		error: getProductsError,
-		refetch: getProductsRefetch,
-	} = useQuery(GET_PRODUCTS, {
+	const { loading, data } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setTrendProducts(data?.getProducts?.list ?? []);
-		},
 	});
+	const trendProducts: Product[] = data?.getProducts?.list ?? [];
 
 	/** HANDLERS **/
+	// The mutation returns productLikes + meLiked, so Apollo updates the card in the cache
 	const likeProductHandler = async (user: T, id: string) => {
 		try {
 			if (!id) return;
 			if (!user._id) throw new Error(Message.NOT_AUTHENTICATED);
 
-			await likeTargetProduct({
-				variables: { input: id },
-			});
-
-			await getProductsRefetch({ input: initialInput });
-
-			await sweetTopSmallSuccessAlert('success', 800);
+			await likeTargetProduct({ variables: { input: id } });
 		} catch (err: any) {
 			console.log('ERROR, likeProductHandler:', err.message);
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
 
-	if (trendProducts) console.log('trendProducts: ', trendProducts);
-	if (!trendProducts) return null;
-
 	if (device === 'mobile') {
 		return (
 			<Stack className={'trend-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Trend Products</span>
+						<span>{t('Trend Products')}</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						{trendProducts.length === 0 ? (
 							<Box component={'div'} className={'empty-list'}>
-								Trends Empty
+								{t('No trending products yet')}
 							</Box>
 						) : (
 							<Swiper
@@ -83,62 +70,11 @@ const TrendProducts = (props: TrendProductsProps) => {
 								spaceBetween={15}
 								modules={[Autoplay]}
 							>
-								{trendProducts.map((product: Product) => {
-									return (
-										<SwiperSlide key={product._id} className={'trend-product-slide'}>
-											<TrendProductCard product={product} likeProductHandler={likeProductHandler} />
-										</SwiperSlide>
-									);
-								})}
-							</Swiper>
-						)}
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	} else {
-		return (
-			<Stack className={'trend-products'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<Box component={'div'} className={'left'}>
-							<span>Trend Products</span>
-							<p>Trend is based on likes</p>
-						</Box>
-						<Box component={'div'} className={'right'}>
-							<div className={'pagination-box'}>
-								<WestIcon className={'swiper-trend-prev'} />
-								<div className={'swiper-trend-pagination'}></div>
-								<EastIcon className={'swiper-trend-next'} />
-							</div>
-						</Box>
-					</Stack>
-					<Stack className={'card-box'}>
-						{trendProducts.length === 0 ? (
-							<Box component={'div'} className={'empty-list'}>
-								Trends Empty
-							</Box>
-						) : (
-							<Swiper
-								className={'trend-product-swiper'}
-								slidesPerView={'auto'}
-								spaceBetween={15}
-								modules={[Autoplay, Navigation, Pagination]}
-								navigation={{
-									nextEl: '.swiper-trend-next',
-									prevEl: '.swiper-trend-prev',
-								}}
-								pagination={{
-									el: '.swiper-trend-pagination',
-								}}
-							>
-								{trendProducts.map((product: Product) => {
-									return (
-										<SwiperSlide key={product._id} className={'trend-product-slide'}>
-											<TrendProductCard product={product} likeProductHandler={likeProductHandler} />
-										</SwiperSlide>
-									);
-								})}
+								{trendProducts.map((product: Product) => (
+									<SwiperSlide key={product._id} className={'trend-product-slide'}>
+										<TrendProductCard product={product} likeProductHandler={likeProductHandler} />
+									</SwiperSlide>
+								))}
 							</Swiper>
 						)}
 					</Stack>
@@ -146,12 +82,45 @@ const TrendProducts = (props: TrendProductsProps) => {
 			</Stack>
 		);
 	}
+
+	return (
+		<section className={'home-section trend-section'} aria-labelledby="trend-title">
+			<div className={'container'}>
+				<SectionHeading
+					id="trend-title"
+					eyebrow={t('#01 Most loved')}
+					title={t('Trend Products')}
+					subtitle={t('Trend is based on likes from our customers')}
+					action={
+						<Link
+							href={{ pathname: '/product', query: { input: JSON.stringify({ ...initialInput, limit: 9 }) } }}
+							className={'link-arrow'}
+						>
+							<span>{t('See all trends')}</span>
+							<ArrowForwardIcon />
+						</Link>
+					}
+				/>
+				{loading && trendProducts.length === 0 ? (
+					<CardSkeletons count={4} />
+				) : trendProducts.length === 0 ? (
+					<EmptyState title={t('No trending products yet')} />
+				) : (
+					<div className={'trend-grid'}>
+						{trendProducts.map((product: Product) => (
+							<TrendProductCard key={product._id} product={product} likeProductHandler={likeProductHandler} />
+						))}
+					</div>
+				)}
+			</div>
+		</section>
+	);
 };
 
 TrendProducts.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 8,
+		limit: 4,
 		sort: 'productLikes',
 		direction: 'DESC',
 		search: {},

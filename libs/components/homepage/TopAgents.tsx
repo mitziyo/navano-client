@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import { Stack, Box } from '@mui/material';
+import React from 'react';
+import Link from 'next/link';
+import { Stack } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import NorthEastIcon from '@mui/icons-material/NorthEast';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination } from 'swiper';
+import { Autoplay, Navigation } from 'swiper';
 import TopAgentCard from './TopAgentCard';
+import SectionHeading from './SectionHeading';
+import { CardSkeletons, EmptyState } from './SectionState';
 import { Member } from '../../types/member/member';
 import { AgentsInquiry } from '../../types/member/member.input';
 import { GET_AGENTS } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
-import { T } from '../../types/common';
 
 interface TopAgentsProps {
 	initialInput: AgentsInquiry;
@@ -19,32 +23,21 @@ interface TopAgentsProps {
 const TopAgents = (props: TopAgentsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
-	const router = useRouter();
-	const [topAgents, setTopAgents] = useState<Member[]>([]);
+	const { t } = useTranslation('common');
 
 	/** APOLLO REQUESTS **/
-	const {
-		loading: getAgentsLoading,
-		data: getAgentsData,
-		error: getAgentsError,
-		refetch: getAgentsRefetch,
-	} = useQuery(GET_AGENTS, {
+	const { loading, data } = useQuery(GET_AGENTS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setTopAgents(data?.getAgents?.list ?? []);
-		},
 	});
-
-	/** HANDLERS **/
+	const topAgents: Member[] = data?.getAgents?.list ?? [];
 
 	if (device === 'mobile') {
 		return (
 			<Stack className={'top-agents'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Top Stores</span>
+						<span>{t('Top Stores')}</span>
 					</Stack>
 					<Stack className={'wrapper'}>
 						<Swiper
@@ -54,72 +47,76 @@ const TopAgents = (props: TopAgentsProps) => {
 							spaceBetween={29}
 							modules={[Autoplay]}
 						>
-							{topAgents.map((agent: Member) => {
-								return (
-									<SwiperSlide className={'top-agents-slide'} key={agent?._id}>
-										<TopAgentCard agent={agent} key={agent?.memberNick} />
-									</SwiperSlide>
-								);
-							})}
+							{topAgents.map((agent: Member) => (
+								<SwiperSlide className={'top-agents-slide'} key={agent?._id}>
+									<TopAgentCard agent={agent} />
+								</SwiperSlide>
+							))}
 						</Swiper>
 					</Stack>
 				</Stack>
 			</Stack>
 		);
-	} else {
-		return (
-			<Stack className={'top-agents'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<Box component={'div'} className={'left'}>
-							<span>Top Stores</span>
-							<p>Our top stores are always ready to serve you</p>
-						</Box>
-						<Box component={'div'} className={'right'}>
-							<div className={'more-box'}>
-								<span>See All Stores</span>
-								<img src="/img/icons/rightup.svg" alt="" />
-							</div>
-						</Box>
-					</Stack>
-					<Stack className={'wrapper'}>
-						<Box component={'div'} className={'switch-btn swiper-agents-prev'}>
-							<ArrowBackIosNewIcon />
-						</Box>
-						<Box component={'div'} className={'card-wrapper'}>
-							<Swiper
-								className={'top-agents-swiper'}
-								slidesPerView={'auto'}
-								spaceBetween={29}
-								modules={[Autoplay, Navigation, Pagination]}
-								navigation={{
-									nextEl: '.swiper-agents-next',
-									prevEl: '.swiper-agents-prev',
-								}}
-							>
-								{topAgents.map((agent: Member) => {
-									return (
-										<SwiperSlide className={'top-agents-slide'} key={agent?._id}>
-											<TopAgentCard agent={agent} key={agent?.memberNick} />
-										</SwiperSlide>
-									);
-								})}
-							</Swiper>
-						</Box>
-						<Box component={'div'} className={'switch-btn swiper-agents-next'}>
-							<ArrowBackIosNewIcon />
-						</Box>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
 	}
+
+	const canSlide = topAgents.length > 4;
+
+	return (
+		<section className={'home-section stores-section'} aria-labelledby="stores-title">
+			<div className={'container'}>
+				<SectionHeading
+					id="stores-title"
+					eyebrow={t('#03 Trusted stores')}
+					title={t('Top Stores')}
+					subtitle={t('Our top florists, bakers and chocolatiers are always ready to serve you')}
+					action={
+						<div className={'heading-actions'}>
+							<Link href={'/agent'} className={'link-arrow'}>
+								<span>{t('See all stores')}</span>
+								<NorthEastIcon />
+							</Link>
+							{canSlide && (
+								<>
+									<button type="button" className={'round-btn swiper-stores-prev'} aria-label={t('Previous stores')}>
+										<ChevronLeftIcon />
+									</button>
+									<button type="button" className={'round-btn swiper-stores-next'} aria-label={t('Next stores')}>
+										<ChevronRightIcon />
+									</button>
+								</>
+							)}
+						</div>
+					}
+				/>
+				{loading && topAgents.length === 0 ? (
+					<CardSkeletons count={4} variant={'store'} />
+				) : topAgents.length === 0 ? (
+					<EmptyState title={t('No stores yet')} href={'/agent'} linkLabel={t('See all stores')} />
+				) : (
+					<Swiper
+						className={'stores-swiper'}
+						slidesPerView={4}
+						slidesPerGroup={4}
+						spaceBetween={24}
+						modules={[Navigation]}
+						navigation={{ nextEl: '.swiper-stores-next', prevEl: '.swiper-stores-prev' }}
+					>
+						{topAgents.map((agent: Member) => (
+							<SwiperSlide key={agent._id}>
+								<TopAgentCard agent={agent} />
+							</SwiperSlide>
+						))}
+					</Swiper>
+				)}
+			</div>
+		</section>
+	);
 };
 
 TopAgents.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 10,
+		limit: 8,
 		sort: 'memberRank',
 		direction: 'DESC',
 		search: {},

@@ -1,56 +1,49 @@
 import React from 'react';
 import Link from 'next/link';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Box } from '@mui/material';
-import Moment from 'react-moment';
+import moment from 'moment';
+import { useTranslation } from 'next-i18next';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { BoardArticle } from '../../types/board-article/board-article';
+import { REACT_APP_API_URL } from '../../config';
+import { toLabel } from './productLabels';
 
 interface CommunityCardProps {
-	vertical: boolean;
 	article: BoardArticle;
-	index: number;
 }
 
 const CommunityCard = (props: CommunityCardProps) => {
-	const { vertical, article, index } = props;
-	const device = useDeviceDetect();
-	const articleImage = article?.articleImage
-		? `${process.env.REACT_APP_API_URL}/${article?.articleImage}`
-		: '/img/event.svg';
+	const { article } = props;
+	const { t } = useTranslation('common');
+	const articleImage = article?.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '/img/event.svg';
 
-	if (device === 'mobile') {
-		return <div>COMMUNITY CARD (MOBILE)</div>;
-	} else {
-		if (vertical) {
-			return (
-				<Link href={`/community/detail?articleCategory=${article?.articleCategory}&id=${article?._id}`}>
-					<Box component={'div'} className={'vertical-card'}>
-						<div className={'community-img'} style={{ backgroundImage: `url(${articleImage})` }}>
-							<div>{index + 1}</div>
-						</div>
-						<strong>{article?.articleTitle}</strong>
-						<span>Free Board</span>
-					</Box>
-				</Link>
-			);
-		} else {
-			return (
-				<>
-					<Link href={`/community/detail?articleCategory=${article?.articleCategory}&id=${article?._id}`}>
-						<Box component={'div'} className="horizontal-card">
-							<img src={articleImage} alt="" />
-							<div>
-								<strong>{article.articleTitle}</strong>
-								<span>
-									<Moment format="DD.MM.YY">{article?.createdAt}</Moment>
-								</span>
-							</div>
-						</Box>
-					</Link>
-				</>
-			);
-		}
-	}
+	return (
+		<Link
+			href={`/community/detail?articleCategory=${article?.articleCategory}&id=${article?._id}`}
+			className={'community-row'}
+		>
+			<span className={'row-thumb'}>
+				<img src={articleImage} alt="" loading="lazy" />
+			</span>
+			<span className={'row-body'}>
+				<span className={'row-chip'}>{t(toLabel(article.articleCategory))}</span>
+				<strong className={'row-title'}>{article.articleTitle}</strong>
+				<span className={'row-meta'}>
+					<span>{moment(article.createdAt).format('YY.MM.DD')}</span>
+					<span aria-hidden>•</span>
+					<span>{article.memberData?.memberNick}</span>
+					<span className={'row-stats'}>
+						<VisibilityOutlinedIcon aria-hidden />
+						{article.articleViews}
+						<FavoriteBorderIcon aria-hidden />
+						{article.articleLikes}
+					</span>
+				</span>
+			</span>
+			<ArrowForwardIcon className={'row-arrow'} aria-hidden />
+		</Link>
+	);
 };
 
 export default CommunityCard;

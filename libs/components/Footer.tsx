@@ -1,3 +1,6 @@
+import React from 'react';
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TelegramIcon from '@mui/icons-material/Telegram';
@@ -6,9 +9,45 @@ import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Stack, Box } from '@mui/material';
 import moment from 'moment';
 import NavanoLogo from './common/NavanoLogo';
+import { ProductLocation, ProductType } from '../enums/product.enum';
+
+// Product search link with one filter preset, in the format /product reads from ?input=
+const productSearch = (search: Record<string, string[]>) => ({
+	pathname: '/product',
+	query: { input: JSON.stringify({ page: 1, limit: 9, sort: 'createdAt', direction: 'DESC', search }) },
+});
+
+const popularSearch = [
+	{ label: 'Flowers & Bouquets', href: productSearch({ typeList: [ProductType.FLOWER] }) },
+	{ label: 'Chocolates', href: productSearch({ typeList: [ProductType.CHOCOLATE] }) },
+	{ label: 'Celebration Cakes', href: productSearch({ typeList: [ProductType.CAKE] }) },
+];
+
+const quickLinks = [
+	{ label: 'All Products', href: '/product' },
+	{ label: 'Stores', href: '/agent' },
+	{ label: 'Community', href: '/community?articleCategory=FREE' },
+	{ label: 'Notices', href: '/cs?tab=notice' },
+	{ label: 'FAQs', href: '/cs?tab=faq' },
+];
+
+const discover = [ProductLocation.SEOUL, ProductLocation.BUSAN, ProductLocation.INCHEON, ProductLocation.JEJU].map(
+	(location) => ({
+		label: location.charAt(0) + location.slice(1).toLowerCase(),
+		href: productSearch({ locationList: [location] }),
+	}),
+);
+
+const socials = [
+	{ label: 'Facebook', icon: <FacebookOutlinedIcon /> },
+	{ label: 'Telegram', icon: <TelegramIcon /> },
+	{ label: 'Instagram', icon: <InstagramIcon /> },
+	{ label: 'Twitter', icon: <TwitterIcon /> },
+];
 
 const Footer = () => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 
 	if (device == 'mobile') {
 		return (
@@ -23,11 +62,6 @@ const Footer = () => {
 							<p>+82 10 4867 2909</p>
 						</Box>
 						<Box component={'div'} className={'footer-box'}>
-							<span>nee live</span>
-							<p>+82 10 4867 2909</p>
-							<span>Support?</span>
-						</Box>
-						<Box component={'div'} className={'footer-box'}>
 							<p>follow us on social media</p>
 							<div className={'media-box'}>
 								<FacebookOutlinedIcon />
@@ -37,104 +71,105 @@ const Footer = () => {
 							</div>
 						</Box>
 					</Stack>
-					<Stack className={'right'}>
-						<Box component={'div'} className={'bottom'}>
-							<div>
-								<strong>Popular Search</strong>
-								<span>Flowers &amp; Bouquets</span>
-								<span>Chocolates &amp; Cakes</span>
-							</div>
-							<div>
-								<strong>Quick Links</strong>
-								<span>Terms of Use</span>
-								<span>Privacy Policy</span>
-								<span>Pricing Plans</span>
-								<span>Our Services</span>
-								<span>Contact Support</span>
-								<span>FAQs</span>
-							</div>
-							<div>
-								<strong>Discover</strong>
-								<span>Seoul</span>
-								<span>Gyeongido</span>
-								<span>Busan</span>
-								<span>Jejudo</span>
-							</div>
-						</Box>
-					</Stack>
 				</Stack>
 				<Stack className={'second'}>
 					<span>© Navano - All rights reserved. Navano {moment().year()}</span>
-				</Stack>
-			</Stack>
-		);
-	} else {
-		return (
-			<Stack className={'footer-container'}>
-				<Stack className={'main'}>
-					<Stack className={'left'}>
-						<Box component={'div'} className={'footer-box'}>
-							<NavanoLogo className={'logo'} />
-						</Box>
-						<Box component={'div'} className={'footer-box'}>
-							<span>total free customer care</span>
-							<p>+82 10 4867 2909</p>
-						</Box>
-						<Box component={'div'} className={'footer-box'}>
-							<span>nee live</span>
-							<p>+82 10 4867 2909</p>
-							<span>Support?</span>
-						</Box>
-						<Box component={'div'} className={'footer-box'}>
-							<p>follow us on social media</p>
-							<div className={'media-box'}>
-								<FacebookOutlinedIcon />
-								<TelegramIcon />
-								<InstagramIcon />
-								<TwitterIcon />
-							</div>
-						</Box>
-					</Stack>
-					<Stack className={'right'}>
-						<Box component={'div'} className={'top'}>
-							<strong>keep yourself up to date</strong>
-							<div>
-								<input type="text" placeholder={'Your Email'} />
-								<span>Subscribe</span>
-							</div>
-						</Box>
-						<Box component={'div'} className={'bottom'}>
-							<div>
-								<strong>Popular Search</strong>
-								<span>Flowers &amp; Bouquets</span>
-								<span>Chocolates &amp; Cakes</span>
-							</div>
-							<div>
-								<strong>Quick Links</strong>
-								<span>Terms of Use</span>
-								<span>Privacy Policy</span>
-								<span>Pricing Plans</span>
-								<span>Our Services</span>
-								<span>Contact Support</span>
-								<span>FAQs</span>
-							</div>
-							<div>
-								<strong>Discover</strong>
-								<span>Seoul</span>
-								<span>Gyeongido</span>
-								<span>Busan</span>
-								<span>Jejudo</span>
-							</div>
-						</Box>
-					</Stack>
-				</Stack>
-				<Stack className={'second'}>
-					<span>© Navano - All rights reserved. Navano {moment().year()}</span>
-					<span>Privacy · Terms · Sitemap</span>
 				</Stack>
 			</Stack>
 		);
 	}
+
+	return (
+		<footer className={'site-footer'}>
+			<div className={'container'}>
+				<div className={'footer-top'}>
+					<div className={'footer-brand'}>
+						<Link href={'/'} className={'brand'} aria-label={'Navano home'}>
+							<NavanoLogo variant={'mark'} width={34} height={34} />
+							<strong>NAVANO</strong>
+						</Link>
+						<div className={'contact'}>
+							<span className={'contact-label'}>{t('Customer care')}</span>
+							<a href="tel:+821048672909" className={'contact-phone'}>
+								+82 10 4867 2909
+							</a>
+						</div>
+						<div className={'contact'}>
+							<span className={'contact-label'}>{t('Questions about an order?')}</span>
+							<Link href={'/cs?tab=faq'} className={'contact-link'}>
+								{t('Visit the help center')}
+							</Link>
+						</div>
+						<div className={'social'}>
+							<span className={'contact-label'}>{t('Follow us on social media')}</span>
+							<div className={'social-icons'}>
+								{socials.map((social) => (
+									<span key={social.label} className={'social-icon'} aria-label={social.label} role={'img'}>
+										{social.icon}
+									</span>
+								))}
+							</div>
+						</div>
+					</div>
+
+					<div className={'footer-right'}>
+						<div className={'newsletter'}>
+							<strong>{t('Keep yourself up to date')}</strong>
+							<p>{t('New bouquets, seasonal cakes and chocolate boxes from our stores, once a week')}</p>
+							<form className={'newsletter-form'} onSubmit={(e) => e.preventDefault()}>
+								<input type="email" placeholder={t('Your email address')} aria-label={t('Your email address')} />
+								<button type="submit">{t('Subscribe')}</button>
+							</form>
+						</div>
+
+						<div className={'footer-columns'}>
+							<div>
+								<h4>{t('Popular Search')}</h4>
+								<ul>
+									{popularSearch.map((item) => (
+										<li key={item.label}>
+											<Link href={item.href}>{t(item.label)}</Link>
+										</li>
+									))}
+								</ul>
+							</div>
+							<div>
+								<h4>{t('Quick Links')}</h4>
+								<ul>
+									{quickLinks.map((item) => (
+										<li key={item.label}>
+											<Link href={item.href}>{t(item.label)}</Link>
+										</li>
+									))}
+								</ul>
+							</div>
+							<div>
+								<h4>{t('Discover')}</h4>
+								<ul>
+									{discover.map((item) => (
+										<li key={item.label}>
+											<Link href={item.href}>{t(item.label)}</Link>
+										</li>
+									))}
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div className={'footer-bottom'}>
+					<p>
+						© {moment().year()} Navano. {t('All rights reserved')}
+					</p>
+					<div className={'footer-legal'}>
+						<Link href={'/cs?tab=notice'}>{t('Privacy')}</Link>
+						<Link href={'/cs?tab=notice'}>{t('Terms')}</Link>
+						<Link href={'/cs?tab=faq'}>{t('Help')}</Link>
+					</div>
+				</div>
+			</div>
+		</footer>
+	);
 };
 
 export default Footer;

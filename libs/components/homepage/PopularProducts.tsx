@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
-import { Stack, Box } from '@mui/material';
+import React from 'react';
+import Link from 'next/link';
+import { Stack } from '@mui/material';
+import { useTranslation } from 'next-i18next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Navigation, Pagination } from 'swiper';
-import WestIcon from '@mui/icons-material/West';
-import EastIcon from '@mui/icons-material/East';
+import { Autoplay } from 'swiper';
+import NorthEastIcon from '@mui/icons-material/NorthEast';
 import PopularProductCard from './PopularProductCard';
+import SectionHeading from './SectionHeading';
+import { CardSkeletons, EmptyState } from './SectionState';
 import { Product } from '../../types/product/product';
-import Link from 'next/link';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
-import { T } from '../../types/common';
 
 interface PopularProductsProps {
 	initialInput: ProductsInquiry;
@@ -20,34 +21,21 @@ interface PopularProductsProps {
 const PopularProducts = (props: PopularProductsProps) => {
 	const { initialInput } = props;
 	const device = useDeviceDetect();
-	const [popularProducts, setPopularProducts] = useState<Product[]>([]);
+	const { t } = useTranslation('common');
 
 	/** APOLLO REQUESTS **/
-
-	const {
-		loading: getProductsLoading,
-		data: getProductsData,
-		error: getProductsError,
-		refetch: getProductsRefetch,
-	} = useQuery(GET_PRODUCTS, {
+	const { loading, data } = useQuery(GET_PRODUCTS, {
 		fetchPolicy: 'cache-and-network',
 		variables: { input: initialInput },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setPopularProducts(data?.getProducts?.list ?? []);
-		},
 	});
-
-	/** HANDLERS **/
-
-	if (!popularProducts) return null;
+	const popularProducts: Product[] = data?.getProducts?.list ?? [];
 
 	if (device === 'mobile') {
 		return (
 			<Stack className={'popular-products'}>
 				<Stack className={'container'}>
 					<Stack className={'info-box'}>
-						<span>Popular products</span>
+						<span>{t('Popular Products')}</span>
 					</Stack>
 					<Stack className={'card-box'}>
 						<Swiper
@@ -57,74 +45,53 @@ const PopularProducts = (props: PopularProductsProps) => {
 							spaceBetween={25}
 							modules={[Autoplay]}
 						>
-							{popularProducts.map((product: Product) => {
-								return (
-									<SwiperSlide key={product._id} className={'popular-product-slide'}>
-										<PopularProductCard product={product} />
-									</SwiperSlide>
-								);
-							})}
+							{popularProducts.map((product: Product) => (
+								<SwiperSlide key={product._id} className={'popular-product-slide'}>
+									<PopularProductCard product={product} />
+								</SwiperSlide>
+							))}
 						</Swiper>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	} else {
-		return (
-			<Stack className={'popular-products'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<Box component={'div'} className={'left'}>
-							<span>Popular products</span>
-							<p>Popularity is based on views</p>
-						</Box>
-						<Box component={'div'} className={'right'}>
-							<div className={'more-box'}>
-								<Link href={'/product'}>
-									<span>See All Categories</span>
-								</Link>
-								<img src="/img/icons/rightup.svg" alt="" />
-							</div>
-						</Box>
-					</Stack>
-					<Stack className={'card-box'}>
-						<Swiper
-							className={'popular-product-swiper'}
-							slidesPerView={'auto'}
-							spaceBetween={25}
-							modules={[Autoplay, Navigation, Pagination]}
-							navigation={{
-								nextEl: '.swiper-popular-next',
-								prevEl: '.swiper-popular-prev',
-							}}
-							pagination={{
-								el: '.swiper-popular-pagination',
-							}}
-						>
-							{popularProducts.map((product: Product) => {
-								return (
-									<SwiperSlide key={product._id} className={'popular-product-slide'}>
-										<PopularProductCard product={product} />
-									</SwiperSlide>
-								);
-							})}
-						</Swiper>
-					</Stack>
-					<Stack className={'pagination-box'}>
-						<WestIcon className={'swiper-popular-prev'} />
-						<div className={'swiper-popular-pagination'}></div>
-						<EastIcon className={'swiper-popular-next'} />
 					</Stack>
 				</Stack>
 			</Stack>
 		);
 	}
+
+	return (
+		<section className={'home-section popular-section tinted'} aria-labelledby="popular-title">
+			<div className={'container'}>
+				<SectionHeading
+					id="popular-title"
+					eyebrow={t('#02 Most viewed')}
+					title={t('Popular Products')}
+					subtitle={t('Popularity is based on how often customers view a product')}
+					action={
+						<Link href={'/product'} className={'link-arrow'}>
+							<span>{t('See all categories')}</span>
+							<NorthEastIcon />
+						</Link>
+					}
+				/>
+				{loading && popularProducts.length === 0 ? (
+					<CardSkeletons count={3} />
+				) : popularProducts.length === 0 ? (
+					<EmptyState title={t('No popular products yet')} />
+				) : (
+					<div className={'popular-grid'}>
+						{popularProducts.map((product: Product) => (
+							<PopularProductCard key={product._id} product={product} />
+						))}
+					</div>
+				)}
+			</div>
+		</section>
+	);
 };
 
 PopularProducts.defaultProps = {
 	initialInput: {
 		page: 1,
-		limit: 7,
+		limit: 3,
 		sort: 'productViews',
 		direction: 'DESC',
 		search: {},

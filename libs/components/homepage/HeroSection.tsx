@@ -1,73 +1,81 @@
-import React from 'react';
-import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
+import { useReducedMotion } from 'framer-motion';
 import HeaderFilter from './HeaderFilter';
 
-// One orchestrated entrance, done in CSS (.hero-rise) so the copy is visible from the first paint, before hydration
-const rise = (step: number) => ({ className: 'hero-rise', style: { '--step': step } as React.CSSProperties });
+const SLIDE_INTERVAL = 6000;
 
-const HeroArt = () => (
-	<div className={'hero-art'} aria-hidden>
-		<span className={'arch'} />
-		<span className={'sun'} />
-		<span className={'stem'} />
-		<span className={'petal p1'} />
-		<span className={'petal p2'} />
-		<span className={'petal p3'} />
-		<span className={'petal p4'} />
-		<span className={'petal p5'} />
-		<span className={'leaf l1'} />
-		<span className={'leaf l2'} />
-	</div>
-);
+// One photo per category; the copy stays the same across slides
+const slides = [
+	{ src: '/img/fiber/img4.jpg', alt: 'Celebration cake with red berries' },
+	{ src: '/img/fiber/img1.jpg', alt: 'Bouquet of pink roses' },
+	{ src: '/img/fiber/img3.jpg', alt: 'Handmade chocolates in a gift box' },
+];
+
+const pad = (n: number) => String(n).padStart(2, '0');
 
 const HeroSection = () => {
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
+	const reduceMotion = useReducedMotion();
+	const [active, setActive] = useState(0);
 
-	const facts = [t('Flowers, chocolates and cakes'), t('Delivery in 9 cities'), t('Independent local stores')];
+	/** LIFECYCLES **/
+	useEffect(() => {
+		if (reduceMotion) return;
+		const timer = setInterval(() => setActive((prev) => (prev + 1) % slides.length), SLIDE_INTERVAL);
+		return () => clearInterval(timer);
+	}, [reduceMotion, active]);
 
 	return (
-		<section className={`header-main hero ${device === 'mobile' ? 'hero--compact' : ''}`} aria-labelledby="hero-title">
-			<div className={'hero-grain'} aria-hidden />
+		<section className={'home-hero'} aria-labelledby="hero-title">
 			<div className={'container'}>
-				<div className={'hero-copy'}>
-					<p {...rise(0)} className={'hero-eyebrow hero-rise'}>
-						{t('For birthdays, weddings, anniversaries and holidays')}
-					</p>
-					<h1 id="hero-title" {...rise(1)}>
-						{t('Gifts from local florists, chocolatiers and bakers')}
-					</h1>
-					<p {...rise(2)} className={'hero-lede hero-rise'}>
-						{t(
-							'Fresh bouquets, handmade chocolate and celebration cakes from independent stores. Choose the occasion and find something they will remember.',
-						)}
-					</p>
-					<div {...rise(3)} className={'hero-actions hero-rise'}>
-						<Link href={'/product'} className={'btn-primary'}>
-							{t('Shop now')}
-						</Link>
-						{device !== 'mobile' && (
-							<Link href={'/agent'} className={'btn-secondary'}>
-								{t('Browse stores')}
-							</Link>
-						)}
+				<div className={'hero-card'}>
+					{slides.map((slide, index) => (
+						<img
+							key={slide.src}
+							src={slide.src}
+							alt={index === active ? t(slide.alt) : ''}
+							aria-hidden={index !== active}
+							className={`hero-slide ${index === active ? 'is-active' : ''}`}
+							loading={index === 0 ? 'eager' : 'lazy'}
+						/>
+					))}
+					<div className={'hero-shade'} aria-hidden />
+
+					<div className={'hero-copy'}>
+						<span className={'hero-badge'}>
+							<span className={'pulse'} aria-hidden />
+							{t('Handmade by local stores')}
+						</span>
+						<h1 id="hero-title">{t('Flowers, cakes & chocolates for every occasion')}</h1>
+						<p>
+							{t(
+								'Fresh bouquets, celebration cakes and handmade chocolates from independent florists, bakers and chocolatiers near you',
+							)}
+						</p>
 					</div>
-					<ul {...rise(4)} className={'hero-facts hero-rise'}>
-						{facts.map((fact) => (
-							<li key={fact}>{fact}</li>
+
+					<div className={'hero-dots'} role={'tablist'} aria-label={t('Hero images')}>
+						{slides.map((slide, index) => (
+							<button
+								key={slide.src}
+								type="button"
+								role={'tab'}
+								aria-selected={index === active}
+								aria-label={`${index + 1} / ${slides.length}`}
+								className={index === active ? 'is-active' : ''}
+								onClick={() => setActive(index)}
+							/>
 						))}
-					</ul>
+						<span className={'hero-count'}>
+							{pad(active + 1)} / {pad(slides.length)}
+						</span>
+					</div>
 				</div>
 
-				{device !== 'mobile' && <HeroArt />}
-
-				{device !== 'mobile' && (
-					<div {...rise(5)} className={'hero-search hero-rise'}>
-						<HeaderFilter />
-					</div>
-				)}
+				<div className={'hero-search'}>
+					<HeaderFilter />
+				</div>
 			</div>
 		</section>
 	);

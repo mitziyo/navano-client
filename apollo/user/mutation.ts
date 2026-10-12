@@ -193,6 +193,11 @@ export const LIKE_TARGET_PRODUCT = gql`
 			deletedAt
 			createdAt
 			updatedAt
+			meLiked {
+				memberId
+				likeRefId
+				myFavorite
+			}
 		}
 	}
 `;

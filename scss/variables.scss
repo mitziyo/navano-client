@@ -24,3 +24,43 @@ $coral: #eb6753;
 		background: $fallback;
 	}
 }
+
+/** NAVANO ROSE tokens (Stitch rose design): navbar, footer, homepage and My Page **/
+$nv-primary: #e11d48;
+$nv-primary-hover: #be123c;
+$nv-primary-light: #fff1f2;
+$nv-pink: #db2777;
+$nv-canvas: #fff7f9;
+$nv-surface: #ffffff;
+$nv-surface-muted: #fffbfa;
+$nv-surface-tint: #fffafb;
+$nv-line: #fbcfe8;
+$nv-line-soft: #fce7f3;
+$nv-ink: #1f1318;
+$nv-muted: #6b5b63;
+$nv-label: #836773;
+$nv-subtle: #9c8a93;
+$nv-font-head: 'Space Grotesk', $font;
+$nv-font-body: 'Manrope', $font;
+$nv-font-label: 'Geist', $font;
+$nv-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+$nv-radius-card: 16px;
+$nv-radius-control: 8px;
+$nv-glow: 0 10px 30px -5px rgba(225, 29, 72, 0.08), 0 4px 12px -2px rgba(244, 114, 182, 0.06);
+$nv-shadow-sm: 0 1px 2px rgba(76, 5, 25, 0.05);
+$nv-gradient: linear-gradient(90deg, #e11d48 0%, #f43f5e 50%, #db2777 100%);
+$nv-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+@mixin nv-focus {
+	outline: 2px solid rgba(225, 29, 72, 0.55);
+	outline-offset: 2px;
+}
+
+@mixin nv-label {
+	font-family: $nv-font-label;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: $nv-label;
+}
