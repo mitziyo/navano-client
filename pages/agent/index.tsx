@@ -161,6 +161,9 @@ const AgentList: NextPage = () => {
 		<div id="store-list-page">
 			<div className="container">
 				<section className={'store-hero'}>
+					<div className={'store-hero-media'} aria-hidden>
+						<img src={'/img/banner/stores-hero.jpg'} alt="" />
+					</div>
 					<div className={'store-hero-copy'}>
 						<nav className={'breadcrumb'} aria-label={'breadcrumb'}>
 							<Link href={'/'}>{t('Home')}</Link>
@@ -224,9 +227,6 @@ const AgentList: NextPage = () => {
 						<footer>
 							<span>{t('Updated from live store data')}</span>
 						</footer>
-						<span className={'network-watermark'} aria-hidden>
-							NAVANO
-						</span>
 					</aside>
 				</section>
 
