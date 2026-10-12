@@ -8,14 +8,14 @@
 			right: 0;
 			z-index: 99;
 			height: 80px;
-			background: rgba(255, 255, 255, 0.96);
+			background: var(--nv-glass);
 			-webkit-backdrop-filter: blur(14px);
 			backdrop-filter: blur(14px);
-			border-bottom: 1px solid rgba(252, 231, 243, 0.8);
+			border-bottom: 1px solid var(--nv-line-soft);
 			box-shadow: 0 4px 6px -1px rgba(136, 19, 55, 0.03);
 			transition: background-color 0.25s $nv-ease, box-shadow 0.25s $nv-ease;
 			&.is-scrolled {
-				background: rgba(255, 255, 255, 0.98);
+				background: var(--nv-glass);
 				box-shadow: 0 10px 30px -10px rgba(136, 19, 55, 0.12);
 			}
 		}
@@ -52,7 +52,7 @@
 					font-size: 22px;
 					font-weight: 600;
 					letter-spacing: 0.08em;
-					color: #1c1917;
+					color: var(--nv-ink);
 				}
 				small {
 					margin-top: 4px;
@@ -72,8 +72,8 @@
 			gap: 4px;
 			padding: 6px 12px;
 			border-radius: 999px;
-			border: 1px solid #ffe4e6;
-			background: rgba(255, 255, 255, 0.95);
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-glass);
 			box-shadow: $nv-shadow-sm;
 			.nav-link {
 				position: relative;
@@ -85,7 +85,7 @@
 				font-size: 12px;
 				font-weight: 600;
 				letter-spacing: 0.04em;
-				color: #57534e;
+				color: var(--nv-text);
 				transition: color 0.15s $nv-ease;
 				.nav-label {
 					position: relative;
@@ -99,11 +99,11 @@
 				}
 				.nav-pill {
 					background: $nv-primary-light;
-					border: 1px solid rgba(254, 205, 211, 0.8);
+					border: 1px solid var(--nv-line-accent);
 					box-shadow: $nv-shadow-sm;
 				}
 				.nav-hover {
-					background: rgba(255, 241, 242, 0.7);
+					background: var(--nv-primary-light);
 				}
 				&:hover {
 					color: $nv-primary;
@@ -132,14 +132,14 @@
 			gap: 6px;
 			height: 40px;
 			border-radius: 12px;
-			border: 1px solid #ffe4e6;
-			background: #fff;
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-surface);
 			box-shadow: $nv-shadow-sm;
-			color: #57534e;
+			color: var(--nv-text);
 			cursor: pointer;
 			transition: border-color 0.2s $nv-ease, color 0.2s $nv-ease;
 			&:hover {
-				border-color: #fda4af;
+				border-color: var(--nv-line-strong);
 				color: $nv-primary;
 			}
 			&:focus-visible {
@@ -184,7 +184,7 @@
 			border-radius: 50%;
 			border: 0;
 			background: $nv-primary-light;
-			box-shadow: 0 0 0 2px rgba(251, 113, 133, 0.5);
+			box-shadow: 0 0 0 2px var(--nv-line-strong);
 			cursor: pointer;
 			transition: transform 0.2s $nv-ease;
 			img {
@@ -200,8 +200,8 @@
 				width: 12px;
 				height: 12px;
 				border-radius: 50%;
-				border: 2px solid #fff;
-				background: #f43f5e;
+				border: 2px solid var(--nv-surface);
+				background: var(--nv-primary-strong);
 			}
 			&:hover {
 				transform: scale(1.05);
@@ -222,5 +222,13 @@
 		height: 14px;
 		border-radius: 2px;
 		object-fit: cover;
+	}
+}
+
+/* Dark theme: blue logo mark, as in the dark design */
+[data-theme='dark'] #pc-wrap .brand .mark {
+	.badge,
+	.heart {
+		fill: #4c8eff;
 	}
 }

@@ -30,14 +30,14 @@
 		.mp-btn-primary {
 			border: 0;
 			background: $nv-gradient;
-			color: #fff;
-			box-shadow: 0 8px 20px -6px rgba(225, 29, 72, 0.45);
+			color: var(--nv-on-primary);
+			box-shadow: var(--nv-btn-shadow);
 			&:hover {
 				filter: brightness(1.05);
 			}
 			&:disabled {
-				background: #f4c5d0;
-				color: #fff;
+				background: var(--nv-disabled);
+				color: var(--nv-subtle);
 				box-shadow: none;
 				filter: none;
 				cursor: not-allowed;
@@ -52,7 +52,7 @@
 				color: $nv-label;
 			}
 			&:hover {
-				background: rgba(255, 241, 242, 0.7);
+				background: var(--nv-primary-light);
 			}
 		}
 		.mp-btn-text {
@@ -89,7 +89,7 @@
 					margin-bottom: 4px;
 					@include nv-label;
 					.sep {
-						color: #fda4af;
+						color: var(--nv-line-strong);
 					}
 					.current {
 						color: $nv-primary;
@@ -130,8 +130,7 @@
 					height: 176px;
 					overflow: hidden;
 					border-bottom: 1px solid $nv-line;
-					background: radial-gradient(ellipse at top, rgba(244, 114, 182, 0.3), transparent 70%),
-						linear-gradient(90deg, #ffe4e9 0%, #fed7e2 50%, #fff1f2 100%);
+					background: var(--nv-cover);
 					.hero-watermark {
 						position: absolute;
 						right: 24px;
@@ -141,7 +140,7 @@
 						font-weight: 700;
 						line-height: 1;
 						letter-spacing: -0.05em;
-						color: rgba(136, 19, 55, 0.15);
+						color: var(--nv-watermark);
 						user-select: none;
 					}
 					.cover-pill {
@@ -154,7 +153,7 @@
 						padding: 5px 12px;
 						border-radius: 999px;
 						border: 1px solid $nv-line;
-						background: rgba(255, 255, 255, 0.9);
+						background: var(--nv-glass);
 						-webkit-backdrop-filter: blur(12px);
 						backdrop-filter: blur(12px);
 						box-shadow: $nv-shadow-sm;
@@ -173,7 +172,7 @@
 							width: 8px;
 							height: 8px;
 							border-radius: 50%;
-							background: #f43f5e;
+							background: var(--nv-primary-strong);
 							animation: mp-pulse 2s $nv-ease infinite;
 							&.off {
 								background: $nv-subtle;
@@ -208,8 +207,8 @@
 							padding: 4px;
 							border-radius: 16px;
 							background: $nv-surface;
-							border: 2px solid #fda4af;
-							box-shadow: 0 20px 25px -5px rgba(76, 5, 25, 0.12), 0 8px 10px -6px rgba(76, 5, 25, 0.1);
+							border: 2px solid var(--nv-line-strong);
+							box-shadow: var(--nv-shadow-lg);
 							img {
 								width: 100%;
 								height: 100%;
@@ -223,8 +222,8 @@
 								width: 14px;
 								height: 14px;
 								border-radius: 50%;
-								background: #f43f5e;
-								border: 2px solid #fff;
+								background: var(--nv-primary-strong);
+								border: 2px solid var(--nv-surface);
 							}
 						}
 						.avatar-overlay {
@@ -237,8 +236,8 @@
 							gap: 2px;
 							padding: 8px;
 							border-radius: 16px;
-							border: 2px solid #fb7185;
-							background: rgba(255, 255, 255, 0.85);
+							border: 2px solid var(--nv-primary-soft);
+							background: var(--nv-glass);
 							-webkit-backdrop-filter: blur(4px);
 							backdrop-filter: blur(4px);
 							text-align: center;
@@ -294,8 +293,8 @@
 						}
 						.role-badge {
 							background: $nv-primary-light;
-							border: 1px solid #fda4af;
-							color: #be123c;
+							border: 1px solid var(--nv-line-strong);
+							color: var(--nv-primary-deep);
 							text-transform: uppercase;
 							letter-spacing: 0.04em;
 							svg {
@@ -304,8 +303,8 @@
 							}
 						}
 						.ref-chip {
-							background: #f8fafc;
-							border: 1px solid #e2e8f0;
+							background: var(--nv-neutral-chip);
+							border: 1px solid var(--nv-neutral-line);
 							font-family: $nv-font-mono;
 							color: $nv-muted;
 						}
@@ -325,7 +324,7 @@
 						}
 						svg {
 							font-size: 15px;
-							color: #f43f5e;
+							color: var(--nv-primary-strong);
 						}
 						.strong {
 							font-weight: 600;
@@ -335,7 +334,7 @@
 							color: $nv-label;
 						}
 						.dot {
-							color: #fda4af;
+							color: var(--nv-line-strong);
 						}
 					}
 					.hero-actions {
@@ -427,7 +426,7 @@
 						flex-shrink: 0;
 						padding: 2px 8px;
 						border-radius: 4px;
-						border: 1px solid #fecdd3;
+						border: 1px solid var(--nv-line-accent);
 						background: $nv-primary-light;
 						font-family: $nv-font-mono;
 						font-size: 10px;
@@ -459,11 +458,11 @@
 						width: 10px;
 						height: 10px;
 						border-radius: 50%;
-						background: #f43f5e;
-						box-shadow: 0 0 0 4px #ffe4e6;
+						background: var(--nv-primary-strong);
+						box-shadow: 0 0 0 4px var(--nv-primary-ring);
 						&.off {
 							background: $nv-subtle;
-							box-shadow: 0 0 0 4px #f1f5f9;
+							box-shadow: 0 0 0 4px var(--nv-neutral-fill);
 						}
 					}
 				}
@@ -517,11 +516,11 @@
 					box-shadow: $nv-shadow-sm;
 					transition: border-color 0.15s $nv-ease, box-shadow 0.15s $nv-ease;
 					&:focus-within {
-						border-color: #fb7185;
-						box-shadow: 0 0 0 3px #fecdd3;
+						border-color: var(--nv-primary-soft);
+						box-shadow: 0 0 0 3px var(--nv-primary-ring);
 					}
 					&.readonly {
-						background: #fdf2f4;
+						background: var(--nv-surface-sunken);
 						input {
 							color: $nv-muted;
 							cursor: default;
@@ -534,7 +533,7 @@
 						padding: 0 12px;
 						border-right: 1px solid $nv-line;
 						border-radius: $nv-radius-control 0 0 $nv-radius-control;
-						background: rgba(255, 241, 242, 0.7);
+						background: var(--nv-primary-light);
 						font-family: $nv-font-mono;
 						font-size: 12px;
 						font-weight: 700;
@@ -546,7 +545,7 @@
 					.suffix-icon {
 						margin-right: 12px;
 						font-size: 18px;
-						color: #f43f5e;
+						color: var(--nv-primary-strong);
 					}
 				}
 				input,
@@ -584,8 +583,8 @@
 					box-shadow: $nv-shadow-sm;
 					transition: border-color 0.15s $nv-ease, box-shadow 0.15s $nv-ease;
 					&:focus {
-						border-color: #fb7185;
-						box-shadow: 0 0 0 3px #fecdd3;
+						border-color: var(--nv-primary-soft);
+						box-shadow: 0 0 0 3px var(--nv-primary-ring);
 					}
 				}
 			}
@@ -599,15 +598,15 @@
 				width: 36px;
 				height: 36px;
 				border-radius: 8px;
-				border: 1px solid #fecdd3;
+				border: 1px solid var(--nv-line-accent);
 				background: $nv-primary-light;
 				color: $nv-ink;
 				svg {
 					font-size: 18px;
 				}
 				&.accent {
-					border-color: #fda4af;
-					background: rgba(255, 228, 230, 0.7);
+					border-color: var(--nv-line-strong);
+					background: var(--nv-primary-tint);
 					color: $nv-primary;
 				}
 			}
@@ -624,14 +623,14 @@
 					padding: 14px;
 					border-radius: 12px;
 					border: 1px solid $nv-line;
-					background: linear-gradient(180deg, $nv-surface-muted, #fff);
+					background: linear-gradient(180deg, $nv-surface-muted, var(--nv-surface));
 					box-shadow: $nv-shadow-sm;
 					transition: border-color 0.2s $nv-ease, transform 0.2s $nv-ease;
 					&:nth-child(2) .icon-slot {
 						color: $nv-primary;
 					}
 					&:hover {
-						border-color: #fb7185;
+						border-color: var(--nv-primary-soft);
 						transform: translateY(-2px);
 					}
 					&:focus-visible {
@@ -662,8 +661,8 @@
 						width: 10px;
 						height: 10px;
 						border-radius: 50%;
-						background: #f43f5e;
-						box-shadow: 0 0 0 4px #ffe4e6;
+						background: var(--nv-primary-strong);
+						box-shadow: 0 0 0 4px var(--nv-primary-ring);
 					}
 				}
 			}
@@ -677,7 +676,7 @@
 				padding: 16px;
 				border-radius: $nv-radius-card;
 				border: 1px solid $nv-line;
-				background: linear-gradient(90deg, rgba(255, 241, 242, 0.7), #fff, rgba(255, 241, 242, 0.5));
+				background: linear-gradient(90deg, var(--nv-primary-light), var(--nv-surface), var(--nv-primary-light));
 				box-shadow: $nv-shadow-sm;
 				.save-note {
 					flex-direction: row;
@@ -693,7 +692,7 @@
 						width: 32px;
 						height: 32px;
 						border-radius: 50%;
-						background: #ffe4e6;
+						background: var(--nv-primary-tint);
 						color: $nv-primary;
 						svg {
 							font-size: 18px;
@@ -722,7 +721,7 @@
 				padding: 14px;
 				border-radius: 12px;
 				border: 1px solid $nv-line;
-				background: linear-gradient(180deg, $nv-surface-muted, #fff);
+				background: linear-gradient(180deg, $nv-surface-muted, var(--nv-surface));
 				box-shadow: $nv-shadow-sm;
 				.icon-slot {
 					margin-top: 2px;
@@ -749,14 +748,14 @@
 				.item-badge {
 					padding: 1px 6px;
 					border-radius: 4px;
-					background: #f1f5f9;
+					background: var(--nv-neutral-fill);
 					font-family: $nv-font-mono;
 					font-size: 10px;
 					font-weight: 700;
 					text-transform: uppercase;
 					color: $nv-label;
 					&.accent {
-						border: 1px solid #fecdd3;
+						border: 1px solid var(--nv-line-accent);
 						background: $nv-primary-light;
 						color: $nv-primary;
 					}
@@ -791,11 +790,11 @@
 				}
 				svg {
 					font-size: 17px;
-					color: #f43f5e;
+					color: var(--nv-primary-strong);
 				}
 				> svg {
 					font-size: 16px;
-					color: #fb7185;
+					color: var(--nv-primary-soft);
 					transition: transform 0.2s $nv-ease;
 				}
 				&:hover {
@@ -820,8 +819,8 @@
 				box-shadow: $nv-shadow-sm;
 				transition: border-color 0.2s $nv-ease, background-color 0.2s $nv-ease;
 				&.featured {
-					border-color: #fecdd3;
-					background: linear-gradient(180deg, rgba(255, 241, 242, 0.6), #fff);
+					border-color: var(--nv-line-accent);
+					background: linear-gradient(180deg, var(--nv-primary-light), var(--nv-surface));
 				}
 				.item-title {
 					font-family: $nv-font-head;
@@ -839,11 +838,11 @@
 					top: 50%;
 					transform: translateY(-50%);
 					font-size: 16px;
-					color: #fb7185;
+					color: var(--nv-primary-soft);
 					transition: transform 0.2s $nv-ease;
 				}
 				&:hover {
-					border-color: #fb7185;
+					border-color: var(--nv-primary-soft);
 					> svg {
 						transform: translate(3px, -50%);
 					}
@@ -859,7 +858,7 @@
 				padding: 16px;
 				border-radius: $nv-radius-card;
 				border: 1px solid $nv-line;
-				background: linear-gradient(90deg, rgba(255, 241, 242, 0.5), #fff);
+				background: linear-gradient(90deg, var(--nv-primary-light), var(--nv-surface));
 				box-shadow: $nv-shadow-sm;
 				.seal-icon {
 					display: inline-flex;
@@ -869,8 +868,8 @@
 					width: 40px;
 					height: 40px;
 					border-radius: 50%;
-					border: 1px solid #fecdd3;
-					background: #ffe4e6;
+					border: 1px solid var(--nv-line-accent);
+					background: var(--nv-primary-tint);
 					color: $nv-primary;
 					svg {
 						font-size: 20px;

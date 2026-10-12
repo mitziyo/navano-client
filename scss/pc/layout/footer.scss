@@ -7,9 +7,9 @@
 
 	.site-footer {
 		width: 100%;
-		background: #fff;
-		border-top: 1px solid #ffe4e6;
-		color: #57534e;
+		background: var(--nv-surface);
+		border-top: 1px solid var(--nv-line-soft);
+		color: var(--nv-text);
 		font-family: $nv-font-body;
 
 		> .container {
@@ -21,7 +21,7 @@
 			grid-template-columns: 5fr 7fr;
 			gap: 40px;
 			padding: 48px 0;
-			border-bottom: 1px solid #ffe4e6;
+			border-bottom: 1px solid var(--nv-line-soft);
 		}
 
 		.footer-brand {
@@ -37,7 +37,7 @@
 					font-size: 22px;
 					font-weight: 600;
 					letter-spacing: 0.18em;
-					color: #1c1917;
+					color: var(--nv-ink);
 				}
 			}
 		}
@@ -51,13 +51,13 @@
 			font-family: $nv-font-label;
 			font-size: 11px;
 			font-weight: 600;
-			color: #78716c;
+			color: var(--nv-muted);
 		}
 		.contact-phone {
 			font-family: $nv-font-mono;
 			font-size: 18px;
 			font-weight: 700;
-			color: #1c1917;
+			color: var(--nv-ink);
 			transition: color 0.2s $nv-ease;
 			&:hover {
 				color: $nv-primary;
@@ -94,9 +94,9 @@
 			width: 36px;
 			height: 36px;
 			border-radius: 12px;
-			border: 1px solid #fecdd3;
+			border: 1px solid var(--nv-line-accent);
 			background: $nv-primary-light;
-			color: #be123c;
+			color: var(--nv-primary-deep);
 			svg {
 				font-size: 18px;
 			}
@@ -111,20 +111,20 @@
 		.newsletter {
 			padding: 20px;
 			border-radius: 16px;
-			border: 1px solid #ffe4e6;
-			background: rgba(255, 241, 242, 0.6);
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-primary-light);
 			box-shadow: $nv-shadow-sm;
 			strong {
 				display: block;
 				font-family: $nv-font-head;
 				font-size: 18px;
 				font-weight: 600;
-				color: #1c1917;
+				color: var(--nv-ink);
 			}
 			p {
 				margin: 4px 0 16px;
 				font-size: 13px;
-				color: #57534e;
+				color: var(--nv-text);
 			}
 		}
 		.newsletter-form {
@@ -135,19 +135,19 @@
 				height: 44px;
 				padding: 0 16px;
 				border-radius: 12px;
-				border: 1px solid #fecdd3;
-				background: #fff;
+				border: 1px solid var(--nv-line-accent);
+				background: var(--nv-surface);
 				font-family: $nv-font-body;
 				font-size: 14px;
-				color: #1c1917;
+				color: var(--nv-ink);
 				outline: none;
 				transition: border-color 0.2s $nv-ease, box-shadow 0.2s $nv-ease;
 				&::placeholder {
-					color: #a8a29e;
+					color: var(--nv-subtle);
 				}
 				&:focus {
-					border-color: #fb7185;
-					box-shadow: 0 0 0 3px #ffe4e6;
+					border-color: var(--nv-primary-soft);
+					box-shadow: 0 0 0 3px var(--nv-primary-ring);
 				}
 			}
 			button {
@@ -155,12 +155,12 @@
 				padding: 0 24px;
 				border: 0;
 				border-radius: 12px;
-				background: linear-gradient(90deg, #e11d48, #db2777);
-				box-shadow: 0 8px 18px -6px rgba(225, 29, 72, 0.4);
+				background: var(--nv-gradient);
+				box-shadow: var(--nv-btn-shadow);
 				font-family: $nv-font-head;
 				font-size: 15px;
 				font-weight: 600;
-				color: #fff;
+				color: var(--nv-on-primary);
 				cursor: pointer;
 				transition: filter 0.2s $nv-ease, transform 0.15s $nv-ease;
 				&:hover {
@@ -183,7 +183,7 @@
 				font-weight: 700;
 				letter-spacing: 0.08em;
 				text-transform: uppercase;
-				color: #1c1917;
+				color: var(--nv-ink);
 			}
 			ul {
 				display: flex;
@@ -195,7 +195,7 @@
 			}
 			a {
 				font-size: 13px;
-				color: #57534e;
+				color: var(--nv-text);
 				transition: color 0.15s $nv-ease;
 				&:hover {
 					color: $nv-primary;
@@ -213,7 +213,7 @@
 			padding: 28px 0 32px;
 			font-family: $nv-font-label;
 			font-size: 11px;
-			color: #78716c;
+			color: var(--nv-muted);
 			p {
 				font-family: $nv-font-mono;
 				letter-spacing: 0.04em;
@@ -223,7 +223,7 @@
 			display: flex;
 			gap: 24px;
 			a {
-				color: #78716c;
+				color: var(--nv-muted);
 				&:hover {
 					color: $nv-primary;
 				}

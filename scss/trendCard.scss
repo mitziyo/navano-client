@@ -7,16 +7,16 @@
 	flex-direction: column;
 	box-sizing: border-box;
 	overflow: hidden;
-	border: 1px solid #ffe4e6;
+	border: 1px solid var(--nv-line-soft);
 	border-radius: 16px;
-	background: #fff;
+	background: var(--nv-surface);
 	box-shadow: $nv-shadow-sm;
 	font-family: $nv-font-body;
 	transition: border-color 0.3s $nv-ease, box-shadow 0.3s $nv-ease, transform 0.3s $nv-ease;
 
 	&:hover {
-		border-color: #fda4af;
-		box-shadow: 0 10px 25px -5px rgba(76, 5, 25, 0.08);
+		border-color: var(--nv-line-strong);
+		box-shadow: var(--nv-shadow-md);
 		transform: translateY(-4px);
 		.card-media img {
 			transform: scale(1.05);
@@ -46,8 +46,8 @@
 			left: 12px;
 			padding: 4px 10px;
 			border-radius: 999px;
-			border: 1px solid #ffe4e6;
-			background: rgba(255, 255, 255, 0.9);
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-glass);
 			-webkit-backdrop-filter: blur(10px);
 			backdrop-filter: blur(10px);
 			box-shadow: $nv-shadow-sm;
@@ -55,7 +55,7 @@
 			font-size: 10px;
 			font-weight: 600;
 			letter-spacing: 0.06em;
-			color: #292524;
+			color: var(--nv-ink);
 		}
 		.like-btn {
 			position: absolute;
@@ -68,12 +68,12 @@
 			align-items: center;
 			justify-content: center;
 			border-radius: 50%;
-			border: 1px solid #ffe4e6;
-			background: rgba(255, 255, 255, 0.9);
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-glass);
 			-webkit-backdrop-filter: blur(10px);
 			backdrop-filter: blur(10px);
 			box-shadow: $nv-shadow-sm;
-			color: #a8a29e;
+			color: var(--nv-subtle);
 			cursor: pointer;
 			transition: transform 0.2s $nv-ease, color 0.2s $nv-ease;
 			svg {
@@ -108,7 +108,7 @@
 		font-size: 10px;
 		font-weight: 500;
 		letter-spacing: 0.06em;
-		color: #78716c;
+		color: var(--nv-muted);
 		.category {
 			font-family: $nv-font-mono;
 			font-weight: 600;
@@ -122,7 +122,7 @@
 		font-size: 18px;
 		font-weight: 600;
 		line-height: 26px;
-		color: #1c1917;
+		color: var(--nv-ink);
 		cursor: pointer;
 		transition: color 0.2s $nv-ease;
 		overflow: hidden;
@@ -137,7 +137,7 @@
 		margin: 4px 0 0;
 		font-size: 12px;
 		line-height: 18px;
-		color: #57534e;
+		color: var(--nv-text);
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
 		-webkit-box-orient: vertical;
@@ -151,7 +151,7 @@
 		gap: 8px;
 		margin-top: auto;
 		padding-top: 16px;
-		border-top: 1px solid #ffe4e6;
+		border-top: 1px solid var(--nv-line-soft);
 	}
 	.card-body .desc + .card-foot,
 	.card-body .title + .card-foot {
@@ -167,14 +167,14 @@
 		font-weight: 600;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		color: #a8a29e;
+		color: var(--nv-subtle);
 	}
 	.price {
 		font-family: $nv-font-head;
 		font-size: 20px;
 		font-weight: 700;
 		line-height: 26px;
-		color: #1c1917;
+		color: var(--nv-ink);
 		font-variant-numeric: tabular-nums;
 	}
 	.meta {
@@ -183,7 +183,7 @@
 		gap: 12px;
 		font-family: $nv-font-mono;
 		font-size: 11px;
-		color: #78716c;
+		color: var(--nv-muted);
 		span {
 			display: inline-flex;
 			align-items: center;
@@ -191,10 +191,10 @@
 		}
 		svg {
 			font-size: 14px;
-			color: #a8a29e;
+			color: var(--nv-subtle);
 		}
 		span:first-child svg {
-			color: #f43f5e;
+			color: var(--nv-primary-strong);
 		}
 	}
 }

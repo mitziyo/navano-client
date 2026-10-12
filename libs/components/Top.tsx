@@ -9,8 +9,11 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import { Logout } from '@mui/icons-material';
 import useDeviceDetect from '../hooks/useDeviceDetect';
+import useThemeMode from '../hooks/useThemeMode';
 import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { userVar } from '../../apollo/store';
@@ -31,8 +34,13 @@ const menuPaperSx = {
 	'& .MuiPaper-root': {
 		minWidth: 168,
 		borderRadius: '12px',
-		border: '1px solid #fce7f3',
-		boxShadow: '0 10px 30px -5px rgba(225, 29, 72, 0.12)',
+		border: '1px solid var(--nv-line-soft)',
+		bgcolor: 'var(--nv-surface)',
+		color: 'var(--nv-ink)',
+		boxShadow: 'var(--nv-shadow-lg)',
+	},
+	'& .MuiMenuItem-root:hover, & .MuiMenuItem-root.Mui-selected': {
+		bgcolor: 'var(--nv-primary-light)',
 	},
 };
 
@@ -46,6 +54,7 @@ const Top = () => {
 	const [userAnchor, setUserAnchor] = useState<null | HTMLElement>(null);
 	const [scrolled, setScrolled] = useState(false);
 	const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+	const { mode, toggleMode } = useThemeMode();
 
 	const navLinks = [
 		{ href: '/', label: t('Home'), match: '/' },
@@ -157,6 +166,16 @@ const Top = () => {
 
 						<button
 							type="button"
+							className={'icon-btn theme-btn'}
+							onClick={toggleMode}
+							aria-label={mode === 'dark' ? t('Switch to light mode') : t('Switch to dark mode')}
+							title={mode === 'dark' ? t('Switch to light mode') : t('Switch to dark mode')}
+						>
+							{mode === 'dark' ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
+						</button>
+
+						<button
+							type="button"
 							className={'lang-btn'}
 							aria-haspopup="menu"
 							aria-expanded={Boolean(langAnchor)}
@@ -217,11 +236,11 @@ const Top = () => {
 											router.push('/mypage');
 										}}
 									>
-										<PersonOutlineIcon fontSize="small" style={{ marginRight: 10, color: '#e11d48' }} />
+										<PersonOutlineIcon fontSize="small" style={{ marginRight: 10, color: 'var(--nv-primary)' }} />
 										{t('My Page')}
 									</MenuItem>
 									<MenuItem onClick={() => logOut()}>
-										<Logout fontSize="small" style={{ marginRight: 10, color: '#e11d48' }} />
+										<Logout fontSize="small" style={{ marginRight: 10, color: 'var(--nv-primary)' }} />
 										{t('Logout')}
 									</MenuItem>
 								</Menu>

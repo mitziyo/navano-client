@@ -25,34 +25,34 @@ $coral: #eb6753;
 	}
 }
 
-/** NAVANO ROSE tokens (Stitch rose design): navbar, footer, homepage and My Page **/
-$nv-primary: #e11d48;
-$nv-primary-hover: #be123c;
-$nv-primary-light: #fff1f2;
-$nv-pink: #db2777;
-$nv-canvas: #fff7f9;
-$nv-surface: #ffffff;
-$nv-surface-muted: #fffbfa;
-$nv-surface-tint: #fffafb;
-$nv-line: #fbcfe8;
-$nv-line-soft: #fce7f3;
-$nv-ink: #1f1318;
-$nv-muted: #6b5b63;
-$nv-label: #836773;
-$nv-subtle: #9c8a93;
+/** NAVANO tokens: CSS variables from scss/theme.scss, so light/dark switch at runtime **/
+$nv-primary: var(--nv-primary);
+$nv-primary-hover: var(--nv-primary-hover);
+$nv-primary-light: var(--nv-primary-light);
+$nv-pink: var(--nv-pink);
+$nv-canvas: var(--nv-canvas);
+$nv-surface: var(--nv-surface);
+$nv-surface-muted: var(--nv-surface-muted);
+$nv-surface-tint: var(--nv-surface-tint);
+$nv-line: var(--nv-line);
+$nv-line-soft: var(--nv-line-soft);
+$nv-ink: var(--nv-ink);
+$nv-muted: var(--nv-text);
+$nv-label: var(--nv-label);
+$nv-subtle: var(--nv-subtle);
 $nv-font-head: 'Space Grotesk', $font;
 $nv-font-body: 'Manrope', $font;
 $nv-font-label: 'Geist', $font;
 $nv-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 $nv-radius-card: 16px;
 $nv-radius-control: 8px;
-$nv-glow: 0 10px 30px -5px rgba(225, 29, 72, 0.08), 0 4px 12px -2px rgba(244, 114, 182, 0.06);
-$nv-shadow-sm: 0 1px 2px rgba(76, 5, 25, 0.05);
-$nv-gradient: linear-gradient(90deg, #e11d48 0%, #f43f5e 50%, #db2777 100%);
+$nv-glow: var(--nv-glow);
+$nv-shadow-sm: var(--nv-shadow-sm);
+$nv-gradient: var(--nv-gradient);
 $nv-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
 @mixin nv-focus {
-	outline: 2px solid rgba(225, 29, 72, 0.55);
+	outline: 2px solid var(--nv-focus);
 	outline-offset: 2px;
 }
 

@@ -1,8 +1,8 @@
 #pc-wrap {
 	#my-page {
 		background-color: $nv-canvas;
-		background-image: linear-gradient(to right, rgba(244, 114, 182, 0.08) 1px, transparent 1px),
-			linear-gradient(to bottom, rgba(244, 114, 182, 0.08) 1px, transparent 1px);
+		background-image: linear-gradient(to right, var(--nv-grid-strong) 1px, transparent 1px),
+			linear-gradient(to bottom, var(--nv-grid-strong) 1px, transparent 1px);
 		background-size: 32px 32px;
 		font-family: $nv-font-body;
 		.container {
@@ -22,8 +22,8 @@
 						width: 288px;
 						flex-shrink: 0;
 						border-radius: $nv-radius-card;
-						border: 1px solid rgba(251, 207, 232, 0.8);
-						background: rgba(255, 255, 255, 0.88);
+						border: 1px solid var(--nv-line);
+						background: var(--nv-glass);
 						-webkit-backdrop-filter: blur(16px);
 						backdrop-filter: blur(16px);
 						box-shadow: $nv-glow;
@@ -41,7 +41,7 @@
 									height: 48px;
 									border-radius: 12px;
 									object-fit: cover;
-									border: 2px solid #fda4af;
+									border: 2px solid var(--nv-line-strong);
 									box-shadow: $nv-shadow-sm;
 								}
 								.menu-identity {
@@ -98,7 +98,7 @@
 									transition: color 0.2s $nv-ease;
 								}
 								&:hover {
-									background: rgba(255, 241, 242, 0.7);
+									background: var(--nv-primary-light);
 									color: $nv-ink;
 								}
 								&:active {
@@ -108,10 +108,10 @@
 									@include nv-focus;
 								}
 								&.active {
-									background: linear-gradient(90deg, rgba(255, 228, 230, 0.9), rgba(255, 241, 242, 0.8), #fff);
+									background: linear-gradient(90deg, var(--nv-primary-tint), var(--nv-primary-light), var(--nv-surface));
 									border-left-color: $nv-primary;
 									box-shadow: $nv-shadow-sm;
-									color: #be123c;
+									color: var(--nv-primary-deep);
 									font-weight: 700;
 									svg {
 										color: $nv-primary;
@@ -130,7 +130,7 @@
 								padding-top: 16px;
 								border-top: 1px solid $nv-line-soft;
 								.menu-logout:hover {
-									color: #be123c;
+									color: var(--nv-primary-deep);
 									background: $nv-primary-light;
 									svg {
 										color: $nv-primary;

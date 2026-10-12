@@ -1,0 +1,124 @@
+/** THEME: light (rose, default) and dark (Stitch dark design). Set on <html data-theme="…">, see pages/_document.tsx **/
+
+:root {
+	color-scheme: light;
+
+	/* Page */
+	--nv-bg: #fff5f7;
+	--nv-canvas: #fff7f9;
+	--nv-grid: rgba(225, 29, 72, 0.04);
+	--nv-grid-strong: rgba(244, 114, 182, 0.08);
+	--nv-hero-glow: rgba(254, 205, 211, 0.45);
+
+	/* Surfaces */
+	--nv-surface: #ffffff;
+	--nv-surface-muted: #fffbfa;
+	--nv-surface-tint: #fffafb;
+	--nv-surface-sunken: #fdf2f4;
+	--nv-glass: rgba(255, 255, 255, 0.92);
+	--nv-glass-strong: rgba(255, 255, 255, 0.97);
+	--nv-section-tint: rgba(255, 255, 255, 0.65);
+	--nv-neutral-chip: #f8fafc;
+	--nv-neutral-line: #e2e8f0;
+	--nv-neutral-fill: #f1f5f9;
+
+	/* Lines */
+	--nv-line: #fbcfe8;
+	--nv-line-soft: #ffe4e6;
+	--nv-line-accent: #fecdd3;
+	--nv-line-strong: #fda4af;
+
+	/* Text */
+	--nv-ink: #1c1917;
+	--nv-text: #57534e;
+	--nv-muted: #78716c;
+	--nv-label: #836773;
+	--nv-subtle: #a8a29e;
+
+	/* Accent */
+	--nv-primary: #e11d48;
+	--nv-primary-hover: #be123c;
+	--nv-primary-deep: #be123c;
+	--nv-primary-strong: #f43f5e;
+	--nv-primary-soft: #fb7185;
+	--nv-primary-light: #fff1f2;
+	--nv-primary-tint: #ffe4e6;
+	--nv-primary-ring: #ffe4e6;
+	--nv-on-primary: #ffffff;
+	--nv-gradient: linear-gradient(90deg, #e11d48 0%, #f43f5e 50%, #db2777 100%);
+	--nv-btn-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.25);
+	--nv-focus: rgba(225, 29, 72, 0.55);
+	--nv-pink: #db2777;
+
+	/* Depth */
+	--nv-glow: 0 10px 30px -5px rgba(225, 29, 72, 0.08), 0 4px 12px -2px rgba(244, 114, 182, 0.06);
+	--nv-shadow-sm: 0 1px 2px rgba(76, 5, 25, 0.05);
+	--nv-shadow-md: 0 6px 16px -4px rgba(76, 5, 25, 0.08);
+	--nv-shadow-lg: 0 20px 40px -12px rgba(76, 5, 25, 0.18);
+
+	/* Hero cover (My Page) */
+	--nv-cover: radial-gradient(ellipse at top, rgba(244, 114, 182, 0.3), transparent 70%),
+		linear-gradient(90deg, #ffe4e9 0%, #fed7e2 50%, #fff1f2 100%);
+	--nv-watermark: rgba(136, 19, 55, 0.15);
+	--nv-disabled: #f4c5d0;
+}
+
+[data-theme='dark'] {
+	color-scheme: dark;
+
+	--nv-bg: #101415;
+	--nv-canvas: #101415;
+	--nv-grid: rgba(255, 255, 255, 0.025);
+	--nv-grid-strong: rgba(255, 255, 255, 0.03);
+	--nv-hero-glow: rgba(76, 142, 255, 0.12);
+
+	--nv-surface: #191c1e;
+	--nv-surface-muted: #0b0f10;
+	--nv-surface-tint: #0b0f10;
+	--nv-surface-sunken: #1d2022;
+	--nv-glass: rgba(16, 20, 21, 0.85);
+	--nv-glass-strong: rgba(16, 20, 21, 0.94);
+	--nv-section-tint: rgba(11, 15, 16, 0.55);
+	--nv-neutral-chip: #272a2c;
+	--nv-neutral-line: rgba(65, 71, 84, 0.6);
+	--nv-neutral-fill: #272a2c;
+
+	--nv-line: rgba(65, 71, 84, 0.6);
+	--nv-line-soft: rgba(65, 71, 84, 0.45);
+	--nv-line-accent: rgba(173, 198, 255, 0.3);
+	--nv-line-strong: rgba(173, 198, 255, 0.55);
+
+	--nv-ink: #e0e3e5;
+	--nv-text: #c2c6d6;
+	--nv-muted: #8c909f;
+	--nv-label: #8c909f;
+	--nv-subtle: #8c909f;
+
+	--nv-primary: #adc6ff;
+	--nv-primary-hover: #d8e2ff;
+	--nv-primary-deep: #adc6ff;
+	--nv-primary-strong: #adc6ff;
+	--nv-primary-soft: #4c8eff;
+	--nv-primary-light: rgba(173, 198, 255, 0.1);
+	--nv-primary-tint: rgba(173, 198, 255, 0.14);
+	--nv-primary-ring: rgba(173, 198, 255, 0.2);
+	--nv-on-primary: #002e69;
+	--nv-gradient: linear-gradient(90deg, #adc6ff 0%, #adc6ff 100%);
+	--nv-btn-shadow: 0 10px 20px -6px rgba(173, 198, 255, 0.25);
+	--nv-focus: rgba(173, 198, 255, 0.6);
+	--nv-pink: #adc6ff;
+
+	--nv-glow: 0 20px 40px -12px rgba(0, 0, 0, 0.55);
+	--nv-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+	--nv-shadow-md: 0 10px 24px -8px rgba(0, 0, 0, 0.55);
+	--nv-shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+
+	--nv-cover: radial-gradient(ellipse at top, rgba(76, 142, 255, 0.18), transparent 65%),
+		linear-gradient(90deg, #1d2022 0%, #272a2c 50%, #191c1e 100%);
+	--nv-watermark: rgba(173, 198, 255, 0.1);
+	--nv-disabled: #323537;
+}
+
+[data-theme='dark'] body {
+	background: #101415;
+}
