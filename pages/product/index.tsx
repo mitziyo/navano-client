@@ -177,6 +177,9 @@ const ProductList: NextPage = () => {
 		<div id="product-list-page">
 			<div className="container">
 				<header className={'catalog-header'}>
+					<div className={'catalog-hero-media'} aria-hidden>
+						<img src={'/img/banner/product-hero.jpg'} alt="" />
+					</div>
 					<div className={'catalog-intro'}>
 						<nav className={'breadcrumb'} aria-label={'breadcrumb'}>
 							<Link href={'/'}>{t('Home')}</Link>
@@ -191,21 +194,21 @@ const ProductList: NextPage = () => {
 								'Browse fresh flowers, handmade chocolates and celebration cakes from local florists, chocolatiers and bakers across Korea',
 							)}
 						</p>
+						<ul className={'catalog-badges'}>
+							<li>
+								<Inventory2OutlinedIcon aria-hidden />
+								{facets?.total ?? total} {t('products')}
+							</li>
+							<li>
+								<StorefrontOutlinedIcon aria-hidden />
+								{storeCount} {t('local stores')}
+							</li>
+							<li>
+								<LocalShippingOutlinedIcon aria-hidden />
+								{t('Delivery in 9 cities')}
+							</li>
+						</ul>
 					</div>
-					<ul className={'catalog-badges'}>
-						<li>
-							<Inventory2OutlinedIcon aria-hidden />
-							{facets?.total ?? total} {t('products')}
-						</li>
-						<li>
-							<StorefrontOutlinedIcon aria-hidden />
-							{storeCount} {t('local stores')}
-						</li>
-						<li>
-							<LocalShippingOutlinedIcon aria-hidden />
-							{t('Delivery in 9 cities')}
-						</li>
-					</ul>
 				</header>
 
 				<div className={'catalog-toolbar'}>
