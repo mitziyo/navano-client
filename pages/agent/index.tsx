@@ -9,7 +9,6 @@ import { useMutation, useQuery } from '@apollo/client';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
@@ -203,32 +202,24 @@ const AgentList: NextPage = () => {
 							</div>
 						</dl>
 					</div>
-
-					<aside className={'network-card'}>
-						<header>
-							<StorefrontOutlinedIcon aria-hidden />
-							<span>{t('Store network')}</span>
-							<small>{t('Live')}</small>
-						</header>
-						<dl>
-							{Object.values(ProductType).map((value) => (
-								<div key={value}>
-									<dt>{t(toLabel(value))}</dt>
-									<dd>
-										{facets?.types?.find((item) => item.value === value)?.count ?? 0} {t('products')}
-									</dd>
-								</div>
-							))}
-							<div>
-								<dt>{t('Busiest city')}</dt>
-								<dd>{facets?.locations?.[0] ? t(toLabel(facets.locations[0].value)) : '—'}</dd>
-							</div>
-						</dl>
-						<footer>
-							<span>{t('Updated from live store data')}</span>
-						</footer>
-					</aside>
 				</section>
+
+				{/* Product counts per category from the live facets */}
+				<dl className={'network-strip'} aria-label={t('Store network')}>
+					{Object.values(ProductType).map((value) => (
+						<div key={value}>
+							<dt>{t(toLabel(value))}</dt>
+							<dd>
+								{facets?.types?.find((item) => item.value === value)?.count ?? 0}
+								<small>{t('products')}</small>
+							</dd>
+						</div>
+					))}
+					<div>
+						<dt>{t('Busiest city')}</dt>
+						<dd>{facets?.locations?.[0] ? t(toLabel(facets.locations[0].value)) : '—'}</dd>
+					</div>
+				</dl>
 
 				<section className={'store-toolbar'} aria-label={t('Search stores')}>
 					<div className={'toolbar-row'}>
