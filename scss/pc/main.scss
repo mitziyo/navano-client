@@ -48,23 +48,34 @@ body::-webkit-scrollbar {
 		.navbar {
 			.navbar-main {
 				position: fixed;
-				padding: 22px 0px;
+				padding-top: 14px;
 				width: 100%;
 				height: 87px;
 				display: flex;
 				flex-direction: row;
 				box-sizing: border-box;
 				z-index: 99;
-				align-items: center;
-				border-top: 1px solid rgba(255, 255, 255, 0.07);
-				&.transparent {
-					background-color: #181a209e;
+				align-items: flex-start;
+				pointer-events: none;
+				.container.nav-glass {
+					@include liquid-glass(rgba(255, 255, 255, 0.12), 20px);
+					padding: 6px 10px 6px 22px;
+					height: 64px;
+					border-radius: 999px;
+					box-sizing: border-box;
+					pointer-events: auto;
+					transition: background 0.3s ease, border-color 0.3s ease;
+				}
+				&.transparent .container.nav-glass {
+					@include liquid-glass(rgba(24, 26, 32, 0.55), 22px);
 				}
 				.container {
 					flex-direction: row;
 					align-items: center;
 					justify-content: space-between;
 					.logo-box {
+						display: flex;
+						align-items: center;
 						img {
 							width: 150px;
 							cursor: pointer;
@@ -72,10 +83,37 @@ body::-webkit-scrollbar {
 					}
 					.router-box {
 						position: relative;
-						width: 617px;
+						padding: 4px;
 						display: flex;
 						flex-direction: row;
-						justify-content: space-between;
+						gap: 2px;
+						border-radius: 999px;
+						background: rgba(255, 255, 255, 0.06);
+						box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+						.nav-link {
+							padding: 9px 18px;
+							border-radius: 999px;
+							.nav-pill,
+							.nav-hover {
+								position: absolute;
+								inset: 0;
+								border-radius: 999px;
+								z-index: 0;
+							}
+							.nav-pill {
+								@include liquid-glass(rgba(255, 255, 255, 0.24), 12px, rgba(255, 255, 255, 0.3));
+							}
+							.nav-hover {
+								background: rgba(255, 255, 255, 0.1);
+							}
+							.nav-label {
+								position: relative;
+								z-index: 1;
+							}
+							&.active {
+								color: #ffffff;
+							}
+						}
 						div {
 							position: relative;
 							color: #eeeeeeed;
@@ -114,13 +152,14 @@ body::-webkit-scrollbar {
 						flex-direction: row;
 						justify-content: flex-end;
 						.join-box {
+							@include liquid-glass(rgba(255, 255, 255, 0.14), 12px);
 							width: 184px;
-							height: 47px;
+							height: 46px;
 							display: flex;
 							align-items: center;
 							justify-content: center;
-							border-radius: 60px;
-							border: 1px solid #ffffff;
+							border-radius: 999px;
+							box-sizing: border-box;
 							cursor: pointer;
 							svg {
 								color: #ffffff;
@@ -136,7 +175,10 @@ body::-webkit-scrollbar {
 							}
 						}
 						.login-user {
+							cursor: pointer;
 							img {
+								display: block;
+								box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
 								width: 42px;
 								height: 42px;
 								border-radius: 50%;
@@ -152,7 +194,10 @@ body::-webkit-scrollbar {
 							color: white;
 						}
 						.btn-lang {
-							border-radius: 4px;
+							@include liquid-glass(rgba(255, 255, 255, 0.1), 12px);
+							padding: 8px 12px;
+							min-width: 0;
+							border-radius: 999px;
 							img {
 								width: 24px;
 								height: 17px;
@@ -191,8 +236,9 @@ body::-webkit-scrollbar {
 				display: flex;
 				flex-direction: row;
 				justify-content: space-between;
-				background: rgba(255, 255, 255, 0.28);
-				border-radius: 12px;
+				@include liquid-glass(rgba(255, 255, 255, 0.16), 22px);
+				border-radius: 20px;
+				box-sizing: border-box;
 				.select-box {
 					width: 712px;
 					display: flex;
@@ -206,13 +252,17 @@ body::-webkit-scrollbar {
 						flex-direction: row;
 						align-items: center;
 						justify-content: space-between;
-						border-radius: 12px;
-						background: rgba(255, 255, 255, 0.575);
+						@include liquid-glass(rgba(255, 255, 255, 0.62), 14px, rgba(255, 255, 255, 0.9));
+						border-radius: 14px;
 						box-sizing: border-box;
 						cursor: pointer;
+						transition: background 0.2s ease, border-color 0.2s ease;
+						&:hover {
+							background: rgba(255, 255, 255, 0.78);
+						}
 						&.on {
 							background: #ffffff;
-							border: 1px solid #000;
+							border-color: #f2a59b;
 							color: #181a20;
 						}
 						span {
@@ -231,12 +281,9 @@ body::-webkit-scrollbar {
 						position: relative;
 						align-self: flex-start;
 						width: 213px;
-						.box.on {
-							border-color: #f2a59b;
-							svg {
-								transform: rotate(180deg);
-							}
-						}
+					}
+					.box.on svg {
+						transform: rotate(180deg);
 					}
 					.select-dropdown {
 						position: absolute;
@@ -246,20 +293,12 @@ body::-webkit-scrollbar {
 						width: 100%;
 						display: flex;
 						flex-direction: column;
-						border-radius: 8px;
-						background: #ffffff;
-						box-shadow: rgba(0, 0, 0, 0.15) 0px 6px 18px;
+						@include liquid-glass(rgba(255, 255, 255, 0.82), 20px, #ffffff);
+						border-radius: 14px;
+						box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 12px 32px rgba(0, 0, 0, 0.18);
 						box-sizing: border-box;
-						visibility: hidden;
-						opacity: 0;
-						transform: translateY(-4px);
-						transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+						overflow: hidden;
 						z-index: 3;
-						&.on {
-							visibility: visible;
-							opacity: 1;
-							transform: translateY(0);
-						}
 						span {
 							padding: 9px 16px;
 							color: #181a20;
@@ -268,9 +307,10 @@ body::-webkit-scrollbar {
 							font-weight: 400;
 							line-height: 22px;
 							cursor: pointer;
+							transition: background 0.15s ease;
 							&:hover,
 							&.active {
-								background: #fde8e6;
+								background: rgba(235, 103, 83, 0.12);
 							}
 						}
 					}
@@ -280,9 +320,13 @@ body::-webkit-scrollbar {
 					flex-direction: row;
 					align-items: center;
 					.advanced-filter {
+						@include liquid-glass(rgba(255, 255, 255, 0.12), 14px);
+						padding: 12px 20px;
 						display: flex;
 						flex-direction: row;
 						align-items: center;
+						border-radius: 999px;
+						cursor: pointer;
 						img {
 							margin-right: 10px;
 							width: 25px;
@@ -292,7 +336,7 @@ body::-webkit-scrollbar {
 						span {
 							color: #fff;
 							font-family: $font;
-							font-size: 20px;
+							font-size: 18px;
 							font-style: normal;
 							font-weight: 600;
 							line-height: normal;
@@ -306,8 +350,11 @@ body::-webkit-scrollbar {
 						display: flex;
 						align-items: center;
 						justify-content: center;
-						border-radius: 55px;
-						background: #f17742;
+						border-radius: 50%;
+						@include liquid-glass(rgba(235, 103, 83, 0.88), 14px, $coral);
+						border-color: rgba(255, 255, 255, 0.4);
+						box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 0 0 6px rgba(235, 103, 83, 0.18),
+							0 10px 28px rgba(235, 103, 83, 0.45);
 						cursor: pointer;
 						svg {
 							width: 20px;
@@ -322,23 +369,17 @@ body::-webkit-scrollbar {
 					width: 1094px;
 					min-height: 120px;
 					height: auto;
-					top: 96px;
+					top: 104px;
 					right: 0px;
 					display: flex;
 					flex-direction: row;
 					flex-wrap: wrap;
 					gap: 40px;
-					visibility: hidden;
-					border-radius: 12px;
-					background: #ffffff;
-					box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+					@include liquid-glass(rgba(255, 255, 255, 0.85), 22px, #ffffff);
+					border-radius: 20px;
+					box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 16px 40px rgba(0, 0, 0, 0.25);
 					box-sizing: border-box;
 					z-index: 2;
-					&.on {
-						visibility: visible;
-						transition: 0.2s ease-out;
-						background: #fffdfd;
-					}
 					div {
 						width: 295px;
 						display: flex;

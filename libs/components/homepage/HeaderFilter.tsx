@@ -7,6 +7,33 @@ import { ProductLocation, ProductOccasion, ProductType } from '../../enums/produ
 import { ProductsInquiry } from '../../types/product/product.input';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
+
+// Liquid-glass dropdown: springs open from the top, options stagger in
+const dropdownVariants = {
+	closed: { opacity: 0, y: -6, scale: 0.96, transition: { duration: 0.12 } },
+	open: {
+		opacity: 1,
+		y: 0,
+		scale: 1,
+		transition: { type: 'spring' as const, stiffness: 420, damping: 30, staggerChildren: 0.025, delayChildren: 0.02 },
+	},
+};
+
+const optionVariants = {
+	closed: { opacity: 0, y: -4 },
+	open: { opacity: 1, y: 0 },
+};
+
+const dropdownMotion = {
+	variants: dropdownVariants,
+	initial: 'closed',
+	animate: 'open',
+	exit: 'closed',
+	style: { transformOrigin: 'top center' },
+};
+
+const chipMotion = { whileHover: { y: -1 }, whileTap: { scale: 0.97 } };
 
 const style = {
 	position: 'absolute' as 'absolute',
@@ -30,6 +57,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	const { t, i18n } = useTranslation('common');
 	const [searchFilter, setSearchFilter] = useState<ProductsInquiry>(initialInput);
 	const locationRef: any = useRef();
+	const locationBoxRef: any = useRef();
 	const occasionRef: any = useRef();
 	const typeRef: any = useRef();
 	const router = useRouter();
@@ -44,7 +72,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 	/** LIFECYCLES **/
 	useEffect(() => {
 		const clickHandler = (event: MouseEvent) => {
-			if (!locationRef?.current?.contains(event.target)) {
+			if (!locationRef?.current?.contains(event.target) && !locationBoxRef?.current?.contains(event.target)) {
 				setOpenLocation(false);
 			}
 
@@ -175,69 +203,108 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 		return <div>HEADER FILTER MOBILE</div>;
 	} else {
 		return (
-			<>
+			<MotionConfig reducedMotion="user">
 				<Stack className={'search-box'}>
 					<Stack className={'select-box'}>
-						<Box component={'div'} className={`box ${openLocation ? 'on' : ''}`} onClick={locationStateChangeHandler}>
+						<motion.div
+							ref={locationBoxRef}
+							className={`box ${openLocation ? 'on' : ''}`}
+							onClick={locationStateChangeHandler}
+							{...chipMotion}
+						>
 							<span>{searchFilter?.search?.locationList ? searchFilter?.search?.locationList[0] : t('Location')} </span>
 							<ExpandMoreIcon />
-						</Box>
+						</motion.div>
 						<div className={'select-item'} ref={occasionRef}>
-							<Box className={`box ${openOccasion ? 'on' : ''}`} onClick={occasionStateChangeHandler}>
-								<span>{searchFilter?.search?.occasionList ? searchFilter?.search?.occasionList[0] : t('Occasion')} </span>
+							<motion.div
+								className={`box ${openOccasion ? 'on' : ''}`}
+								onClick={occasionStateChangeHandler}
+								{...chipMotion}
+							>
+								<span>
+									{searchFilter?.search?.occasionList ? searchFilter?.search?.occasionList[0] : t('Occasion')}{' '}
+								</span>
 								<ExpandMoreIcon />
-							</Box>
-							<div className={`select-dropdown ${openOccasion ? 'on' : ''}`}>
-								{productOccasion.map((occasion: ProductOccasion) => (
-									<span
-										key={occasion}
-										className={searchFilter?.search?.occasionList?.[0] === occasion ? 'active' : ''}
-										onClick={() => productOccasionSelectHandler(occasion)}
-									>
-										{occasion}
-									</span>
-								))}
-							</div>
+							</motion.div>
+							<AnimatePresence>
+								{openOccasion && (
+									<motion.div className={'select-dropdown'} {...dropdownMotion}>
+										{productOccasion.map((occasion: ProductOccasion) => (
+											<motion.span
+												key={occasion}
+												variants={optionVariants}
+												className={searchFilter?.search?.occasionList?.[0] === occasion ? 'active' : ''}
+												onClick={() => productOccasionSelectHandler(occasion)}
+											>
+												{occasion}
+											</motion.span>
+										))}
+									</motion.div>
+								)}
+							</AnimatePresence>
 						</div>
 						<div className={'select-item'} ref={typeRef}>
-							<Box className={`box ${openType ? 'on' : ''}`} onClick={typeStateChangeHandler}>
+							<motion.div className={`box ${openType ? 'on' : ''}`} onClick={typeStateChangeHandler} {...chipMotion}>
 								<span>{searchFilter?.search?.typeList ? searchFilter?.search?.typeList[0] : t('Category')} </span>
 								<ExpandMoreIcon />
-							</Box>
-							<div className={`select-dropdown ${openType ? 'on' : ''}`}>
-								{productType.map((type: ProductType) => (
-									<span
-										key={type}
-										className={searchFilter?.search?.typeList?.[0] === type ? 'active' : ''}
-										onClick={() => productTypeSelectHandler(type)}
-									>
-										{type}
-									</span>
-								))}
-							</div>
+							</motion.div>
+							<AnimatePresence>
+								{openType && (
+									<motion.div className={'select-dropdown'} {...dropdownMotion}>
+										{productType.map((type: ProductType) => (
+											<motion.span
+												key={type}
+												variants={optionVariants}
+												className={searchFilter?.search?.typeList?.[0] === type ? 'active' : ''}
+												onClick={() => productTypeSelectHandler(type)}
+											>
+												{type}
+											</motion.span>
+										))}
+									</motion.div>
+								)}
+							</AnimatePresence>
 						</div>
 					</Stack>
 					<Stack className={'search-box-other'}>
-						<Box className={'advanced-filter'} onClick={() => advancedFilterHandler(true)}>
+						<motion.div
+							className={'advanced-filter'}
+							onClick={() => advancedFilterHandler(true)}
+							whileHover={{ scale: 1.03 }}
+							whileTap={{ scale: 0.97 }}
+						>
 							<img src="/img/icons/tune.svg" alt="" />
 							<span>{t('Advanced')}</span>
-						</Box>
-						<Box className={'search-btn'} onClick={pushSearchHandler}>
+						</motion.div>
+						<motion.div
+							className={'search-btn'}
+							onClick={pushSearchHandler}
+							whileHover={{ scale: 1.06 }}
+							whileTap={{ scale: 0.94 }}
+						>
 							<img src="/img/icons/search_white.svg" alt="" />
-						</Box>
+						</motion.div>
 					</Stack>
 
 					{/*MENU */}
-					<div className={`filter-location ${openLocation ? 'on' : ''}`} ref={locationRef}>
-						{productLocation.map((location: string) => {
-							return (
-								<div onClick={() => productLocationSelectHandler(location)} key={location}>
-									<img src={`img/banner/cities/${location}.webp`} alt="" />
-									<span>{location}</span>
-								</div>
-							);
-						})}
-					</div>
+					<AnimatePresence>
+						{openLocation && (
+							<motion.div className={'filter-location'} ref={locationRef} {...dropdownMotion}>
+								{productLocation.map((location: string) => {
+									return (
+										<motion.div
+											variants={optionVariants}
+											onClick={() => productLocationSelectHandler(location)}
+											key={location}
+										>
+											<img src={`img/banner/cities/${location}.webp`} alt="" />
+											<span>{location}</span>
+										</motion.div>
+									);
+								})}
+							</motion.div>
+						)}
+					</AnimatePresence>
 				</Stack>
 
 				{/* ADVANCED FILTER MODAL */}
@@ -287,7 +354,10 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 														...searchFilter,
 														search: {
 															...searchFilter.search,
-															pricesRange: { start: Number(e.target.value), end: searchFilter?.search?.pricesRange?.end ?? 0 },
+															pricesRange: {
+																start: Number(e.target.value),
+																end: searchFilter?.search?.pricesRange?.end ?? 0,
+															},
 														},
 													})
 												}
@@ -304,7 +374,10 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 														...searchFilter,
 														search: {
 															...searchFilter.search,
-															pricesRange: { start: searchFilter?.search?.pricesRange?.start ?? 0, end: Number(e.target.value) },
+															pricesRange: {
+																start: searchFilter?.search?.pricesRange?.start ?? 0,
+																end: Number(e.target.value),
+															},
 														},
 													})
 												}
@@ -330,7 +403,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						</Box>
 					</Box>
 				</Modal>
-			</>
+			</MotionConfig>
 		);
 	}
 };
