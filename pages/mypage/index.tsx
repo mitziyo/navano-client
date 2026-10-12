@@ -101,10 +101,10 @@ const MyPage: NextPage = () => {
 				<div className="container">
 					<Stack className={'my-page'}>
 						<Stack className={'back-frame'}>
-							<Stack className={'left-config'}>
+							<Stack className={'left-config'} component={'aside'}>
 								<MyMenu />
 							</Stack>
-							<Stack className="main-config" mb={'76px'}>
+							<Stack className={`main-config ${category === 'myProfile' ? 'is-profile' : ''}`}>
 								<Stack className={'list-config'}>
 									{category === 'addProduct' && <AddProduct />}
 									{category === 'myProducts' && <MyProducts />}

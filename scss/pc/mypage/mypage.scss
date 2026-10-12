@@ -1,147 +1,206 @@
+/** MY PAGE tokens (rose dossier design, zip/DESIGN.md + zip/code.html) **/
+$mp-primary: #e11d48;
+$mp-primary-hover: #be123c;
+$mp-primary-light: #fff1f2;
+$mp-pink: #db2777;
+$mp-canvas: #fff7f9;
+$mp-surface: #ffffff;
+$mp-surface-muted: #fffbfa;
+$mp-surface-tint: #fffafb;
+$mp-line: #fbcfe8;
+$mp-line-soft: #fce7f3;
+$mp-ink: #1f1318;
+$mp-muted: #6b5b63;
+$mp-label: #836773;
+$mp-subtle: #9c8a93;
+$mp-font-head: 'Space Grotesk', $font;
+$mp-font-body: 'Manrope', $font;
+$mp-font-label: 'Geist', $font;
+$mp-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+$mp-radius-card: 16px;
+$mp-radius-control: 8px;
+$mp-glow: 0 10px 30px -5px rgba(225, 29, 72, 0.08), 0 4px 12px -2px rgba(244, 114, 182, 0.06);
+$mp-shadow-sm: 0 1px 2px rgba(76, 5, 25, 0.05);
+$mp-gradient: linear-gradient(90deg, #e11d48 0%, #f43f5e 50%, #db2777 100%);
+$mp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+@mixin mp-focus {
+	outline: 2px solid rgba(225, 29, 72, 0.55);
+	outline-offset: 2px;
+}
+
+@mixin mp-label {
+	font-family: $mp-font-label;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: $mp-label;
+}
+
 #pc-wrap {
 	#my-page {
-		background: #f6f6f6;
+		background-color: $mp-canvas;
+		background-image: linear-gradient(to right, rgba(244, 114, 182, 0.08) 1px, transparent 1px),
+			linear-gradient(to bottom, rgba(244, 114, 182, 0.08) 1px, transparent 1px);
+		background-size: 32px 32px;
+		font-family: $mp-font-body;
 		.container {
 			.my-page {
 				position: relative;
 				width: 100%;
-				flex-direction: row;
-				gap: 25px;
-				padding-top: 96px;
+				padding: 48px 0 120px;
 				.back-frame {
-					width: 1260px;
-					height: auto;
+					width: 100%;
 					display: flex;
 					flex-direction: row;
-					margin: 100px 0 200px 0;
-					border-radius: 12px;
-					border: 1px solid #c4c4c4;
-					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
+					align-items: flex-start;
+					gap: 28px;
 					.left-config {
-						position: relative;
-						padding: 0 0 0 0;
-						width: 266px;
-						height: 700px;
-						border-radius: 12px;
-						background: #fff;
-						border: 1px solid rgba(196, 196, 196, 0.79);
-						box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-						margin: 180px 20px 40px 20px;
-						.profile {
-							margin-top: 5px;
-							position: relative;
-							display: flex;
-							flex-direction: row;
-							.profile-img {
-								img {
-									width: 79px;
-									height: 79px;
-									border-radius: 50%;
-									right: 30px;
-									bottom: 12px;
+						position: sticky;
+						top: 96px;
+						width: 288px;
+						flex-shrink: 0;
+						border-radius: $mp-radius-card;
+						border: 1px solid rgba(251, 207, 232, 0.8);
+						background: rgba(255, 255, 255, 0.88);
+						-webkit-backdrop-filter: blur(16px);
+						backdrop-filter: blur(16px);
+						box-shadow: $mp-glow;
+						.my-menu {
+							padding: 24px 16px 18px;
+							gap: 20px;
+							.menu-profile {
+								flex-direction: row;
+								align-items: center;
+								gap: 12px;
+								padding: 0 4px 14px;
+								border-bottom: 1px solid $mp-line-soft;
+								.menu-avatar img {
+									width: 48px;
+									height: 48px;
+									border-radius: 12px;
 									object-fit: cover;
+									border: 2px solid #fda4af;
+									box-shadow: $mp-shadow-sm;
+								}
+								.menu-identity {
+									min-width: 0;
+									.menu-name {
+										font-family: $mp-font-head;
+										font-size: 18px;
+										font-weight: 700;
+										letter-spacing: -0.01em;
+										color: $mp-ink;
+										white-space: nowrap;
+										overflow: hidden;
+										text-overflow: ellipsis;
+									}
+									.menu-role {
+										font-family: $mp-font-label;
+										font-size: 10px;
+										font-weight: 700;
+										letter-spacing: 0.14em;
+										text-transform: uppercase;
+										color: $mp-primary;
+									}
 								}
 							}
-							.user-info {
-								margin-left: 20px;
+							.menu-group {
+								gap: 4px;
+								.menu-group-title {
+									@include mp-label;
+									font-size: 10px;
+									padding: 0 12px 4px;
+									color: $mp-subtle;
+								}
+							}
+							.menu-link {
 								display: flex;
-								flex-direction: column;
-								.user-name {
-									color: #181a20;
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: normal;
+								align-items: center;
+								gap: 12px;
+								width: 100%;
+								padding: 10px 14px;
+								border: 0;
+								border-left: 4px solid transparent;
+								border-radius: $mp-radius-control;
+								background: transparent;
+								font-family: $mp-font-label;
+								font-size: 13px;
+								font-weight: 500;
+								color: $mp-muted;
+								text-align: left;
+								cursor: pointer;
+								transition: background-color 0.2s $mp-ease, color 0.2s $mp-ease, transform 0.15s $mp-ease;
+								svg {
+									font-size: 20px;
+									color: $mp-subtle;
+									transition: color 0.2s $mp-ease;
 								}
-								.user-phone {
-									display: flex;
-									flex-direction: row;
-									img {
-										margin-top: 7px;
-										margin-right: 4px;
-										width: 16px;
-										height: 16px;
+								&:hover {
+									background: rgba(255, 241, 242, 0.7);
+									color: $mp-ink;
+								}
+								&:active {
+									transform: scale(0.98);
+								}
+								&:focus-visible {
+									@include mp-focus;
+								}
+								&.active {
+									background: linear-gradient(90deg, rgba(255, 228, 230, 0.9), rgba(255, 241, 242, 0.8), #fff);
+									border-left-color: $mp-primary;
+									box-shadow: $mp-shadow-sm;
+									color: #be123c;
+									font-weight: 700;
+									svg {
+										color: $mp-primary;
 									}
 								}
-								.view-list {
-									font-weight: bold;
-									color: red;
+								&.small {
+									padding: 7px 12px;
+									font-size: 12px;
+									svg {
+										font-size: 18px;
+									}
 								}
 							}
-						}
-						.sections {
-							height: auto;
-							gap: 45px;
-							margin-top: 30px;
-							.section {
-								height: auto;
-								.title {
-									font-family: $font;
-									font-size: 15px;
-									font-style: normal;
-									font-weight: 400;
-									line-height: 28px;
-								}
-								.sub-section {
-									width: 230px;
-									height: 26px;
-									display: flex;
-									flex-direction: column;
-									align-items: center;
-									cursor: pointer;
-									padding: 0 5px 0 5px;
-									li {
-										height: 33px;
-										margin-bottom: 6px;
-										border-radius: 4px;
-									}
-									.focus {
-										height: 50px;
-										background: #000000;
-										border-radius: 10px;
-										p {
-											font-size: 14px;
-											color: #ffffff;
-										}
-									}
-									.flex-box {
-										display: flex;
-										align-items: center;
-										.com-icon {
-											display: flex;
-											flex-direction: row;
-											justify-content: flex-end;
-											margin-left: 11px;
-										}
-										p {
-											font-size: 14px;
-										}
+							.menu-footer {
+								gap: 2px;
+								padding-top: 16px;
+								border-top: 1px solid $mp-line-soft;
+								.menu-logout:hover {
+									color: #be123c;
+									background: $mp-primary-light;
+									svg {
+										color: $mp-primary;
 									}
 								}
-								img {
-									width: 16px;
-									height: 16px;
-								}
-								.sub-title {
-									margin-left: 12px;
-									color: #181a20;
-									font-family: $font;
-									font-size: 14px;
-									font-style: normal;
-									font-weight: 600;
-									line-height: 55px;
+								.menu-ref {
+									padding: 8px 12px 0;
+									font-family: $mp-font-mono;
+									font-size: 10px;
+									color: $mp-subtle;
 								}
 							}
 						}
 					}
 					.main-config {
 						position: relative;
-						width: 936px;
-						margin-top: 52px;
+						flex: 1;
+						min-width: 0;
+						padding: 20px;
+						border-radius: $mp-radius-card;
+						border: 1px solid $mp-line;
+						background: $mp-surface;
+						box-shadow: $mp-glow;
 						align-items: center;
-						gap: 109px;
+						&.is-profile {
+							padding: 0;
+							border: 0;
+							background: transparent;
+							box-shadow: none;
+						}
 						.list-config {
 							display: flex;
 							width: 100%;
