@@ -1,9 +1,6 @@
 #pc-wrap {
 	#my-page {
 		background-color: $nv-canvas;
-		background-image: linear-gradient(to right, var(--nv-grid-strong) 1px, transparent 1px),
-			linear-gradient(to bottom, var(--nv-grid-strong) 1px, transparent 1px);
-		background-size: 32px 32px;
 		font-family: $nv-font-body;
 		.container {
 			.my-page {

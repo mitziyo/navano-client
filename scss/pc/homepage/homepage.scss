@@ -31,9 +31,6 @@
 		padding: 104px 0 56px;
 		overflow: hidden;
 		background-color: var(--nv-bg);
-		background-image: linear-gradient(to right, var(--nv-grid) 1px, transparent 1px),
-			linear-gradient(to bottom, var(--nv-grid) 1px, transparent 1px);
-		background-size: 32px 32px;
 		font-family: $nv-font-body;
 		&::before {
 			content: '';
@@ -407,9 +404,6 @@
 	.home-page {
 		width: 100%;
 		background-color: var(--nv-bg);
-		background-image: linear-gradient(to right, var(--nv-grid) 1px, transparent 1px),
-			linear-gradient(to bottom, var(--nv-grid) 1px, transparent 1px);
-		background-size: 32px 32px;
 		font-family: $nv-font-body;
 	}
 

@@ -17,9 +17,6 @@
 		width: 100%;
 		padding: 112px 0 96px;
 		background-color: var(--nv-bg);
-		background-image: linear-gradient(to right, var(--nv-grid) 1px, transparent 1px),
-			linear-gradient(to bottom, var(--nv-grid) 1px, transparent 1px);
-		background-size: 32px 32px;
 		font-family: $nv-font-body;
 		color: var(--nv-ink);
 
