@@ -8,8 +8,8 @@ const SLIDE_INTERVAL = 6000;
 // The copy stays the same across slides; position keeps the subject in the wide crop
 const slides = [
 	{ src: '/img/banner/hero-atelier.jpg', alt: 'Tiered wedding cake with roses and truffles', position: 'center 8%' },
-	{ src: '/img/fiber/img1.jpg', alt: 'Bouquet of pink roses', position: 'center' },
-	{ src: '/img/fiber/img3.jpg', alt: 'Handmade chocolates in a gift box', position: 'center' },
+	{ src: '/img/banner/hero-florist.jpg', alt: 'Florist workshop with orchids and garden roses', position: 'center 50%' },
+	{ src: '/img/banner/hero-chocolatier.jpg', alt: 'Hand-painted bonbons on a chocolatier counter', position: 'center 45%' },
 ];
 
 const pad = (n: number) => String(n).padStart(2, '0');
