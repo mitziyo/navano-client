@@ -127,8 +127,10 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 			if (!search.typeList?.length) delete search.typeList;
 			if (!search.text?.trim()) delete search.text;
 
-			const input = JSON.stringify({ ...searchFilter, search });
-			await router.push(`/product?input=${input}`, `/product?input=${input}`);
+			// A query object lets Next encode the JSON, so text with & # % survives the URL
+			setOpenField(null);
+			setOpenAdvancedFilter(false);
+			await router.push({ pathname: '/product', query: { input: JSON.stringify({ ...searchFilter, search }) } });
 		} catch (err: any) {
 			console.log('ERROR, pushSearchHandler:', err);
 		}

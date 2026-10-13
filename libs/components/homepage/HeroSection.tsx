@@ -28,21 +28,22 @@ const HeroSection = () => {
 
 	return (
 		<section className={'home-hero'} aria-labelledby="hero-title">
-			<div className={'container'}>
-				<div className={'hero-card'}>
-					{slides.map((slide, index) => (
-						<img
-							key={slide.src}
-							src={slide.src}
-							alt={index === active ? t(slide.alt) : ''}
-							aria-hidden={index !== active}
-							className={`hero-slide ${index === active ? 'is-active' : ''}`}
-							style={{ objectPosition: slide.position }}
-							loading={index === 0 ? 'eager' : 'lazy'}
-						/>
-					))}
-					<div className={'hero-shade'} aria-hidden />
+			{/* The photo spans the full page width; copy and dots stay on the page grid */}
+			<div className={'hero-card'}>
+				{slides.map((slide, index) => (
+					<img
+						key={slide.src}
+						src={slide.src}
+						alt={index === active ? t(slide.alt) : ''}
+						aria-hidden={index !== active}
+						className={`hero-slide ${index === active ? 'is-active' : ''}`}
+						style={{ objectPosition: slide.position }}
+						loading={index === 0 ? 'eager' : 'lazy'}
+					/>
+				))}
+				<div className={'hero-shade'} aria-hidden />
 
+				<div className={'container hero-inner'}>
 					<div className={'hero-copy'}>
 						<span className={'hero-badge'}>
 							<span className={'pulse'} aria-hidden />
@@ -73,7 +74,9 @@ const HeroSection = () => {
 						</span>
 					</div>
 				</div>
+			</div>
 
+			<div className={'container'}>
 				<div className={'hero-search'}>
 					<HeaderFilter />
 				</div>

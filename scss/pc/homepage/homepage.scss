@@ -28,8 +28,9 @@
 	.home-hero {
 		position: relative;
 		width: 100%;
-		padding: 104px 0 56px;
-		overflow: hidden;
+		padding: 80px 0 56px;
+		/* clip, not hidden: the glow stays inside but the search dropdowns can open below the hero */
+		overflow-x: clip;
 		background-color: var(--nv-bg);
 		font-family: $nv-font-body;
 		&::before {
@@ -51,14 +52,13 @@
 		}
 	}
 
+	/* Full-bleed: the photo spans the whole page width under the navbar */
 	.hero-card {
 		position: relative;
 		width: 100%;
-		height: 460px;
+		height: 520px;
 		overflow: hidden;
-		border-radius: 16px;
-		border: 1px solid var(--nv-line-soft);
-		box-shadow: 0 0 0 1px rgba(225, 29, 72, 0.12), 0 20px 40px -15px rgba(244, 63, 94, 0.12);
+		border-bottom: 1px solid var(--nv-line-soft);
 		background: #0b0f10;
 		.hero-slide {
 			position: absolute;
@@ -83,10 +83,14 @@
 		}
 	}
 
+	.hero-card > .hero-inner {
+		height: 100%;
+	}
+
 	.hero-copy {
 		position: absolute;
-		left: 56px;
-		bottom: 72px;
+		left: 0;
+		bottom: 88px;
 		max-width: 640px;
 		display: flex;
 		flex-direction: column;
@@ -147,8 +151,8 @@
 
 	.hero-dots {
 		position: absolute;
-		right: 32px;
-		bottom: 72px;
+		right: 0;
+		bottom: 88px;
 		display: flex;
 		align-items: center;
 		gap: 8px;
