@@ -1,641 +1,723 @@
 <!DOCTYPE html>
 
-<html class="light" lang="en"><head>
+<html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Navano Governance | Executive Profile Dashboard</title>
-<!-- Material Symbols Outlined -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<!-- Google Fonts: Space Grotesk & Manrope & Geist -->
+<title>Pink Drip Birthday Cake — NAVANO Sovereign Patisserie</title>
+<!-- Fonts -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <script id="tailwind-config">
-  tailwind.config = {
-    darkMode: "class",
-    theme: {
-      extend: {
-        "colors": {
-          "primary": "#e11d48",
-          "primary-hover": "#be123c",
-          "primary-light": "#fff1f2",
-          "rose-gold": "#db2777",
-          "surface": "#fff7f9",
-          "surface-card": "#ffffff",
-          "surface-muted": "#fdf2f4",
-          "surface-glass": "rgba(255, 255, 255, 0.88)",
-          "border-pink": "#fce7f3",
-          "border-pink-subtle": "#fbcfe8",
-          "text-main": "#1f1318",
-          "text-muted": "#6b5b63",
-          "text-subtle": "#9c8a93"
-        },
-        "fontFamily": {
-          "headline": ["Space Grotesk", "sans-serif"],
-          "body": ["Manrope", "sans-serif"],
-          "label": ["Geist", "sans-serif"]
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#dbe1ff",
+            "secondary": "#bdc5e9",
+            "on-primary-fixed": "#001a41",
+            "inverse-on-surface": "#2d3133",
+            "tertiary-fixed": "#dbe1ff",
+            "error-container": "#93000a",
+            "on-secondary": "#262f4c",
+            "on-surface": "#e0e3e5",
+            "primary-container": "#4c8eff",
+            "surface-container": "#1d2022",
+            "outline-variant": "#414754",
+            "surface-variant": "#323537",
+            "on-tertiary-fixed-variant": "#3e4660",
+            "surface-container-lowest": "#0b0f10",
+            "on-surface-variant": "#c2c6d6",
+            "surface-container-high": "#272a2c",
+            "surface-dim": "#101415",
+            "tertiary-container": "#8890ae",
+            "surface-bright": "#363a3b",
+            "on-tertiary-fixed": "#131a33",
+            "on-error": "#690005",
+            "surface-container-highest": "#323537",
+            "on-primary": "#002e69",
+            "on-primary-container": "#00285d",
+            "primary": "#adc6ff",
+            "surface": "#101415",
+            "inverse-primary": "#005ac2",
+            "on-error-container": "#ffdad6",
+            "on-secondary-container": "#abb4d7",
+            "on-tertiary": "#282f49",
+            "on-tertiary-container": "#212942",
+            "surface-tint": "#adc6ff",
+            "primary-fixed": "#d8e2ff",
+            "surface-container-low": "#191c1e",
+            "secondary-fixed-dim": "#bdc5e9",
+            "secondary-container": "#3d4664",
+            "on-primary-fixed-variant": "#004494",
+            "error": "#ffb4ab",
+            "on-secondary-fixed": "#111a36",
+            "on-secondary-fixed-variant": "#3d4664",
+            "on-background": "#e0e3e5",
+            "outline": "#8c909f",
+            "primary-fixed-dim": "#adc6ff",
+            "background": "#101415",
+            "tertiary-fixed-dim": "#bec5e5",
+            "inverse-surface": "#e0e3e5",
+            "tertiary": "#bec5e5"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin-desktop": "3rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem",
+            "margin-mobile": "1rem",
+            "gutter-mobile": "1rem",
+            "space-xl": "2.5rem",
+            "gutter": "1.5rem",
+            "gutter-desktop": "2rem",
+            "margin": "2rem"
+          },
+          "fontFamily": {
+            "body-sm": ["Manrope"],
+            "body-xl": ["Manrope"],
+            "headline-md": ["Space Grotesk"],
+            "label-sm": ["Geist"],
+            "label-md": ["Geist"],
+            "headline-lg": ["Space Grotesk"],
+            "body-lg": ["Manrope"],
+            "label-lg": ["Geist"],
+            "body-md": ["Manrope"],
+            "display-hero-mobile": ["Space Grotesk"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "headline-sm": ["Space Grotesk"],
+            "display-hero": ["Space Grotesk"]
+          },
+          "fontSize": {
+            "body-sm": ["12px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+            "body-xl": ["18px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.08em", "fontWeight": "600" }],
+            "label-md": ["11px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "600" }],
+            "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-lg": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "body-md": ["14px", { "lineHeight": "22px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "display-hero-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500" }],
+            "display-hero": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.03em", "fontWeight": "600" }]
+          }
         }
       }
     }
-  }
-</script>
+  </script>
 <style>
     .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      display: inline-block;
-      vertical-align: middle;
-      line-height: 1;
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
     }
-    /* Ultra-luxury light pink architectural grid */
-    .bg-grid-pink {
+    .grid-bg-overlay {
       background-size: 32px 32px;
       background-image: 
-        linear-gradient(to right, rgba(244, 114, 182, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(244, 114, 182, 0.08) 1px, transparent 1px);
+        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
     }
-    .custom-scroll::-webkit-scrollbar {
-      width: 4px;
-    }
-    .custom-scroll::-webkit-scrollbar-thumb {
-      background: rgba(244, 114, 182, 0.25);
-      border-radius: 4px;
-    }
-    .luxury-glass {
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-    .luxury-glow {
-      box-shadow: 0 10px 30px -5px rgba(225, 29, 72, 0.08), 0 4px 12px -2px rgba(244, 114, 182, 0.06);
-    }
-</style>
+  </style>
 </head>
-<body class="bg-[#fff7f9] text-[#1f1318] antialiased min-h-screen flex flex-col font-body selection:bg-rose-100 selection:text-rose-900">
-<!-- ================= TOP NAVIGATION BAR ================= -->
-<header class="docked full-width top-0 sticky z-50 luxury-glass border-b border-[#fbcfe8]/70 shadow-sm shadow-rose-950/5">
-<div class="flex justify-between items-center w-full px-6 py-2.5 max-w-[1400px] mx-auto">
-<!-- Left cluster: Brand & Search Bar -->
-<div class="flex items-center gap-6">
-<a class="flex items-center gap-2 group" href="#">
-<div class="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-50 to-rose-100 border border-rose-300 flex items-center justify-center text-rose-600 shadow-sm shadow-rose-500/10 group-hover:border-rose-500 transition-all">
-<span class="material-symbols-outlined text-[19px]">hexagon</span>
+<body class="bg-background text-on-surface font-body-md text-body-md min-h-screen selection:bg-primary selection:text-on-primary relative overflow-x-hidden">
+<!-- Sovereign Ambient Background Pattern -->
+<div class="fixed inset-0 grid-bg-overlay pointer-events-none z-0"></div>
+<div class="fixed top-0 left-1/4 w-[600px] h-[350px] bg-primary/5 rounded-full blur-[140px] pointer-events-none z-0"></div>
+<div class="fixed top-1/2 right-0 w-[500px] h-[400px] bg-secondary-container/10 rounded-full blur-[160px] pointer-events-none z-0"></div>
+<!-- Shared Component: TopNavBar (Exact mapping from JSON) -->
+<header class="docked full-width top-0 sticky z-50 bg-surface-container-low/80 backdrop-blur-md border-b border-outline-variant/30 shadow-2xl shadow-surface-container-lowest/60">
+<div class="flex justify-between items-center w-full px-space-md md:px-margin-desktop max-w-[1400px] mx-auto h-20">
+<!-- Brand & Search cluster -->
+<div class="flex items-center space-x-6">
+<a class="flex items-center space-x-2 group" href="#">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary group-hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="token">token</span>
 </div>
-<span class="text-xl font-headline font-bold tracking-wider text-[#1f1318] uppercase">NAVANO</span>
+<span class="text-headline-md font-headline-md tracking-wider font-semibold text-on-surface">NAVANO</span>
 </a>
-<!-- Global Command Search -->
-<div class="relative hidden lg:block w-72">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#9c8a93] text-[18px]">search</span>
-<input class="w-full bg-white/90 border border-[#fbcfe8] rounded-lg pl-9 pr-12 py-1.5 text-xs font-body text-[#1f1318] placeholder:text-[#9c8a93] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200 transition-all shadow-sm" placeholder="Search entity, ledger, audit..." type="text"/>
-<kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-label text-[#836773] border border-[#fbcfe8] rounded px-1.5 py-0.5 bg-rose-50/60 font-semibold">⌘K</kbd>
+<!-- Search Bar (on_left in JSON) -->
+<div class="hidden xl:flex items-center bg-surface-container-lowest/80 border border-outline-variant/40 rounded-lg px-3 py-1.5 focus-within:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-outline text-lg mr-2" data-icon="search">search</span>
+<input class="bg-transparent text-on-surface placeholder:text-outline text-label-md font-label-md outline-none border-none p-0 focus:ring-0 w-44" placeholder="Search Sovereign Ateliers..." type="text"/>
+<kbd class="text-[9px] font-mono text-outline border border-outline-variant/40 px-1 py-0.5 rounded ml-2">⌘K</kbd>
 </div>
 </div>
-<!-- Center navigation links -->
-<nav class="hidden md:flex items-center gap-4">
-<a class="text-[#6b5b63] hover:text-[#1f1318] hover:bg-rose-50/80 transition-colors duration-200 text-xs font-label font-medium px-3 py-1.5 rounded" href="#">Executive Suite</a>
-<a class="text-rose-600 font-semibold border-b-2 border-rose-600 pb-1 text-xs font-label px-3 py-1.5" href="#">Governance</a>
-<a class="text-[#6b5b63] hover:text-[#1f1318] hover:bg-rose-50/80 transition-colors duration-200 text-xs font-label font-medium px-3 py-1.5 rounded" href="#">Audit Trail</a>
+<!-- Center Navigation Links (Exact labels from JSON) -->
+<nav class="hidden md:flex items-center space-x-6 text-label-md font-label-md">
+<!-- Active Tab: Patisserie (Since product is Pink Drip Birthday Cake) -->
+<a class="text-primary border-b-2 border-primary font-medium py-1 px-1 transition-colors duration-150" href="#">Patisserie</a>
+<a class="text-on-surface-variant font-normal py-1 px-1 hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-150" href="#">Artisanal Confectionery</a>
+<a class="text-on-surface-variant font-normal py-1 px-1 hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-150" href="#">Floral Ateliers</a>
+<a class="text-on-surface-variant font-normal py-1 px-1 hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-150" href="#">Bespoke Gifting</a>
+<a class="text-on-surface-variant font-normal py-1 px-1 hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-150" href="#">Calendar</a>
+<a class="text-on-surface-variant font-normal py-1 px-1 hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-150" href="#">Editorial</a>
 </nav>
-<!-- Right cluster: Real-time telemetry, Actions & Profile -->
-<div class="flex items-center gap-4">
-<!-- Live Tier 1 Sovereign Status Chip -->
-<div class="hidden xl:flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#fbcfe8] shadow-sm">
-<span class="relative flex h-2 w-2">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-<span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-</span>
-<span class="text-[11px] font-label text-[#6b5b63]">Verified Status:</span>
-<span class="text-[11px] font-label text-rose-600 font-bold tracking-wider">TIER-1 ACTIVE</span>
-</div>
-<!-- Trailing action icons -->
-<div class="flex items-center gap-1 border-l border-[#fce7f3] pl-3">
-<button class="p-2 rounded-lg text-[#6b5b63] hover:text-[#1f1318] hover:bg-rose-50 transition-colors relative" title="Notifications">
-<span class="material-symbols-outlined text-[20px]">notifications</span>
-<span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-rose-500 ring-2 ring-white"></span>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center space-x-3">
+<!-- Icons from trailing_icon_actions: lock, bookmark, shopping_bag -->
+<button aria-label="Security Token Lock" class="w-9 h-9 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-150 active:scale-[0.98]">
+<span class="material-symbols-outlined text-sm" data-icon="lock">lock</span>
 </button>
-<button class="p-2 rounded-lg text-[#6b5b63] hover:text-[#1f1318] hover:bg-rose-50 transition-colors" title="Identity Assurance">
-<span class="material-symbols-outlined text-[20px]">shield_person</span>
+<button aria-label="Vault Bookmarks" class="w-9 h-9 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-150 active:scale-[0.98]">
+<span class="material-symbols-outlined text-sm" data-icon="bookmark">bookmark</span>
 </button>
-<button class="p-2 rounded-lg text-[#6b5b63] hover:text-rose-600 hover:bg-rose-50 transition-colors" title="Emergency Lock">
-<span class="material-symbols-outlined text-[20px]">tune</span>
+<button aria-label="Private Client Cart" class="w-9 h-9 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high/60 transition-colors duration-150 active:scale-[0.98] relative">
+<span class="material-symbols-outlined text-sm" data-icon="shopping_bag">shopping_bag</span>
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-primary rounded-full"></span>
 </button>
-</div>
-<!-- Executive Avatar & Wallet preview -->
-<div class="flex items-center gap-3 pl-1">
-<div class="hidden sm:flex flex-col text-right">
-<span class="text-xs font-label font-bold text-[#1f1318]">Khanzada R.</span>
-<span class="text-[11px] font-mono text-rose-600 font-semibold">$48,250.00 VIP</span>
-</div>
-<div class="relative group cursor-pointer">
-<img alt="Executive monogram avatar with verified badge" class="w-9 h-9 rounded-full object-cover border-2 border-rose-300 group-hover:border-rose-500 shadow-sm transition-colors" data-alt="Monochrome executive portrait of a distinguished young male venture leader in dark minimalist tech apparel with subtle architectural studio illumination, sharp high-contrast gaze, professional corporate assurance aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD9KdpGXljyzGmczcEqH7HBHEItXSqZwn07JbxqTT158vUuU8jraxhSsQsnd5LmYjcNuYPn87piDU3rxqZcxcY_PnGORtrXgMjxUTk1d7BBuOfP7aVEAFwMkJH8DNmuyDWZa9Pf_9OrKvXwoN1X_cSyvwcHiAsOB4n8b6sKbNQVu1DZJ1hsEV-bI0nM9LZLbQuDaSTbIF4lMohCE-2hlreC7sZZx3tYRs5ug8FA_7tw2PSeZAI8Y_3fw"/>
-<span class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-white rounded-full flex items-center justify-center shadow-sm">
-<span class="material-symbols-outlined text-[12px] text-rose-600" style="font-variation-settings: 'FILL' 1;">verified</span>
-</span>
-</div>
+<!-- Sovereign Concierge CTA -->
+<a class="hidden sm:inline-flex items-center text-label-md font-label-md bg-surface-container-high border border-outline-variant/50 text-on-surface hover:text-primary hover:bg-surface-variant px-3 py-2 rounded-lg transition-colors duration-150 active:scale-[0.98]" href="#concierge">
+<span>Private Client Concierge</span>
+</a>
+<!-- Sovereign Avatar Badge -->
+<div class="w-9 h-9 rounded-lg overflow-hidden border border-primary/40 p-0.5 bg-surface-container-high" title="Executive client sovereign avatar badge">
+<img class="w-full h-full object-cover rounded" data-alt="Close up sophisticated sovereign client avatar photograph with subtle blue studio backlight against deep charcoal backdrop, representing high status private patron." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2AepyBrZDC75GIfkblJ1xmFBtJh1jpFvVlCu2Q6jYd07g-33YrGH4IhsO9UJR09EWo9r6YqOnCXvgJf0FzPkACdva1TXfwqNgFmnsOZm3LMtJSaAdLGPLplKf-1qOh6yEfEVNBAYSU8UIEE5foMeqC5WyEJGkkbWATjsfMw6BF28D3MYY_O1IDPrZPAGtL_TUgYKasCUVce9Xbj7HAvvZl8GoFldKRBuqzYxZYz5IKD-jrzM2hG5klw"/>
 </div>
 </div>
 </div>
 </header>
-<!-- ================= MAIN LAYOUT WRAPPER ================= -->
-<div class="flex-1 w-full max-w-[1400px] mx-auto flex flex-col md:flex-row bg-grid-pink">
-<!-- ================= EXECUTIVE DRAWER ================= -->
-<aside class="w-full md:w-72 flex-shrink-0 flex flex-col py-6 px-4 border-r border-[#fbcfe8]/70 luxury-glass shadow-sm justify-between">
-<!-- Navigation Header Section -->
-<div class="flex flex-col gap-6">
-<div class="px-1 flex items-center justify-between pb-3 border-b border-[#fce7f3]">
-<div>
-<div class="text-lg font-headline font-bold text-[#1f1318] tracking-tight">Navano Governance</div>
-<div class="text-[10px] font-label text-rose-600 font-bold uppercase tracking-widest mt-0.5">Tier-1 Sovereign Entity</div>
+<!-- Main Content Canvas (max-w-[1400px], 12-column architecture) -->
+<main class="relative z-10 max-w-[1400px] mx-auto px-space-md md:px-margin-desktop py-space-lg md:py-space-xl">
+<!-- Breadcrumb & Classification Bar -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-space-lg text-label-sm font-label-sm text-outline border-b border-outline-variant/20 pb-4">
+<div class="flex items-center space-x-2">
+<span class="text-on-surface-variant">MAISON CATALOGUE</span>
+<span>/</span>
+<span class="text-on-surface-variant">PATISSERIE</span>
+<span>/</span>
+<span class="text-primary font-medium tracking-wider">#NVN-INCH-CAKE-01</span>
 </div>
-<span class="material-symbols-outlined text-rose-400 text-[18px]">token</span>
+<div class="flex items-center space-x-3">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-highest text-secondary text-label-sm font-label-sm border border-outline-variant/40">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          ACTIVE ATELIER INVENTORY
+        </span>
+<span class="text-outline font-mono">FIPS-140-3 CRYPTO-VERIFIED</span>
 </div>
-<!-- Dynamic Navigation Tabs -->
-<nav class="flex flex-col gap-1.5">
-<!-- 1. Profile Overview (ACTIVE MATCH - Ultra luxury rose style) -->
-<a class="flex items-center gap-3 px-3.5 py-2.5 bg-gradient-to-r from-rose-100/90 via-rose-50/80 to-white text-rose-700 font-bold rounded-lg border-l-4 border-rose-600 shadow-sm active:scale-[0.98] transition-transform duration-150" href="#">
-<span class="material-symbols-outlined text-[20px] text-rose-600" style="font-variation-settings: 'FILL' 1;">account_circle</span>
-<span class="text-xs font-label tracking-normal font-bold">Profile Overview</span>
-</a>
-<!-- 2. Security & Keys -->
-<a class="flex items-center gap-3 px-3.5 py-2.5 text-[#6b5b63] hover:text-[#1f1318] hover:bg-rose-50/70 rounded-lg active:scale-[0.98] transition-all duration-200" href="#">
-<span class="material-symbols-outlined text-[20px] text-[#9c8a93]">key</span>
-<span class="text-xs font-label font-medium tracking-normal">Security &amp; Keys</span>
-</a>
-<!-- 3. Financials & Invoices -->
-<a class="flex items-center justify-between px-3.5 py-2.5 text-[#6b5b63] hover:text-[#1f1318] hover:bg-rose-50/70 rounded-lg active:scale-[0.98] transition-all duration-200" href="#">
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined text-[20px] text-[#9c8a93]">account_balance_wallet</span>
-<span class="text-xs font-label font-medium tracking-normal">Financials &amp; Invoices</span>
 </div>
-<span class="text-[10px] font-label font-semibold px-2 py-0.5 bg-rose-100/80 rounded-full text-rose-700">$48k</span>
-</a>
-<!-- 4. Connected Accounts -->
-<a class="flex items-center gap-3 px-3.5 py-2.5 text-[#6b5b63] hover:text-[#1f1318] hover:bg-rose-50/70 rounded-lg active:scale-[0.98] transition-all duration-200" href="#">
-<span class="material-symbols-outlined text-[20px] text-[#9c8a93]">hub</span>
-<span class="text-xs font-label font-medium tracking-normal">Connected Accounts</span>
-</a>
-<!-- 5. Activity Log -->
-<a class="flex items-center gap-3 px-3.5 py-2.5 text-[#6b5b63] hover:text-[#1f1318] hover:bg-rose-50/70 rounded-lg active:scale-[0.98] transition-all duration-200" href="#">
-<span class="material-symbols-outlined text-[20px] text-[#9c8a93]">history</span>
-<span class="text-xs font-label font-medium tracking-normal">Activity Log</span>
-</a>
-<!-- 6. Preferences -->
-<a class="flex items-center gap-3 px-3.5 py-2.5 text-[#6b5b63] hover:text-[#1f1318] hover:bg-rose-50/70 rounded-lg active:scale-[0.98] transition-all duration-200" href="#">
-<span class="material-symbols-outlined text-[20px] text-[#9c8a93]">settings</span>
-<span class="text-xs font-label font-medium tracking-normal">Preferences</span>
-</a>
-</nav>
-<!-- Generate API Key CTA -->
-<div class="p-3.5 rounded-xl bg-gradient-to-b from-rose-50/60 to-white border border-[#fbcfe8] flex flex-col gap-2.5 shadow-sm">
+<!-- 12-Column Master Layout Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg md:gap-gutter-desktop items-start">
+<!-- 8-Column Primary Dossier Area (Left Column) -->
+<section class="lg:col-span-8 space-y-space-lg">
+<!-- Header & Title Module -->
+<div class="bg-surface-container-low/70 backdrop-blur-md border border-outline-variant/30 rounded-xl p-space-lg md:p-space-xl shadow-xl shadow-surface-container-lowest/50 relative overflow-hidden">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+<div class="space-y-2">
+<h1 class="text-headline-lg font-headline-lg text-on-surface tracking-tight">
+                Pink Drip Birthday Cake
+              </h1>
+<!-- Metadata Badges Row matching exact reference: INCHEON • CAKE • 1 days ago -->
+<div class="flex flex-wrap items-center text-label-md font-label-md text-on-surface-variant gap-x-3 gap-y-1">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-primary text-base" data-icon="location_on">location_on</span>
+                  INCHEON
+                </span>
+<span class="text-outline-variant">•</span>
+<span class="text-error font-medium">CAKE</span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center gap-1 text-outline">
+<span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span>
+                  1 days ago
+                </span>
+</div>
+</div>
+<!-- Price & Analytics Telemetry matching reference (Views: 1, Hearts: 1, $45) -->
+<div class="flex flex-row md:flex-col items-baseline md:items-end justify-between border-t md:border-t-0 border-outline-variant/20 pt-3 md:pt-0">
+<div class="flex items-center space-x-4 text-label-sm font-label-sm text-outline mb-1">
+<span class="inline-flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span>
+                  1
+                </span>
+<span class="inline-flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-sm" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                  1
+                </span>
+</div>
+<div class="flex items-baseline space-x-1">
+<span class="text-headline-lg font-headline-lg text-primary tracking-tight font-semibold">$45</span>
+<span class="text-label-sm font-label-sm text-outline uppercase">USD</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Visual Masterpiece Gallery Section -->
+<div class="bg-surface-container-low/70 backdrop-blur-md border border-outline-variant/30 rounded-xl p-space-md md:p-space-lg shadow-xl shadow-surface-container-lowest/50 space-y-space-md">
+<!-- Master Stage Image: Pink Drip Cake on pedestal matching prompt and visual -->
+<div class="relative w-full aspect-[4/3] rounded-lg overflow-hidden border border-outline-variant/40 bg-surface-container-lowest group">
+<img class="w-full h-full object-cover object-center transform group-hover:scale-[1.02] transition-transform duration-700 ease-out" data-alt="Exquisite artisanal two-tiered pink drip birthday cake resting atop an elegant pastel pink scalloped ceramic pedestal stand. Glazed in glossy pastel pink drip with vibrant rainbow gourmet sugar sprinkles dusting the tiers against an ambient moody obsidian dark studio setting, ultra high definition culinary photography with soft rim lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_XyrD3RjJmJfiJ06XGF-7f3kPdr9lc16beROg4BgTdnJnRZN_pNuDw4teI5MBVhc5YyuIlIMGBO83p9GKp3jp7x-DRAxSCqOhgt1mmDHK6Btx3ZZAn1uYhm55A0xt1hZ5dxD7vN1WO7NA-QT6YUEJ6djWjzhp4ec-35D7HL-enToLsPauYfFezMGWtcQSpBEMil_f0CgdV2gMqZtiZwG97ORMOlTljUjMHNVxkgqpFh2n68TWdglTCw"/>
+<div class="absolute top-4 left-4">
+<span class="px-2.5 py-1 rounded bg-surface-container-lowest/80 backdrop-blur-md text-label-sm font-label-sm border border-outline-variant/40 text-on-surface flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                FRESHLY BAKED ATELIER SPECIMEN
+              </span>
+</div>
+<div class="absolute bottom-4 right-4 bg-surface-container-lowest/80 backdrop-blur-md border border-outline-variant/40 rounded px-3 py-1 text-label-sm font-label-sm text-outline">
+              Serves 8-10 Connoisseurs
+            </div>
+</div>
+<!-- Thumbnail Strip (matching reference thumbnail gallery behavior) -->
+<div class="flex items-center space-x-3 overflow-x-auto pb-1">
+<button class="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-primary bg-surface-container p-0.5 focus:outline-none">
+<img class="w-full h-full object-cover rounded" data-alt="Detailed frontal view thumbnail of the two-tiered pink drip birthday cake on scalloped stand, showcasing fine confectionery sugar sprinkles and decadent drip frosting under studio lights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpMKCEU8T_W2dScaJgm7diMuvTsXoAbAsUXYjDtKxW4R4Q9lK2vKRALQRiaMnRIH4B1FhYkzydBfEATrhAJ69wBJEWxcgIzoCrTYneEDCDFNf_TVeAvRBBIjM6kHA9vW1IyV9_X5_QH0kwr_FOFr4Dvu-momYTpeFyE2JtijeAt_lu1K8iQeRUhytl1DeObW0KAv6o-xvxkf9lYQ0OdaTFF7Jys11qgj0y5qDBYa-r5Cw4VB7vaPdq-g"/>
+</button>
+<button class="relative w-20 h-20 rounded-lg overflow-hidden border border-outline-variant/40 hover:border-primary/50 transition-colors bg-surface-container p-0.5 focus:outline-none">
+<img class="w-full h-full object-cover rounded opacity-80 hover:opacity-100 transition-opacity" data-alt="Top down overhead view of the vanilla layer birthday cake decorated with pastel pink drip edges, whipped cream rosettes, and confetti rainbow sprinkles on marble tabletop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3aCf7IakXb9uCmAzMVdEUU1yN3HZl6-gGunYp8wPiyUiCkJs7q1nlDeehVVolcH8GWAGWQ7pK6dTslxQKFJ5u0lB43x8kHLeqw16EShLaBczbSAHkNYGUNwmHcE9gsbyMgT7cS26B2xE4cElG_9rI9FGTsIGzszvDGETHj5IMQqLDh6oLqEZw-8hwiKUgC53maLkPxf17kuCu4LLCey-89ekCt9qKWZbH2YNokQNezgTHEhy1gDcgEA"/>
+</button>
+<button class="relative w-20 h-20 rounded-lg overflow-hidden border border-outline-variant/40 hover:border-primary/50 transition-colors bg-surface-container p-0.5 focus:outline-none">
+<img class="w-full h-full object-cover rounded opacity-80 hover:opacity-100 transition-opacity" data-alt="Extreme close-up macro culinary shot of glossy pastel pink confectionery drip dripping down textured vanilla bean buttercream with artisanal rainbow sugar beads." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuoGxJZwELnuiFut9yyRiWJaknvnzbY-i1oZelhJWtwCwFAAx2MOXN6tlpREX9SaI1GkbAAVtwXs1WnSxMH7eesSJ928kYBTZvIwPt1t0YJ7a1arCixo5PoDfrTVtPtJBq_7_2HhbFW3gysXK9BMTaD5MrdBJV2h6QoY2ZYLUTXFvkEr5CgQpkBrmMMrr0C1AnQx4nAaG3ktSGrHfM-6X8A8P0aWdXT8avJQ3jh9JIkuBYKenvkrz5bw"/>
+</button>
+<div class="flex-1 flex items-center justify-end pr-2 text-label-sm font-label-sm text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="photo_camera">photo_camera</span>
+                3 Curated Perspectives
+              </span>
+</div>
+</div>
+</div>
+<!-- Key Specification Quick-Pill Badges (Direct 1:1 match of reference icons & badges) -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+<!-- Badge 1: Items 1 -->
+<div class="bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 rounded-lg p-3.5 flex items-center space-x-3 hover:border-outline-variant/60 transition-colors">
+<div class="w-10 h-10 rounded bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="inventory_2">inventory_2</span>
+</div>
+<div class="min-w-0">
+<div class="text-label-sm font-label-sm text-outline truncate">Items</div>
+<div class="text-headline-sm font-headline-sm text-on-surface truncate">1</div>
+</div>
+</div>
+<!-- Badge 2: Location INCHEON -->
+<div class="bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 rounded-lg p-3.5 flex items-center space-x-3 hover:border-outline-variant/60 transition-colors">
+<div class="w-10 h-10 rounded bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="apartment">apartment</span>
+</div>
+<div class="min-w-0">
+<div class="text-label-sm font-label-sm text-outline truncate">Location</div>
+<div class="text-label-md font-label-md text-on-surface font-semibold truncate">INCHEON</div>
+</div>
+</div>
+<!-- Badge 3: Listed 2026 -->
+<div class="bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 rounded-lg p-3.5 flex items-center space-x-3 hover:border-outline-variant/60 transition-colors">
+<div class="w-10 h-10 rounded bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-outline shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="calendar_today">calendar_today</span>
+</div>
+<div class="min-w-0">
+<div class="text-label-sm font-label-sm text-outline truncate">Listed</div>
+<div class="text-label-md font-label-md text-on-surface font-semibold truncate">2026</div>
+</div>
+</div>
+<!-- Badge 4: Status ACTIVE -->
+<div class="bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 rounded-lg p-3.5 flex items-center space-x-3 hover:border-outline-variant/60 transition-colors">
+<div class="w-10 h-10 rounded bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="verified">verified</span>
+</div>
+<div class="min-w-0">
+<div class="text-label-sm font-label-sm text-outline truncate">Status</div>
+<div class="text-label-md font-label-md text-primary font-semibold truncate">ACTIVE</div>
+</div>
+</div>
+<!-- Badge 5: Product Type CAKE -->
+<div class="bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 rounded-lg p-3.5 flex items-center space-x-3 hover:border-outline-variant/60 transition-colors col-span-2 sm:col-span-1">
+<div class="w-10 h-10 rounded bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-lg" data-icon="cake">cake</span>
+</div>
+<div class="min-w-0">
+<div class="text-label-sm font-label-sm text-outline truncate">Product Type</div>
+<div class="text-label-md font-label-md text-on-surface font-semibold truncate">CAKE</div>
+</div>
+</div>
+</div>
+<!-- Product Description & Detailed Specifications Dossier -->
+<div class="bg-surface-container-low/70 backdrop-blur-md border border-outline-variant/30 rounded-xl p-space-lg md:p-space-xl shadow-xl shadow-surface-container-lowest/50 space-y-space-lg">
+<!-- Narrative Section -->
+<div class="space-y-3 pb-space-lg border-b border-outline-variant/20">
+<h2 class="text-headline-sm font-headline-sm text-on-surface font-semibold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="description">description</span>
+              Product Description
+            </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant leading-relaxed">
+              Vanilla layer cake with pink drip glaze, rainbow sprinkles and whipped cream rosettes. Serves 8-10. Handcrafted daily with premium French butter and Madagascar vanilla.
+            </p>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="px-2.5 py-1 rounded bg-surface-container-high text-outline text-label-sm font-label-sm border border-outline-variant/30">Bourbon Madagascar Vanilla</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high text-outline text-label-sm font-label-sm border border-outline-variant/30">AOP Charentes-Poitou Butter</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high text-outline text-label-sm font-label-sm border border-outline-variant/30">Organic Pasture Eggs</span>
+<span class="px-2.5 py-1 rounded bg-surface-container-high text-outline text-label-sm font-label-sm border border-outline-variant/30">Zero Artificial Additives</span>
+</div>
+</div>
+<!-- Structured Specifications Grid (Direct replication of reference metadata fields) -->
+<div class="space-y-4">
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-semibold">
+              Product Details
+            </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8 text-body-md font-body-md">
+<!-- Left Spec Column -->
+<div class="space-y-3">
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+<span class="text-outline font-label-md font-label-md">Price</span>
+<span class="text-on-surface font-semibold font-mono">$45</span>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+<span class="text-outline font-label-md font-label-md">Items Available</span>
+<span class="text-on-surface font-mono">1</span>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+<span class="text-outline font-label-md font-label-md">Location</span>
+<span class="text-on-surface font-medium">INCHEON</span>
+</div>
+<div class="flex items-start justify-between py-2 border-b border-outline-variant/20">
+<span class="text-outline font-label-md font-label-md shrink-0">Address</span>
+<span class="text-on-surface text-right max-w-[200px] font-mono text-body-sm font-body-sm">
+                    Yeonsu-gu, Songdo Convensia-daero 81
+                  </span>
+</div>
+</div>
+<!-- Right Spec Column -->
+<div class="space-y-3">
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+<span class="text-outline font-label-md font-label-md">Listed</span>
+<span class="text-on-surface font-mono">2026</span>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+<span class="text-outline font-label-md font-label-md">Product Type</span>
+<span class="text-on-surface font-medium">CAKE</span>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+<span class="text-outline font-label-md font-label-md">Status</span>
+<span class="text-primary font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                    ACTIVE
+                  </span>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-outline-variant/20">
+<span class="text-outline font-label-md font-label-md">Maison Vault Batch</span>
+<span class="text-outline font-mono text-body-sm font-body-sm">NVN-BATCH-8921</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Leave A Review Section (Matching reference review form logic) -->
+<div class="bg-surface-container-low/70 backdrop-blur-md border border-outline-variant/30 rounded-xl p-space-lg md:p-space-xl shadow-xl shadow-surface-container-lowest/50 space-y-space-md">
 <div class="flex items-center justify-between">
-<span class="text-[10px] font-label font-bold text-[#836773] tracking-wider uppercase">REST &amp; GRAPHQL GATEWAY</span>
-<span class="text-[11px] font-label font-bold text-rose-600 font-mono">v4.8</span>
+<h2 class="text-headline-sm font-headline-sm text-on-surface font-semibold">
+              Leave A Review
+            </h2>
+<div class="flex items-center text-primary space-x-1">
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-outline text-label-sm font-label-sm ml-2">Verified Clients Only</span>
 </div>
-<button class="w-full py-2 px-3 bg-white hover:bg-rose-50 text-[#1f1318] text-xs font-label font-semibold rounded-lg border border-rose-200 flex items-center justify-center gap-2 transition-all active:scale-[0.98] shadow-sm">
-<span class="material-symbols-outlined text-[16px] text-rose-600">key_vertical</span>
-<span>Generate API Key</span>
+</div>
+<form class="space-y-4" onsubmit="event.preventDefault();">
+<div>
+<label class="block text-label-md font-label-md text-on-surface-variant mb-2" for="review-text">Review</label>
+<textarea class="w-full bg-surface-container-highest/90 border border-outline-variant/40 rounded-lg p-3.5 text-on-surface text-body-md font-body-md placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/50 transition-all resize-y" id="review-text" placeholder="Share your experience regarding confectionery texture, delivery courier temperature precision, and flavor profile..." rows="4"></textarea>
+</div>
+<div class="flex justify-end">
+<button class="inline-flex items-center space-x-2 bg-surface-container-high border border-outline-variant/50 text-on-surface hover:text-primary hover:border-primary/50 px-6 py-2.5 rounded-lg text-label-md font-label-md transition-all duration-150 active:scale-[0.98] shadow-sm" type="submit">
+<span>Submit Review</span>
+<span class="material-symbols-outlined text-sm" data-icon="north_east">north_east</span>
 </button>
 </div>
+</form>
 </div>
-<!-- Footer navigation tabs -->
-<div class="pt-5 border-t border-[#fce7f3] flex flex-col gap-1">
-<a class="flex items-center gap-3 px-3 py-1.5 text-[#6b5b63] hover:text-[#1f1318] text-xs font-label font-medium rounded transition-colors" href="#">
-<span class="material-symbols-outlined text-[18px] text-[#9c8a93]">menu_book</span>
-<span>Documentation</span>
-</a>
-<a class="flex items-center justify-between px-3 py-1.5 text-[#6b5b63] hover:text-[#1f1318] text-xs font-label font-medium rounded transition-colors" href="#">
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined text-[18px] text-[#9c8a93]">verified_user</span>
-<span>Compliance Vault</span>
+</section>
+<!-- 4-Column Telemetry & Atelier Consultation Rail (Right Column) -->
+<aside class="lg:col-span-4 space-y-space-lg sticky top-28">
+<!-- Atelier Consultation Card ("Get More Information") -->
+<div class="bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/40 rounded-xl p-space-lg shadow-2xl shadow-surface-container-lowest/60 relative overflow-hidden" id="concierge">
+<div class="border-b border-outline-variant/20 pb-4 mb-5">
+<h2 class="text-headline-sm font-headline-sm text-on-surface font-semibold tracking-tight">
+              Get More Information
+            </h2>
+<p class="text-body-sm font-body-sm text-outline mt-1">Direct private channel to the master pâtissier atelier.</p>
 </div>
-<span class="w-2 h-2 rounded-full bg-rose-500 ring-2 ring-rose-200"></span>
+<!-- navano_store contact header matching reference -->
+<div class="flex items-center space-x-4 mb-6 p-3 rounded-lg bg-surface-container-high/60 border border-outline-variant/30">
+<div class="w-14 h-14 rounded-full overflow-hidden border border-primary/40 shrink-0 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Distinguished executive master pâtissier in tailored dark institutional blazer with focused professional expression against minimalist atelier background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8hKNN2o77E0piGO0OrILHgKZf2Rwx-5M4fZe5b5Av9Oug_YgF0lmAX3RhkP8SBC1q4X9CqIiF73NJFLMaLJoK6gQQOkmRE0gwRx0WLBpF0gvSjrlWT7XJtfSNcYET2djipRalkSBIDWaP3d7733MXxveNCvwMK8G_x37pati6VPmuAvjfh7E0GOTN58gcbh5fQ9QAPdiTES4YDKNefXM6Ojf8UOJ3awNsrYS4ak_bSA5p0SqmxZHP7w"/>
+</div>
+<div class="min-w-0 flex-1">
+<div class="text-label-lg font-label-lg text-on-surface font-semibold truncate">navano_store</div>
+<a class="flex items-center gap-1.5 text-body-sm font-body-sm text-on-surface-variant hover:text-primary transition-colors mt-0.5" href="tel:01055502028">
+<span class="material-symbols-outlined text-sm text-primary" data-icon="call">call</span>
+<span class="font-mono">01055502028</span>
 </a>
-<div class="px-3 pt-2 text-[10px] font-label text-[#9c8a93] font-mono">
-  SEC-ID: #NVN-882-901K
+<a class="inline-block text-label-sm font-label-sm text-primary hover:underline mt-1 font-medium" href="#">
+                View Listings
+              </a>
+</div>
+</div>
+<!-- Contact Form matching reference inputs -->
+<form class="space-y-4" onsubmit="event.preventDefault();">
+<!-- Name Input -->
+<div>
+<label class="block text-label-md font-label-md text-on-surface-variant mb-1.5" for="client-name">Name</label>
+<input class="w-full bg-surface-container-lowest/80 border border-outline-variant/40 rounded-lg px-3.5 py-2.5 text-on-surface text-body-md font-body-md placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/50 transition-all" id="client-name" placeholder="Enter your name" type="text"/>
+</div>
+<!-- Phone Input -->
+<div>
+<label class="block text-label-md font-label-md text-on-surface-variant mb-1.5" for="client-phone">Phone</label>
+<input class="w-full bg-surface-container-lowest/80 border border-outline-variant/40 rounded-lg px-3.5 py-2.5 text-on-surface text-body-md font-body-md placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/50 transition-all" id="client-phone" placeholder="Enter your phone" type="tel"/>
+</div>
+<!-- Email Input -->
+<div>
+<label class="block text-label-md font-label-md text-on-surface-variant mb-1.5" for="client-email">Email</label>
+<input class="w-full bg-surface-container-lowest/80 border border-outline-variant/40 rounded-lg px-3.5 py-2.5 text-on-surface text-body-md font-body-md placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/50 transition-all font-mono text-body-sm font-body-sm" id="client-email" type="email" value="creativelayers088@sovereign.vault"/>
+</div>
+<!-- Message Textarea matching reference prefill style -->
+<div>
+<label class="block text-label-md font-label-md text-on-surface-variant mb-1.5" for="client-msg">Message</label>
+<textarea class="w-full bg-surface-container-highest/90 border border-outline-variant/40 rounded-lg p-3 text-on-surface text-body-md font-body-md placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/50 transition-all resize-none" id="client-msg" rows="4">Hello, I am interested in inquiring about Pink Drip Birthday Cake reserved for celebration at Songdo Convensia.</textarea>
+</div>
+<!-- Primary Action Button with Salmon/Coral tint matching reference accent -->
+<button class="w-full bg-[#E06D53] hover:bg-[#cf6046] active:scale-[0.98] text-white font-label-lg font-label-lg py-3 rounded-lg flex items-center justify-center space-x-2 shadow-lg shadow-[#E06D53]/20 transition-all duration-150" type="submit">
+<span>Send Message</span>
+<span class="material-symbols-outlined text-sm font-bold" data-icon="north_east">north_east</span>
+</button>
+<!-- Sovereign Trust Guarantee -->
+<div class="pt-2 text-center">
+<span class="text-label-sm font-label-sm text-outline flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="lock">lock</span>
+                End-to-End Cryptographic Escrow &amp; Chilled Logistics
+              </span>
+</div>
+</form>
+</div>
+<!-- Quick Atelier Status Card -->
+<div class="bg-surface-container-low/70 backdrop-blur-md border border-outline-variant/30 rounded-xl p-space-md shadow-xl text-body-sm font-body-sm space-y-3">
+<div class="flex items-center justify-between text-label-sm font-label-sm text-outline">
+<span class="uppercase">INCHEON SONGDO ATELIER</span>
+<span class="text-primary">OPEN TODAY</span>
+</div>
+<div class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-secondary" data-icon="distance">distance</span>
+<span>Same-Day Concierge Courier across Incheon &amp; Seoul Metro</span>
+</div>
+<div class="text-outline text-label-sm font-label-sm pt-2 border-t border-outline-variant/20 flex justify-between">
+<span>Standard Preparation: 4 Hours</span>
+<span class="font-mono text-on-surface">Batch #2026-04</span>
 </div>
 </div>
 </aside>
-<!-- ================= CANVAS CONTENT AREA ================= -->
-<main class="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto custom-scroll">
-<!-- BREADCRUMBS & CONTEXTUAL HEADER -->
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+</div>
+<!-- Related & Destination Products Section ("Destination Product" from Reference Image 2) -->
+<section class="mt-space-xl pt-space-xl border-t border-outline-variant/30 space-y-space-lg">
 <div>
-<div class="flex items-center gap-2 text-[11px] font-label font-semibold text-[#836773] mb-1">
-<span class="tracking-wider">SOVEREIGN ACCOUNT</span>
-<span class="text-rose-300">/</span>
-<span class="tracking-wider">IDENTITY GOVERNANCE</span>
-<span class="text-rose-300">/</span>
-<span class="text-rose-600 font-bold tracking-wider">MY PROFILE</span>
+<h2 class="text-headline-lg font-headline-lg text-on-surface font-semibold tracking-tight">
+          Destination Product
+        </h2>
+<p class="text-body-md font-body-md text-outline mt-1">
+          Aliquam lacinia diam quis lacus euismod
+        </p>
 </div>
-<h1 class="text-3xl font-headline font-bold text-[#1f1318] tracking-tight">Executive Identity &amp; Dossier</h1>
-<p class="text-sm font-body text-[#6b5b63] mt-1">Cryptographic sovereign credentials, biometrics verification, and institutional routing node.</p>
+<!-- Bento-style Card Cluster reflecting reference products -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1: 24K Gold Leaf Noir Opera Cake ($95, 2 items) -->
+<article class="bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group shadow-xl">
+<div class="relative aspect-[16/10] overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Sophisticated artisanal square slice of French Opera Cake crowned with delicate edible 24 karat gold leaf and chocolate curls, resting on a slate dark stone platter beside an espresso cup in a luxurious dim ambient setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2gf7SFZmwJ3jbY8Gxnt7ddcqtq3GzX7Nf8DXu-D4IICG7zPZOSkC46yF3hyYxSw-MArW5hllhzVqdEQPzfPGcNVSxrG7cuRBcE-kAeHZFOT3XQvxkuh1u7sZRva2d76YDGWxpHR9qNap7Y0v3Wzbu7AD0a-nHKqCNrTz_rGiBEWSyGjc2lRK2HzhS2eozS5o3gs26k1lev5JJ7UZc5xb7WAwI31VptNF13lP2OYUW6riF9DNKVN9XjA"/>
+<!-- Badge Price ($95) matching reference layout -->
+<div class="absolute top-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md border border-outline-variant/40 rounded px-3 py-1 text-label-md font-label-md font-semibold text-on-surface">
+              $95
+            </div>
 </div>
-<!-- Quick actions -->
-<div class="flex items-center gap-2.5">
-<button class="px-3.5 py-2 bg-white border border-[#fbcfe8] rounded-lg text-xs font-label font-semibold text-[#1f1318] hover:bg-rose-50/70 transition-colors flex items-center gap-1.5 shadow-sm">
-<span class="material-symbols-outlined text-[16px] text-[#836773]">history</span>
-<span>Audit Trail</span>
-</button>
-<button class="px-4 py-2 bg-gradient-to-r from-rose-600 via-rose-500 to-pink-600 text-white font-bold rounded-lg text-xs font-label shadow-md shadow-rose-500/25 hover:brightness-105 active:scale-[0.99] transition-all flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">shield</span>
-<span>Export Attestation</span>
-</button>
+<div class="p-space-md space-y-3">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">
+                24K Gold Leaf Noir Opera Cake
+              </h3>
+<p class="text-body-sm font-body-sm text-outline mt-0.5">
+                Central Park-ro, Yeonsu-gu, Incheon
+              </p>
 </div>
+<!-- Quick Meta Row -->
+<div class="flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant border-y border-outline-variant/20 py-2">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-secondary" data-icon="cake">cake</span>
+                CAKE
+              </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="location_on">location_on</span>
+                INCHEON
+              </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-outline" data-icon="inventory_2">inventory_2</span>
+                2 items
+              </span>
 </div>
-<!-- ================= HERO DOSSIER CARD WITH ROSE AMBIENT BACKDROP ================= -->
-<section class="relative rounded-2xl border border-[#fbcfe8] bg-white luxury-glow overflow-hidden mb-6">
-<!-- Ambient Pink Velvet Header Layer -->
-<div class="h-44 w-full bg-gradient-to-r from-[#ffe4e9] via-[#fed7e2] to-[#fff1f2] relative border-b border-[#fbcfe8]">
-<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(244,114,182,0.3),transparent_70%)]"></div>
-<!-- Watermark Background Typography -->
-<div class="absolute right-6 top-3 opacity-15 select-none text-[120px] font-black font-headline leading-none tracking-tighter text-rose-900">
-  NAVANO
-</div>
-<!-- Cover Badge: Security Level -->
-<div class="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 bg-white/90 border border-[#fbcfe8] rounded-full backdrop-blur-md shadow-sm">
-<span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-<span class="text-[11px] font-label font-semibold text-[#6b5b63]">HARDWARE VAULT SECURED</span>
-<span class="text-[11px] font-label text-rose-600 font-mono font-bold">FIPS-140-3</span>
-</div>
-</div>
-<!-- Identity Bar below cover -->
-<div class="px-6 pb-6 pt-0 relative flex flex-col md:flex-row md:items-end justify-between gap-6 -mt-16">
-<!-- Avatar + Titles Cluster -->
-<div class="flex flex-col sm:flex-row items-start sm:items-end gap-5">
-<!-- Executive Portrait Frame -->
-<div class="relative group">
-<div class="w-32 h-32 rounded-2xl overflow-hidden p-1 bg-white border-2 border-rose-300 shadow-xl relative">
-<img alt="Khanzada Rustamov sovereign profile portrait" class="w-full h-full object-cover rounded-xl grayscale contrast-110" data-alt="Close-up monochrome fine-art portrait photograph of a focused Central Asian executive leader Khanzada Rustamov with disciplined expression, clean dark tactical turtleneck, cinematic high-contrast rim lighting against an obsidian minimalist background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3aFUmjh48b_mQMeeDq3b8sHP9OWLLQ-ErDLJL-4dyYTVGPYFLP0VKpqtVvbUvEk5xhfwa9C-vFlXVqZd7JNr5EbIFyvoZTya152k9xAZfoxiPCxEXlYWD7fe_ybO6FcZd0MvTaTG5IJ-Cc-YzJT0pZyvxSCDzV07RJ1sBTLQ0BkwWWWDIbVXL_Fo8Q6h3Z0YW-B2p0pCpkhZzusa8hBzDVjByPzPqCNEaITcfsQW-ulkeWQNz7yHCng"/>
-<!-- Live status ring -->
-<span class="absolute bottom-2 right-2 flex h-3.5 w-3.5">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-<span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-rose-500 border-2 border-white"></span>
-</span>
-</div>
-<!-- Quick Avatar Action Trigger -->
-<div class="absolute inset-0 bg-white/85 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity p-2 text-center cursor-pointer border-2 border-rose-400">
-<span class="material-symbols-outlined text-rose-600 text-[26px]">photo_camera</span>
-<span class="text-xs font-label font-bold text-[#1f1318] mt-1">Change Portrait</span>
-<span class="text-[9px] text-[#836773] font-medium">RAW / JPG / PNG Max 25MB</span>
-</div>
-</div>
-<!-- Identity Core Data -->
-<div class="mb-1">
-<div class="flex flex-wrap items-center gap-2">
-<h2 class="text-2xl font-headline text-[#1f1318] font-bold tracking-tight">Khanzada Rustamov</h2>
-<!-- Sovereign Verified Badge -->
-<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 border border-rose-300 text-rose-700 text-[11px] font-label font-bold">
-<span class="material-symbols-outlined text-[13px] text-rose-600" style="font-variation-settings: 'FILL' 1;">verified</span>
-<span>KYC TIER-3</span>
-</div>
-<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-slate-50 border border-slate-200 text-[#6b5b63] text-[11px] font-label font-bold">
-<span class="font-mono">#NVN-KHAN-01</span>
-</div>
-</div>
-<div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-body text-[#6b5b63] mt-1.5">
-<span class="flex items-center gap-1 font-medium text-[#1f1318]">
-<span class="material-symbols-outlined text-[15px] text-rose-500">badge</span>
-  Managing Partner &amp; Principal Shareholder
-</span>
-<span class="text-rose-300">•</span>
-<span class="flex items-center gap-1 font-mono text-[#836773]">
-<span class="material-symbols-outlined text-[15px] text-rose-400">alternate_email</span>
-  khan_executive
-</span>
-<span class="text-rose-300">•</span>
-<span class="flex items-center gap-1 text-[#6b5b63]">
-<span class="material-symbols-outlined text-[15px] text-rose-500">location_on</span>
-  Daejeon, South Korea
-</span>
+<!-- Footer Stats: Category & Likes -->
+<div class="flex items-center justify-between text-label-sm font-label-sm pt-1">
+<span class="text-outline uppercase font-semibold">CAKE</span>
+<div class="flex items-center space-x-3 text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="visibility">visibility</span>
+                  0
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="favorite">favorite</span>
+                  0
+                </span>
 </div>
 </div>
 </div>
-<!-- Quick Action Buttons for Avatar & Dossier -->
-<div class="flex items-center gap-2 self-start md:self-end">
-<button class="px-3.5 py-2 bg-white hover:bg-rose-50 text-[#1f1318] border border-[#fbcfe8] rounded-lg text-xs font-label font-semibold transition-colors flex items-center gap-1.5 shadow-sm active:scale-[0.98]">
-<span class="material-symbols-outlined text-[16px] text-rose-600">file_upload</span>
-<span>Upload New Photo</span>
-</button>
-<button class="p-2 bg-white hover:bg-rose-100 hover:text-rose-700 text-[#836773] border border-[#fbcfe8] rounded-lg transition-colors shadow-sm" title="Remove Profile Media">
-<span class="material-symbols-outlined text-[16px]">delete</span>
-</button>
+</article>
+<!-- Card 2: Pink Drip Birthday Cake ($45, 1 items) as seen in reference companion list -->
+<article class="bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group shadow-xl">
+<div class="relative aspect-[16/10] overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Signature two tiered pink drip birthday cake on light pink cake stand surrounded by festive gourmet sprinkles, shot in moody charcoal background with fine culinary lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgIo5OPyAh_09ZzuBV_9lkBjh3XQ4MADMFIDpPwQZWnz42i7uYDoB4ZN2r0SNUkUIKKJJKGTjsprnjyC4SiSlWlu3hCv2_Uw2qrJHqzdHe_NJodJseg8ylLGXiiq9tPd5SS4_0n0mvIcHXypCUNdg6eC2LJt6gsSG9PzA9I0SdljVJpz23qZ7ETIssrgKU0ejtlUv_-zXJsYgKrCycOUrtfUPq1qCc8v7BbFO9N6eUMeyqogOT_Iiv1Q"/>
+<!-- Badge Price ($45) -->
+<div class="absolute top-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md border border-outline-variant/40 rounded px-3 py-1 text-label-md font-label-md font-semibold text-on-surface">
+              $45
+            </div>
+</div>
+<div class="p-space-md space-y-3">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">
+                Pink Drip Birthday Cake
+              </h3>
+<p class="text-body-sm font-body-sm text-outline mt-0.5">
+                Yeonsu-gu, Songdo Convensia-daero 81
+              </p>
+</div>
+<!-- Quick Meta Row -->
+<div class="flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant border-y border-outline-variant/20 py-2">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-secondary" data-icon="cake">cake</span>
+                CAKE
+              </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="location_on">location_on</span>
+                INCHEON
+              </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-outline" data-icon="inventory_2">inventory_2</span>
+                1 items
+              </span>
+</div>
+<!-- Footer Stats: Category & Likes -->
+<div class="flex items-center justify-between text-label-sm font-label-sm pt-1">
+<span class="text-outline uppercase font-semibold">CAKE</span>
+<div class="flex items-center space-x-3 text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="visibility">visibility</span>
+                  1
+                </span>
+<span class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-xs" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                  1
+                </span>
 </div>
 </div>
-<!-- Metric Telemetry Strips -->
-<div class="grid grid-cols-2 md:grid-cols-4 border-t border-[#fce7f3] divide-x divide-[#fce7f3] bg-[#fffafb]">
-<div class="p-4 flex flex-col">
-<span class="text-[10px] font-label font-bold text-[#836773] uppercase tracking-wider">Member Standing</span>
-<span class="text-base font-headline text-[#1f1318] font-bold mt-0.5">Since March 2021</span>
-<span class="text-[11px] text-rose-600 font-mono font-medium">3 Years 8 Months Active</span>
 </div>
-<div class="p-4 flex flex-col">
-<span class="text-[10px] font-label font-bold text-[#836773] uppercase tracking-wider">Security Posture</span>
-<div class="flex items-center gap-2 mt-0.5">
-<span class="text-base font-headline text-rose-600 font-bold">98 / 100</span>
-<span class="text-[10px] font-label font-bold text-rose-700 bg-rose-100 px-1.5 py-0.5 rounded font-mono">OPTIMAL</span>
+</article>
+<!-- Card 3: Single-Origin Valrhona Truffle Box ($32, 4 items) -->
+<article class="bg-surface-container-low/80 backdrop-blur-md border border-outline-variant/30 rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group shadow-xl">
+<div class="relative aspect-[16/10] overflow-hidden bg-surface-container-lowest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out" data-alt="Luxury obsidian gift box filled with handcrafted single origin Valrhona dark chocolate truffles dusted in rich cocoa powder and edible gold flecks on black velvet surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3h9DPtE6ytz3SqNbcMebrV8wPnA6xp-hyO06drA3LI82o7ctWa8DDl5Ywid45M_CH1SHZ3dCTh0R3lN4VdouFBtsso2XTH2_sdpuuYzlYH1jYLcyfA-KISg9ZVBaIyRf202FYfrOkuv_jul2rwfKXV_VgejShvwN8oNpqOHkfFplcjnM_PhbLCyElMfFwknM3ewDOKef5JHAMF_HvBRAqNj0wmhwsIU2drDdRrScHDXFBQQQ7dsNUXQ"/>
+<!-- Badge Price ($32) -->
+<div class="absolute top-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md border border-outline-variant/40 rounded px-3 py-1 text-label-md font-label-md font-semibold text-on-surface">
+              $32
+            </div>
 </div>
-<span class="text-[11px] text-[#6b5b63]">Hardware Key Protected</span>
+<div class="p-space-md space-y-3">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors">
+                Valrhona Sovereign Truffles
+              </h3>
+<p class="text-body-sm font-body-sm text-outline mt-0.5">
+                Cheongdam Flagship Atelier, Gangnam
+              </p>
 </div>
-<div class="p-4 flex flex-col">
-<span class="text-[10px] font-label font-bold text-[#836773] uppercase tracking-wider">Ledger Executions</span>
-<span class="text-base font-headline text-[#1f1318] font-bold mt-0.5">1,420 Completed</span>
-<span class="text-[11px] text-rose-600 font-mono font-semibold">100% Zero-Fault Rate</span>
+<!-- Quick Meta Row -->
+<div class="flex items-center justify-between text-label-sm font-label-sm text-on-surface-variant border-y border-outline-variant/20 py-2">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-secondary" data-icon="bakery_dining">bakery_dining</span>
+                CONFECTION
+              </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-primary" data-icon="location_on">location_on</span>
+                SEOUL
+              </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-outline" data-icon="inventory_2">inventory_2</span>
+                4 items
+              </span>
 </div>
-<div class="p-4 flex flex-col">
-<span class="text-[10px] font-label font-bold text-[#836773] uppercase tracking-wider">Governance Allocation</span>
-<span class="text-base font-headline text-[#1f1318] font-bold mt-0.5">Black Titanium</span>
-<span class="text-[11px] text-[#836773] font-mono">Voting Weight: 12.4%</span>
+<!-- Footer Stats: Category & Likes -->
+<div class="flex items-center justify-between text-label-sm font-label-sm pt-1">
+<span class="text-outline uppercase font-semibold">CONFECTION</span>
+<div class="flex items-center space-x-3 text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" data-icon="visibility">visibility</span>
+                  14
+                </span>
+<span class="flex items-center gap-1 text-error">
+<span class="material-symbols-outlined text-xs" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                  8
+                </span>
 </div>
+</div>
+</div>
+</article>
 </div>
 </section>
-<!-- ================= MAIN EDITABLE DOSSIER GRID ================= -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-<!-- LEFT 8-COLUMN AREA: FORM DATA & CREDENTIALS -->
-<div class="lg:col-span-8 flex flex-col gap-6">
-<!-- SECTION A: PERSONAL & CONTACT INTELLIGENCE -->
-<div class="rounded-2xl border border-[#fbcfe8] bg-white p-6 shadow-sm">
-<div class="flex items-center justify-between pb-4 border-b border-[#fce7f3] mb-5">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-rose-600 text-[22px]">person_pin</span>
-<h3 class="text-lg font-headline font-bold text-[#1f1318]">Identity &amp; Contact Intelligence</h3>
-</div>
-<span class="text-[10px] font-label font-bold text-[#836773] font-mono tracking-wider bg-rose-50 px-2 py-0.5 rounded border border-rose-200">CANONICAL RECORD</span>
-</div>
-<!-- Form Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-<!-- Full Legal Name -->
-<div class="flex flex-col gap-1.5">
-<label class="text-xs font-label font-bold text-[#6b5b63] flex items-center justify-between">
-<span>FULL LEGAL NAME</span>
-<span class="text-[10px] text-rose-600 font-bold">PASSPORT MATCH</span>
-</label>
-<div class="relative">
-<input class="w-full bg-[#fffbfa] border border-[#fbcfe8] rounded-lg px-3.5 py-2.5 text-sm font-body text-[#1f1318] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200 font-semibold shadow-sm transition-all" type="text" value="Khanzada Rustamov"/>
-<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-rose-500 text-[18px]">verified</span>
-</div>
-</div>
-<!-- Username / Handle -->
-<div class="flex flex-col gap-1.5">
-<label class="text-xs font-label font-bold text-[#6b5b63] flex items-center justify-between">
-<span>SOVEREIGN HANDLE</span>
-<span class="text-[10px] text-[#9c8a93]">NON-TRANSFERABLE</span>
-</label>
-<div class="relative flex">
-<span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-[#fbcfe8] bg-rose-50/70 text-rose-600 text-xs font-mono font-bold">@</span>
-<input class="w-full bg-[#fffbfa] border border-[#fbcfe8] rounded-r-lg px-3.5 py-2.5 text-sm font-body text-[#1f1318] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200 font-mono shadow-sm transition-all" type="text" value="khan_executive"/>
-</div>
-</div>
-<!-- Corporate Executive Email -->
-<div class="flex flex-col gap-1.5">
-<label class="text-xs font-label font-bold text-[#6b5b63] flex items-center justify-between">
-<span>CORPORATE EMAIL GATEWAY</span>
-<span class="text-[10px] text-rose-600 font-bold flex items-center gap-0.5">
-<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-  SECURE RELAY
-</span>
-</label>
-<div class="relative">
-<input class="w-full bg-[#fffbfa] border border-[#fbcfe8] rounded-lg pl-3.5 pr-10 py-2.5 text-sm font-body text-[#1f1318] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200 font-mono shadow-sm transition-all" type="email" value="khan@navanogroup.holdings"/>
-<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-rose-600 text-[18px]">encrypted</span>
-</div>
-</div>
-<!-- Direct Telephone -->
-<div class="flex flex-col gap-1.5">
-<label class="text-xs font-label font-bold text-[#6b5b63] flex items-center justify-between">
-<span>DIRECT ENCRYPTED TELEPHONE</span>
-<span class="text-[10px] text-rose-600 font-bold">SMS 2FA VERIFIED</span>
-</label>
-<div class="relative flex">
-<div class="inline-flex items-center gap-1.5 px-2.5 rounded-l-lg border border-r-0 border-[#fbcfe8] bg-rose-50/70 text-xs text-[#1f1318] font-mono font-bold">
-<span>🇰🇷</span>
-<span>+82</span>
-</div>
-<input class="w-full bg-[#fffbfa] border border-[#fbcfe8] rounded-r-lg px-3.5 py-2.5 text-sm font-body text-[#1f1318] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200 font-mono font-medium shadow-sm transition-all" type="tel" value="10-8069-347475"/>
-</div>
-</div>
-<!-- Physical Jurisdiction Address -->
-<div class="md:col-span-2 flex flex-col gap-1.5">
-<label class="text-xs font-label font-bold text-[#6b5b63] flex items-center justify-between">
-<span>DOMICILE &amp; PHYSICAL REGISTRATION ADDRESS</span>
-<span class="text-[10px] text-[#9c8a93]">NOTARIZED ON-FILE</span>
-</label>
-<div class="relative">
-<input class="w-full bg-[#fffbfa] border border-[#fbcfe8] rounded-lg pl-3.5 pr-10 py-2.5 text-sm font-body text-[#1f1318] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200 shadow-sm transition-all" type="text" value="궁동 401-5 (Gung-dong 401-5, Yuseong-gu), Daejeon, Republic of Korea"/>
-<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-rose-400 text-[18px]">domain</span>
-</div>
-</div>
-<!-- Executive Mandate / Bio Summary -->
-<div class="md:col-span-2 flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<label class="text-xs font-label font-bold text-[#6b5b63]">EXECUTIVE MANDATE &amp; GOVERNANCE SCOPE</label>
-<span class="text-[10px] text-[#836773] font-mono">184 / 500 CHARS</span>
-</div>
-<textarea class="w-full bg-[#fffbfa] border border-[#fbcfe8] rounded-lg p-3 text-sm font-body text-[#1f1318] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200 resize-none font-normal shadow-sm transition-all" rows="3">Overseeing sovereign fund investments, algorithmic treasury routing, cross-border multi-currency liquidity conduits, and institutional consensus protocols across East Asia and North America.</textarea>
-</div>
-</div>
-</div>
-<!-- SECTION B: CONNECTED ECOSYSTEM & API ATTESTATION -->
-<div class="rounded-2xl border border-[#fbcfe8] bg-white p-6 shadow-sm">
-<div class="flex items-center justify-between pb-4 border-b border-[#fce7f3] mb-4">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-rose-600 text-[22px]">hub</span>
-<h3 class="text-lg font-headline font-bold text-[#1f1318]">Integrated Repositories &amp; Federated Auth</h3>
-</div>
-<button class="text-xs font-label font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 transition-colors">
-<span class="material-symbols-outlined text-[15px]">add</span>
-<span>Link Service</span>
-</button>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-<!-- Item 1: GitHub Enterprise -->
-<div class="p-3.5 rounded-xl bg-gradient-to-b from-[#fffbfa] to-white border border-[#fbcfe8] flex items-center justify-between shadow-sm">
-<div class="flex items-center gap-3">
-<div class="w-9 h-9 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-[#1f1318]">
-<span class="material-symbols-outlined text-[18px]">terminal</span>
-</div>
-<div>
-<div class="text-xs font-label text-[#1f1318] font-bold">GitHub Ent.</div>
-<div class="text-[11px] font-label text-rose-600 font-mono">@khan-core</div>
-</div>
-</div>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500 ring-4 ring-rose-100" title="Synced"></span>
-</div>
-<!-- Item 2: LinkedIn Executive -->
-<div class="p-3.5 rounded-xl bg-gradient-to-b from-[#fffbfa] to-white border border-[#fbcfe8] flex items-center justify-between shadow-sm">
-<div class="flex items-center gap-3">
-<div class="w-9 h-9 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600">
-<span class="material-symbols-outlined text-[18px]">business_center</span>
-</div>
-<div>
-<div class="text-xs font-label text-[#1f1318] font-bold">LinkedIn</div>
-<div class="text-[11px] font-label text-[#836773] font-mono">/in/khanzada-r</div>
-</div>
-</div>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500 ring-4 ring-rose-100" title="Synced"></span>
-</div>
-<!-- Item 3: Telegram Secret Tunnel -->
-<div class="p-3.5 rounded-xl bg-gradient-to-b from-[#fffbfa] to-white border border-[#fbcfe8] flex items-center justify-between shadow-sm">
-<div class="flex items-center gap-3">
-<div class="w-9 h-9 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-500">
-<span class="material-symbols-outlined text-[18px]">send</span>
-</div>
-<div>
-<div class="text-xs font-label text-[#1f1318] font-bold">Telegram Bot</div>
-<div class="text-[11px] font-label text-[#836773] font-mono">@khan_nvn</div>
-</div>
-</div>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500 ring-4 ring-rose-100" title="Synced"></span>
-</div>
-</div>
-</div>
-<!-- SECTION C: ACTION CONTROLS & SUBMISSION DOCK -->
-<div class="rounded-2xl border border-[#fbcfe8] bg-gradient-to-r from-rose-50/70 via-white to-rose-50/50 p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 flex-shrink-0">
-<span class="material-symbols-outlined text-[18px]">info</span>
-</div>
-<div class="text-xs font-body text-[#6b5b63]">
-  Modifications to address or phone trigger a cryptographic 24h compliance re-audit.
-</div>
-</div>
-<div class="flex items-center gap-3 w-full sm:w-auto justify-end">
-<button class="px-4 py-2 rounded-lg text-xs font-label font-semibold text-[#6b5b63] hover:text-[#1f1318] hover:bg-white transition-colors">
-  Discard Changes
-</button>
-<button class="px-5 py-2.5 rounded-lg bg-gradient-to-r from-rose-600 via-rose-500 to-pink-600 text-white font-bold text-xs font-label shadow-lg shadow-rose-500/25 hover:brightness-105 active:scale-[0.98] transition-all flex items-center gap-2">
-<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check</span>
-<span>Update Executive Profile</span>
-<kbd class="text-[10px] font-mono opacity-80 bg-white/20 px-1.5 py-0.5 rounded font-bold">⌘S</kbd>
-</button>
-</div>
-</div>
-</div>
-<!-- RIGHT 4-COLUMN AREA: SECURITY, HARDWARE KEYS & AUDIT TELEMETRY -->
-<div class="lg:col-span-4 flex flex-col gap-6">
-<!-- SECURITY & BIOMETRICS SNAPSHOT -->
-<div class="rounded-2xl border border-[#fbcfe8] bg-white p-6 shadow-sm flex flex-col gap-4">
-<div class="flex items-center justify-between pb-3 border-b border-[#fce7f3]">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-rose-600 text-[22px]">fingerprint</span>
-<h3 class="text-lg font-headline font-bold text-[#1f1318]">Biometrics &amp; Keys</h3>
-</div>
-<span class="w-2.5 h-2.5 rounded-full bg-rose-500 ring-4 ring-rose-100" title="Security Active"></span>
-</div>
-<!-- FIDO2 Hardware Key -->
-<div class="p-3.5 rounded-xl bg-gradient-to-b from-[#fffbfa] to-white border border-[#fbcfe8] flex items-start gap-3 shadow-sm">
-<div class="w-9 h-9 rounded-lg bg-rose-100/70 border border-rose-300 flex items-center justify-center text-rose-600 flex-shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[18px]">key</span>
-</div>
-<div class="flex-1 min-w-0">
-<div class="flex items-center justify-between">
-<span class="text-xs font-label font-bold text-[#1f1318] truncate">YubiKey 5C NFC</span>
-<span class="text-[10px] font-label font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded font-mono border border-rose-200">PRIMARY</span>
-</div>
-<div class="text-[11px] text-[#836773] font-mono mt-0.5">SLOT #1 • SHA-256</div>
-<div class="text-[11px] text-[#6b5b63] font-medium mt-1">Bound to Hardware Enclave</div>
-</div>
-</div>
-<!-- Secondary Passkey -->
-<div class="p-3.5 rounded-xl bg-gradient-to-b from-[#fffbfa] to-white border border-[#fbcfe8] flex items-start gap-3 shadow-sm">
-<div class="w-9 h-9 rounded-lg bg-rose-50 border border-rose-200 flex items-center justify-center text-[#836773] flex-shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[18px]">smartphone</span>
-</div>
-<div class="flex-1 min-w-0">
-<div class="flex items-center justify-between">
-<span class="text-xs font-label font-bold text-[#1f1318] truncate">Apple Secure Enclave</span>
-<span class="text-[10px] font-label font-bold text-[#836773] bg-slate-100 px-1.5 py-0.5 rounded font-mono">PASSKEY</span>
-</div>
-<div class="text-[11px] text-[#836773] font-mono mt-0.5">MacBook Pro M3 Max</div>
-<div class="text-[11px] text-[#6b5b63] font-medium mt-1">Biometric TouchID Enabled</div>
-</div>
-</div>
-<!-- Quick Password Action -->
-<button class="w-full py-2.5 px-3 bg-white hover:bg-rose-50 text-[#1f1318] border border-[#fbcfe8] rounded-xl text-xs font-label font-semibold flex items-center justify-between transition-colors shadow-sm">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-[18px] text-rose-500">password</span>
-<span>Change Master Password</span>
-</div>
-<span class="material-symbols-outlined text-[16px] text-rose-400">arrow_forward</span>
-</button>
-</div>
-<!-- ACTIVE SESSIONS & RECENT TELEMETRY -->
-<div class="rounded-2xl border border-[#fbcfe8] bg-white p-6 shadow-sm flex flex-col gap-4">
-<div class="flex items-center justify-between pb-3 border-b border-[#fce7f3]">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-rose-600 text-[22px]">radar</span>
-<h3 class="text-lg font-headline font-bold text-[#1f1318]">Active Session Trace</h3>
-</div>
-<span class="text-[10px] font-label font-bold text-rose-600 font-mono bg-rose-50 px-2 py-0.5 rounded border border-rose-200">2 NODES</span>
-</div>
-<!-- Current Node -->
-<div class="flex flex-col gap-2 p-3.5 rounded-xl bg-gradient-to-b from-rose-50/60 to-white border border-rose-200 relative overflow-hidden shadow-sm">
-<div class="flex items-center justify-between">
-<span class="text-[10px] font-label font-bold text-rose-700 font-mono">CURRENT DEVICE</span>
-<span class="text-[11px] font-label text-[#836773] font-mono font-medium">14.138.22.81</span>
-</div>
-<div class="text-sm font-headline font-bold text-[#1f1318]">
-  Chrome 124 • macOS Sonoma
-</div>
-<div class="flex items-center justify-between text-xs font-body text-[#6b5b63]">
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px] text-rose-500">near_me</span>
-  Daejeon / Seoul, KR
-</span>
-<span class="text-[11px] font-mono text-rose-600 font-bold">Active Now</span>
-</div>
-</div>
-<!-- Secondary Node -->
-<div class="flex flex-col gap-2 p-3.5 rounded-xl bg-[#fffbfa] border border-[#fbcfe8] shadow-sm">
-<div class="flex items-center justify-between">
-<span class="text-[10px] font-label font-bold text-[#836773] font-mono">MOBILE APP NODE</span>
-<span class="text-[11px] font-label text-[#836773] font-mono font-medium">211.58.10.42</span>
-</div>
-<div class="text-sm font-headline font-bold text-[#1f1318]">
-  Navano Sovereign iOS v4.2
-</div>
-<div class="flex items-center justify-between text-xs font-body text-[#6b5b63]">
-<span class="flex items-center gap-1">
-<span class="material-symbols-outlined text-[14px] text-rose-400">cell_tower</span>
-  5G SK Telecom
-</span>
-<span class="text-[11px] font-mono text-[#836773]">22 mins ago</span>
-</div>
-</div>
-<button class="w-full py-2 text-center text-xs font-label font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-colors flex items-center justify-center gap-1.5">
-<span class="material-symbols-outlined text-[16px]">logout</span>
-<span>Terminate All External Sessions</span>
-</button>
-</div>
-<!-- COMPLIANCE SEAL & JURISDICTION SUMMARY -->
-<div class="rounded-2xl border border-[#fbcfe8] bg-gradient-to-r from-rose-50/50 to-white p-4 flex items-center gap-3.5 shadow-sm">
-<div class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center border border-rose-200 text-rose-600 flex-shrink-0">
-<span class="material-symbols-outlined text-[20px]">account_balance</span>
-</div>
-<div class="flex-1 min-w-0">
-<div class="text-xs font-label font-bold text-[#1f1318] truncate">Institutional Custody Seal</div>
-<div class="text-[11px] text-[#6b5b63]">Verified by Swiss Regulatory Gateway FINMA &amp; FSC Korea Protocol</div>
-</div>
-</div>
-</div>
-</div>
 </main>
+<!-- Shared Component: Institutional Refined Footer (Exact matching from JSON) -->
+<footer class="docked full-width bottom bg-surface-container-lowest border-t border-outline-variant/30 mt-space-xl">
+<div class="w-full px-space-md md:px-margin-desktop py-space-xl max-w-[1400px] mx-auto space-y-space-lg">
+<!-- Top Brand Row -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-outline-variant/20 pb-space-lg">
+<div>
+<span class="text-headline-md font-headline-md font-semibold tracking-widest text-on-surface">NAVANO</span>
+<p class="text-body-sm font-body-sm text-outline mt-1 max-w-md">
+            Sovereign haute confectionery, rare botanical florals, and private vault client services.
+          </p>
 </div>
-<!-- Micro Toast Status -->
-<div class="fixed bottom-6 right-6 px-4 py-3 rounded-xl bg-white border border-rose-300 text-[#1f1318] shadow-xl luxury-glow flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none" id="toast">
-<span class="material-symbols-outlined text-rose-600 text-[20px]" style="font-variation-settings: 'FILL' 1;">task_alt</span>
-<span class="text-xs font-body font-bold">Executive Profile State Synchronized</span>
+<div class="flex items-center space-x-3 text-label-sm font-label-sm">
+<span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-on-surface-variant font-mono">
+            GATEWAY: INCHEON ATELIER #01
+          </span>
+<span class="px-3 py-1 rounded bg-surface-container border border-outline-variant/40 text-primary font-mono">
+            ESCROW SECURE
+          </span>
 </div>
-<script>
-    // Lightweight vanilla micro-interactions for luxury feedback
-    document.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
-        e.preventDefault();
-        const toast = document.getElementById('toast');
-        toast.classList.remove('translate-y-20', 'opacity-0');
-        setTimeout(() => {
-          toast.classList.add('translate-y-20', 'opacity-0');
-        }, 2600);
-      }
-    });
-</script>
+</div>
+<!-- Links Array (Exact strings from JSON) -->
+<div class="flex flex-wrap gap-x-8 gap-y-3 text-label-sm font-label-sm">
+<a class="text-primary font-medium hover:text-primary transition-colors duration-150" href="#">Maison Directory</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#">Sovereign Concierge</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#">Bespoke Commissions</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#">Corporate Vault Gifting</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#">Atelier Provenance</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#">Private Governance</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-150" href="#">Legal &amp; Disclosures</a>
+</div>
+<!-- Copyright text (Exact literal string from JSON) -->
+<div class="flex flex-col sm:flex-row items-center justify-between text-body-sm font-body-sm text-outline gap-4 pt-4">
+<span>© 2025 NAVANO SOVEREIGN ATELIERS &amp; CO. ALL RIGHTS RESERVED. CRYPTOGRAPHIC INTEGRITY ASSURED.</span>
+<div class="flex items-center space-x-4">
+<span class="hover:text-primary transition-colors cursor-pointer">Security Ledger</span>
+<span>•</span>
+<span class="hover:text-primary transition-colors cursor-pointer">FIPS Compliance</span>
+</div>
+</div>
+</div>
+</footer>
 </body></html>
