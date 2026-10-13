@@ -410,5 +410,10 @@
 	"from stores on Navano": "от магазинов Navano",
 	"photo": "фото",
 	"photos": "фото",
-	"views": "просмотров"
+	"views": "просмотров",
+	"Store not found": "Магазин не найден",
+	"This store link is missing or no longer works.": "Ссылка на магазин отсутствует или больше не работает.",
+	"Browse all stores": "Все магазины",
+	"Member not found": "Участник не найден",
+	"This profile link is missing or no longer works.": "Ссылка на профиль отсутствует или больше не работает."
 }
