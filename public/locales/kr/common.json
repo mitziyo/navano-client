@@ -410,5 +410,10 @@
   "from stores on Navano": "나바노 상점의 상품",
   "photo": "장",
   "photos": "장",
-  "views": "조회"
+  "views": "조회",
+  "Store not found": "상점을 찾을 수 없습니다",
+  "This store link is missing or no longer works.": "상점 링크가 없거나 더 이상 작동하지 않습니다.",
+  "Browse all stores": "모든 상점 보기",
+  "Member not found": "회원을 찾을 수 없습니다",
+  "This profile link is missing or no longer works.": "프로필 링크가 없거나 더 이상 작동하지 않습니다."
 }
