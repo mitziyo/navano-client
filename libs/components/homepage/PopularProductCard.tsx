@@ -1,4 +1,7 @@
 import React from 'react';
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
+import ProductTypeIcon from '../common/ProductTypeIcon';
 import { Stack, Box, Divider, Typography } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
@@ -61,15 +64,15 @@ const PopularProductCard = (props: PopularProductCardProps) => {
 					<p className={'desc'}>{product.productAddress}</p>
 					<div className={'options'}>
 						<div>
-							<img src="/img/icons/bed.svg" alt="" />
+							<ProductTypeIcon type={product?.productType} sx={{ fontSize: 17, color: 'var(--nv-primary-strong)' }} />
 							<span>{product?.productType}</span>
 						</div>
 						<div>
-							<img src="/img/icons/room.svg" alt="" />
+							<PlaceOutlinedIcon aria-hidden sx={{ fontSize: 17, color: 'var(--nv-primary-strong)' }} />
 							<span>{product?.productLocation}</span>
 						</div>
 						<div>
-							<img src="/img/icons/expand.svg" alt="" />
+							<Inventory2OutlinedIcon aria-hidden sx={{ fontSize: 17, color: 'var(--nv-primary-strong)' }} />
 							<span>{product?.productItemCount} items</span>
 						</div>
 					</div>
