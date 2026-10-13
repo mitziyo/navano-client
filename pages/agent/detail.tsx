@@ -21,6 +21,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { CREATE_COMMENT, LIKE_TARGET_PRODUCT } from '../../apollo/user/mutation';
 import { GET_COMMENTS, GET_MEMBER, GET_PRODUCTS } from '../../apollo/user/query';
 import { T } from '../../libs/types/common';
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import { MemberType } from '../../libs/enums/member.enum';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -31,6 +34,10 @@ export const getStaticProps = async ({ locale }: any) => ({
 const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) => {
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('common');
+	// The server render never knows the query, so the missing-store check waits until after hydration
+	const [mounted, setMounted] = useState<boolean>(false);
+	useEffect(() => setMounted(true), []);
 	const user = useReactiveVar(userVar);
 	const [agentId, setAgentId] = useState<string | null>(null);
 	const [agent, setAgent] = useState<Member | null>(null);
@@ -176,8 +183,26 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 		}
 	};
 
+	// No agentId, an unknown id or a member that is not a store: say so instead of an empty profile
+	const storeMissing =
+		mounted &&
+		router.isReady &&
+		(!router.query.agentId ||
+			Boolean(getMemberError) ||
+			(getMemberData?.getMember && getMemberData.getMember.memberType !== MemberType.AGENT));
+
 	if (device === 'mobile') {
 		return <div>AGENT DETAIL PAGE MOBILE</div>;
+	} else if (storeMissing) {
+		return (
+			<Stack className={'agent-detail-page'}>
+				<Stack className={'container store-missing'}>
+					<h1>{t('Store not found')}</h1>
+					<p>{t('This store link is missing or no longer works.')}</p>
+					<Link href={'/agent'}>{t('Browse all stores')}</Link>
+				</Stack>
+			</Stack>
+		);
 	} else {
 		return (
 			<Stack className={'agent-detail-page'}>
