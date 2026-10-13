@@ -33,11 +33,14 @@
 				align-items: center;
 				gap: 10px;
 				strong {
-					font-family: $nv-font-head;
+					font-family: $nv-font-brand;
 					font-size: 22px;
-					font-weight: 600;
+					font-weight: 700;
 					letter-spacing: 0.18em;
-					color: var(--nv-ink);
+					background: $nv-gold-text;
+					-webkit-background-clip: text;
+					background-clip: text;
+					color: transparent;
 				}
 			}
 		}

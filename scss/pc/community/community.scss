@@ -150,18 +150,7 @@
 			margin-bottom: 16px;
 			border-bottom: 1px solid var(--nv-line-soft);
 			.brand-mark {
-				display: grid;
-				place-items: center;
-				width: 48px;
-				height: 48px;
 				flex-shrink: 0;
-				border-radius: 12px;
-				background: $nv-gradient;
-				box-shadow: var(--nv-btn-shadow);
-				color: var(--nv-on-primary);
-				svg {
-					font-size: 26px;
-				}
 			}
 			strong {
 				display: block;

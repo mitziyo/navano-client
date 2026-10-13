@@ -48,14 +48,17 @@
 				flex-direction: column;
 				line-height: 1;
 				strong {
-					font-family: $nv-font-head;
+					font-family: $nv-font-brand;
 					font-size: 22px;
-					font-weight: 600;
-					letter-spacing: 0.08em;
-					color: var(--nv-ink);
+					font-weight: 700;
+					letter-spacing: 0.16em;
+					background: $nv-gold-text;
+					-webkit-background-clip: text;
+					background-clip: text;
+					color: transparent;
 				}
 				small {
-					margin-top: 4px;
+					margin-top: 5px;
 					font-family: $nv-font-label;
 					font-size: 9px;
 					font-weight: 700;
@@ -226,9 +229,3 @@
 }
 
 /* Dark theme: blue logo mark, as in the dark design */
-[data-theme='dark'] #pc-wrap .brand .mark {
-	.badge,
-	.heart {
-		fill: #4c8eff;
-	}
-}

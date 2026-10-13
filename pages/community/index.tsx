@@ -13,7 +13,6 @@ import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 import NewspaperOutlinedIcon from '@mui/icons-material/NewspaperOutlined';
 import SentimentVerySatisfiedOutlinedIcon from '@mui/icons-material/SentimentVerySatisfiedOutlined';
-import LocalFloristOutlinedIcon from '@mui/icons-material/LocalFloristOutlined';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -21,6 +20,7 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import ArticleCard from '../../libs/components/community/ArticleCard';
+import NavanoLogo from '../../libs/components/common/NavanoLogo';
 import { BOARDS, boardLabel } from '../../libs/components/community/boards';
 import { CardSkeletons } from '../../libs/components/homepage/SectionState';
 import { memberRef, memberRoleLabel } from '../../libs/components/mypage/MyMenu';
@@ -198,9 +198,7 @@ const Community: NextPage = () => {
 					<aside className={'community-aside'}>
 						<div className={'aside-card'}>
 							<div className={'aside-brand'}>
-								<span className={'brand-mark'}>
-									<LocalFloristOutlinedIcon aria-hidden />
-								</span>
+								<NavanoLogo variant={'mark'} width={48} height={48} className={'brand-mark'} />
 								<div>
 									<strong>{t('Navano Community')}</strong>
 									<small>{t('Boards for makers and gift lovers')}</small>

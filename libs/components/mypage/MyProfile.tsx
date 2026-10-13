@@ -20,6 +20,7 @@ import { memberRef, memberRoleLabel } from './MyMenu';
 import PhotoCameraOutlinedIcon from '@mui/icons-material/PhotoCameraOutlined';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import NavanoLogo from '../common/NavanoLogo';
 import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
@@ -38,7 +39,6 @@ import AddIcon from '@mui/icons-material/Add';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckIcon from '@mui/icons-material/Check';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import LocalFloristOutlinedIcon from '@mui/icons-material/LocalFloristOutlined';
 
 const DESC_MAX = 500;
 
@@ -575,7 +575,7 @@ const MyProfile: NextPage = ({ initialValues, ...props }: any) => {
 
 						<section className="seal-card">
 							<span className="seal-icon">
-								<LocalFloristOutlinedIcon />
+								<NavanoLogo variant={'mark'} width={40} height={40} />
 							</span>
 							<span className="seal-text">
 								<span className="seal-title">{t('Navano member')}</span>

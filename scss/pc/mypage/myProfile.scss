@@ -867,13 +867,6 @@
 					flex-shrink: 0;
 					width: 40px;
 					height: 40px;
-					border-radius: 50%;
-					border: 1px solid var(--nv-line-accent);
-					background: var(--nv-primary-tint);
-					color: $nv-primary;
-					svg {
-						font-size: 20px;
-					}
 				}
 				.seal-text {
 					display: flex;

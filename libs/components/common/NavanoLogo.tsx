@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 
 interface NavanoLogoProps {
 	variant?: 'full' | 'mark';
@@ -7,36 +7,81 @@ interface NavanoLogoProps {
 	height?: number;
 }
 
-const PETAL_ANGLES = [0, 72, 144, 216, 288];
-
-const LETTERS = [
-	'M48.5 33V19L58.5 33V19',
-	'M62 33L67 19L72 33M63.8 28H70.2',
-	'M75.5 19L80.5 33L85.5 19',
-	'M89 33L94 19L99 33M90.8 28H97.2',
-	'M102.5 33V19L112.5 33V19',
+/*
+ * Navano crest: a gold octagonal seal holding a five-petal bloom (flowers) around a
+ * ruby heart (chocolates, cakes and gifting). Drawn on a 220 x 220 grid centred at 110,110;
+ * strokes are heavier than a print crest so the mark still reads at 32-40px.
+ */
+const OCTAGON = '110,5 184,36 215,110 184,184 110,215 36,184 5,110 36,36';
+const GOLD_PETALS = [
+	'M 110,42 C 96,60 96,82 110,98 C 124,82 124,60 110,42 Z',
+	'M 168,78 C 148,72 132,86 120,104 C 138,112 158,102 168,78 Z',
+	'M 146,158 C 136,140 118,134 104,146 C 114,162 130,170 146,158 Z',
+	'M 74,158 C 90,170 106,162 116,146 C 102,134 84,140 74,158 Z',
+	'M 52,78 C 62,102 82,112 100,104 C 88,86 72,72 52,78 Z',
+];
+const BLUSH_PETAL = 'M 0,-48 C 16,-34 20,-14 0,0 C -20,-14 -16,-34 0,-48 Z';
+const HEART = 'M 0,9 C -10,3 -11,-5 -5,-8 C -2,-9 0,-6 0,-4 C 0,-6 2,-9 5,-8 C 11,-5 10,3 0,9 Z';
+const STARS = [
+	[110, 17],
+	[110, 203],
+	[17, 110],
+	[203, 110],
 ];
 
-const Mark = ({ y = 0 }: { y?: number }) => (
-	<svg className={'mark'} x={0} y={y} width={40} height={40} viewBox="0 0 40 40" overflow="visible">
-		<circle className={'badge'} cx="20" cy="20" r="20" fill="#EB6753" />
+const Crest = ({ uid, size, x = 0, y = 0 }: { uid: string; size: number; x?: number; y?: number }) => (
+	<svg className={'mark'} x={x} y={y} width={size} height={size} viewBox="0 0 220 220" overflow="visible">
+		<defs>
+			<linearGradient id={`${uid}-gold`} x1="0%" y1="0%" x2="100%" y2="100%">
+				<stop offset="0%" stopColor="#FCEFD2" />
+				<stop offset="25%" stopColor="#E5BA73" />
+				<stop offset="50%" stopColor="#C59341" />
+				<stop offset="75%" stopColor="#F2D8A7" />
+				<stop offset="100%" stopColor="#996E26" />
+			</linearGradient>
+			<linearGradient id={`${uid}-rose`} x1="0%" y1="0%" x2="100%" y2="100%">
+				<stop offset="0%" stopColor="#FF9EAA" />
+				<stop offset="50%" stopColor="#E05368" />
+				<stop offset="100%" stopColor="#9C2237" />
+			</linearGradient>
+			<linearGradient id={`${uid}-blush`} x1="0%" y1="0%" x2="0%" y2="100%">
+				<stop offset="0%" stopColor="#FFE4D6" stopOpacity="0.95" />
+				<stop offset="100%" stopColor="#D97762" stopOpacity="0.5" />
+			</linearGradient>
+		</defs>
+
+		<polygon className={'seal'} points={OCTAGON} fill="#121618" stroke={`url(#${uid}-gold)`} strokeWidth="7" />
+		<circle cx="110" cy="110" r="86" fill="none" stroke={`url(#${uid}-gold)`} strokeWidth="2.5" strokeOpacity="0.45" />
+		{STARS.map(([cx, cy]) => (
+			<circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="4.5" fill={`url(#${uid}-gold)`} />
+		))}
+
 		<g className={'petals'}>
-			<g className={'petals-bloom'} fill="white">
-				{PETAL_ANGLES.map((angle) => (
-					<ellipse key={angle} cx="20" cy="12.8" rx="4.2" ry="6.6" transform={`rotate(${angle} 20 20)`} />
+			{/* Invisible disc keeps the rotation centred on the seal */}
+			<circle cx="110" cy="110" r="70" fill="none" />
+			{GOLD_PETALS.map((d) => (
+				<path key={d} d={d} fill={`url(#${uid}-gold)`} />
+			))}
+			<g transform="translate(110 110)">
+				{[0, 72, 144, 216, 288].map((angle) => (
+					<path key={angle} d={BLUSH_PETAL} fill={`url(#${uid}-blush)`} transform={`rotate(${angle})`} />
 				))}
 			</g>
 		</g>
-		<path
-			className={'heart'}
-			d="M20 23.4C17.1 21.4 16.3 20 16.3 18.8C16.3 17.6 17.2 16.7 18.3 16.7C19 16.7 19.6 17.1 20 17.7C20.4 17.1 21 16.7 21.7 16.7C22.8 16.7 23.7 17.6 23.7 18.8C23.7 20 22.9 21.4 20 23.4Z"
-			fill="#EB6753"
-		/>
+
+		<g transform="translate(110 110)">
+			<circle r="21" fill="#121618" stroke={`url(#${uid}-gold)`} strokeWidth="3" />
+			<g className={'heart'}>
+				<path d={HEART} fill={`url(#${uid}-rose)`} transform="scale(1.45)" />
+			</g>
+		</g>
 	</svg>
 );
 
 const NavanoLogo = (props: NavanoLogoProps) => {
 	const { variant = 'full', className = '', width, height } = props;
+	// Gradient ids must be unique per instance; useId gives ":r1:", colons are not safe inside url(#…)
+	const uid = `nv${useId().replace(/:/g, '')}`;
 
 	if (variant === 'mark') {
 		return (
@@ -44,12 +89,12 @@ const NavanoLogo = (props: NavanoLogoProps) => {
 				className={`navano-logo ${className}`}
 				width={width ?? 40}
 				height={height ?? 40}
-				viewBox="0 0 40 40"
+				viewBox="0 0 220 220"
 				fill="none"
 				role="img"
 				aria-label="Navano"
 			>
-				<Mark />
+				<Crest uid={uid} size={220} />
 			</svg>
 		);
 	}
@@ -57,20 +102,49 @@ const NavanoLogo = (props: NavanoLogoProps) => {
 	return (
 		<svg
 			className={`navano-logo ${className}`}
-			width={width ?? 129}
+			width={width ?? 188}
 			height={height ?? 52}
-			viewBox="0 0 129 52"
+			viewBox="0 0 188 52"
 			fill="none"
 			role="img"
 			aria-label="Navano"
 		>
-			<Mark y={6} />
-			<g stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-				{LETTERS.map((d, i) => (
-					<path key={i} className={'letter'} d={d} style={{ '--i': i } as React.CSSProperties} />
-				))}
-				<ellipse className={'letter'} cx="121.5" cy="26" rx="5.5" ry="7" style={{ '--i': 5 } as React.CSSProperties} />
-			</g>
+			<Crest uid={uid} size={48} x={0} y={2} />
+			<text
+				className={'wordmark'}
+				x="60"
+				y="30"
+				fill={`url(#${uid}-word)`}
+				fontFamily="'Cinzel', 'Playfair Display', serif"
+				fontSize="22"
+				fontWeight="700"
+				letterSpacing="4"
+				textLength="122"
+				lengthAdjust="spacingAndGlyphs"
+			>
+				NAVANO
+			</text>
+			<defs>
+				<linearGradient id={`${uid}-word`} x1="0%" y1="0%" x2="100%" y2="100%">
+					<stop offset="0%" stopColor="#F2D8A7" />
+					<stop offset="45%" stopColor="#C59341" />
+					<stop offset="100%" stopColor="#E5BA73" />
+				</linearGradient>
+			</defs>
+			<line x1="60" y1="36" x2="184" y2="36" stroke="#C59341" strokeOpacity="0.6" strokeWidth="0.75" />
+			<text
+				x="60"
+				y="46"
+				fill="currentColor"
+				fontFamily="'Geist', 'Manrope', sans-serif"
+				fontSize="6.4"
+				fontWeight="600"
+				letterSpacing="1.6"
+				textLength="124"
+				lengthAdjust="spacingAndGlyphs"
+			>
+				FLOWERS • CHOCOLATES • CAKES
+			</text>
 		</svg>
 	);
 };
