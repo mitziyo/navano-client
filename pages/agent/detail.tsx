@@ -2,7 +2,14 @@ import React, { ChangeEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import ProductBigCard from '../../libs/components/common/ProductBigCard';
+import ProductCard from '../../libs/components/product/ProductCard';
+import ProfileHero, { ProfileMetric } from '../../libs/components/member/ProfileHero';
+import { memberRef } from '../../libs/components/mypage/MyMenu';
+import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
+import RateReviewOutlinedIcon from '@mui/icons-material/RateReviewOutlined';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import NorthEastIcon from '@mui/icons-material/NorthEast';
 import ReviewCard from '../../libs/components/agent/ReviewCard';
 import { Box, Button, Pagination, Stack, Typography } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
@@ -195,7 +202,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 		return <div>AGENT DETAIL PAGE MOBILE</div>;
 	} else if (storeMissing) {
 		return (
-			<Stack className={'agent-detail-page'}>
+			<Stack className={'agent-detail-page nv-profile'}>
 				<Stack className={'container store-missing'}>
 					<h1>{t('Store not found')}</h1>
 					<p>{t('This store link is missing or no longer works.')}</p>
@@ -204,123 +211,156 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 			</Stack>
 		);
 	} else {
+		const metrics: ProfileMetric[] = [
+			{ label: t('Products'), value: productTotal },
+			{ label: t('Reviews'), value: commentTotal },
+			{ label: t('Likes'), value: agent?.memberLikes ?? 0 },
+			{ label: t('Views'), value: agent?.memberViews ?? 0 },
+			{ label: t('Followers'), value: agent?.memberFollowers ?? 0 },
+		];
+
 		return (
-			<Stack className={'agent-detail-page'}>
-				<Stack className={'container'}>
-					<Stack className={'agent-info'}>
-						<img
-							src={agent?.memberImage ? `${REACT_APP_API_URL}/${agent?.memberImage}` : '/img/profile/defaultUser.svg'}
-							alt=""
-						/>
-						<Box component={'div'} className={'info'} onClick={() => redirectToMemberPageHandler(agent?._id as string)}>
-							<strong>{agent?.memberFullName ?? agent?.memberNick}</strong>
-							<div>
-								<img src="/img/icons/call.svg" alt="" />
-								<span>{agent?.memberPhone}</span>
+			<div className={'agent-detail-page nv-profile'}>
+				<div className={'container nv-shell'}>
+					<aside className={'nv-side'}>
+						<nav className={'side-menu'} aria-label={t('Store')}>
+							<div className={'side-profile'}>
+								<img
+									src={agent?.memberImage ? `${REACT_APP_API_URL}/${agent?.memberImage}` : '/img/profile/defaultUser.svg'}
+									alt=""
+								/>
+								<div>
+									<strong>{agent?.memberFullName ?? agent?.memberNick}</strong>
+									<small>{t('Store')}</small>
+								</div>
 							</div>
-						</Box>
-					</Stack>
-					<Stack className={'agent-home-list'}>
-						<Stack className={'card-wrap'}>
-							{agentProducts.map((product: Product) => {
-								return (
-									<div className={'wrap-main'} key={product?._id}>
-										<ProductBigCard
-											product={product}
-											likeProductHandler={likeProductHandler}
-											key={product?._id}
-										/>
-									</div>
-								);
-							})}
-						</Stack>
-						<Stack className={'pagination'}>
+							{agent?.memberPhone && (
+								<a href={`tel:${agent.memberPhone}`} className={'side-contact'}>
+									<CallOutlinedIcon aria-hidden />
+									{agent.memberPhone}
+								</a>
+							)}
+							<div className={'side-group'}>
+								<span className={'side-group-title'}>{t('Store')}</span>
+								<a href={'#store-products'} className={'side-link'}>
+									<StorefrontOutlinedIcon aria-hidden />
+									<span>{t('Products')}</span>
+									<span className={'side-count'}>{productTotal}</span>
+								</a>
+								<a href={'#store-reviews'} className={'side-link'}>
+									<RateReviewOutlinedIcon aria-hidden />
+									<span>{t('Reviews')}</span>
+									<span className={'side-count'}>{commentTotal}</span>
+								</a>
+							</div>
+							<div className={'side-group'}>
+								<span className={'side-group-title'}>{t('Community')}</span>
+								<button
+									type="button"
+									className={'side-link'}
+									onClick={() => redirectToMemberPageHandler(agent?._id as string)}
+								>
+									<PersonOutlineIcon aria-hidden />
+									<span>{t('View public page')}</span>
+								</button>
+							</div>
+							<div className={'side-footer'}>
+								<span>ID: {memberRef(agent?._id)}</span>
+							</div>
+						</nav>
+					</aside>
+
+					<section className={'nv-main'}>
+						<ProfileHero member={agent} metrics={metrics} />
+
+						<div className={'nv-panel'} id={'store-products'}>
+							<header className={'panel-head'}>
+								<div>
+									<h2>{t('Products')}</h2>
+									<p>{t('Bouquets, cakes and chocolates from this store')}</p>
+								</div>
+								<span className={'panel-count'}>
+									{productTotal} {t('products')}
+								</span>
+							</header>
 							{productTotal ? (
 								<>
-									<Stack className="pagination-box">
+									<div className={'tab-grid three'}>
+										{agentProducts.map((product: Product) => (
+											<ProductCard product={product} likeProductHandler={likeProductHandler} key={product?._id} />
+										))}
+									</div>
+									<footer className={'panel-pagination'}>
 										<Pagination
 											page={searchFilter.page}
 											count={Math.ceil(productTotal / searchFilter.limit) || 1}
 											onChange={productPaginationChangeHandler}
-											shape="circular"
-											color="primary"
+											shape="rounded"
 										/>
-									</Stack>
-									<span>
-										Total {productTotal} product{productTotal > 1 ? 's' : ''} available
-									</span>
+										<span>
+											{productTotal} {t('products')}
+										</span>
+									</footer>
 								</>
 							) : (
-								<div className={'no-data'}>
-									<img src="/img/icons/icoAlert.svg" alt="" />
-									<p>No products found!</p>
+								<div className={'panel-empty'}>
+									<p>{t('No products yet')}</p>
 								</div>
 							)}
-						</Stack>
-					</Stack>
-					<Stack className={'review-box'}>
-						<Stack className={'main-intro'}>
-							<span>Reviews</span>
-							<p>we are glad to see you again</p>
-						</Stack>
-						{commentTotal !== 0 && (
-							<Stack className={'review-wrap'}>
-								<Box component={'div'} className={'title-box'}>
-									<StarIcon />
-									<span>
-										{commentTotal} review{commentTotal > 1 ? 's' : ''}
-									</span>
-								</Box>
-								{agentComments?.map((comment: Comment) => {
-									return <ReviewCard comment={comment} key={comment?._id} />;
-								})}
-								<Box component={'div'} className={'pagination-box'}>
-									<Pagination
-										page={commentInquiry.page}
-										count={Math.ceil(commentTotal / commentInquiry.limit) || 1}
-										onChange={commentPaginationChangeHandler}
-										shape="circular"
-										color="primary"
-									/>
-								</Box>
-							</Stack>
-						)}
+						</div>
 
-						<Stack className={'leave-review-config'}>
-							<Typography className={'main-title'}>Leave A Review</Typography>
-							<Typography className={'review-title'}>Review</Typography>
-							<textarea
-								onChange={({ target: { value } }: any) => {
-									setInsertCommentData({ ...insertCommentData, commentContent: value });
-								}}
-								value={insertCommentData.commentContent}
-							></textarea>
-							<Box className={'submit-btn'} component={'div'}>
-								<Button
-									className={'submit-review'}
-									disabled={insertCommentData.commentContent === '' || user?._id === ''}
-									onClick={createCommentHandler}
-								>
-									<Typography className={'title'}>Submit Review</Typography>
-									<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-										<g clipPath="url(#clip0_6975_3642)">
-											<path
-												d="M16.1571 0.5H6.37936C6.1337 0.5 5.93491 0.698792 5.93491 0.944458C5.93491 1.19012 6.1337 1.38892 6.37936 1.38892H15.0842L0.731781 15.7413C0.558156 15.915 0.558156 16.1962 0.731781 16.3698C0.818573 16.4566 0.932323 16.5 1.04603 16.5C1.15974 16.5 1.27345 16.4566 1.36028 16.3698L15.7127 2.01737V10.7222C15.7127 10.9679 15.9115 11.1667 16.1572 11.1667C16.4028 11.1667 16.6016 10.9679 16.6016 10.7222V0.944458C16.6016 0.698792 16.4028 0.5 16.1571 0.5Z"
-												fill="#181A20"
-											/>
-										</g>
-										<defs>
-											<clipPath id="clip0_6975_3642">
-												<rect width="16" height="16" fill="white" transform="translate(0.601562 0.5)" />
-											</clipPath>
-										</defs>
-									</svg>
-								</Button>
-							</Box>
-						</Stack>
-					</Stack>
-				</Stack>
-			</Stack>
+						<div className={'nv-panel'} id={'store-reviews'}>
+							<header className={'panel-head'}>
+								<div>
+									<h2>{t('Reviews')}</h2>
+									<p>{t('What customers say about this store')}</p>
+								</div>
+								<span className={'panel-count'}>
+									<StarIcon aria-hidden />
+									{commentTotal} {t('reviews')}
+								</span>
+							</header>
+							{commentTotal !== 0 && (
+								<div className={'review-stack'}>
+									{agentComments?.map((comment: Comment) => {
+										return <ReviewCard comment={comment} key={comment?._id} />;
+									})}
+									<footer className={'panel-pagination'}>
+										<Pagination
+											page={commentInquiry.page}
+											count={Math.ceil(commentTotal / commentInquiry.limit) || 1}
+											onChange={commentPaginationChangeHandler}
+											shape="rounded"
+										/>
+									</footer>
+								</div>
+							)}
+							<div className={'review-form'}>
+								<label htmlFor={'store-review'}>{t('Leave A Review')}</label>
+								<textarea
+									id={'store-review'}
+									rows={4}
+									placeholder={user?._id ? t('Share your experience with this store') : t('Log in to leave a review')}
+									onChange={({ target: { value } }: any) => {
+										setInsertCommentData({ ...insertCommentData, commentContent: value });
+									}}
+									value={insertCommentData.commentContent}
+								></textarea>
+								<div className={'form-foot'}>
+									<Button
+										className={'submit-review'}
+										disabled={insertCommentData.commentContent === '' || user?._id === ''}
+										onClick={createCommentHandler}
+									>
+										{t('Submit Review')}
+										<NorthEastIcon aria-hidden />
+									</Button>
+								</div>
+							</div>
+						</div>
+					</section>
+				</div>
+			</div>
 		);
 	}
 };
