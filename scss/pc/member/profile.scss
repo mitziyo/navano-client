@@ -1,0 +1,665 @@
+/** PUBLIC PROFILES (/agent/detail, /member): My Page look on the --nv-* theme variables (light + dark) **/
+
+#pc-wrap {
+	.nv-profile {
+		width: 100%;
+		padding: 112px 0 120px;
+		background-color: var(--nv-canvas);
+		font-family: $nv-font-body;
+		color: var(--nv-ink);
+
+		/* ---------- Shell: sticky sidebar + main column ---------- */
+		.nv-shell {
+			flex-direction: row;
+			align-items: flex-start;
+			gap: 28px;
+		}
+		.nv-side {
+			position: sticky;
+			top: 104px;
+			width: 288px;
+			flex-shrink: 0;
+			border-radius: $nv-radius-card;
+			border: 1px solid var(--nv-line);
+			background: var(--nv-glass);
+			-webkit-backdrop-filter: blur(16px);
+			backdrop-filter: blur(16px);
+			box-shadow: $nv-glow;
+		}
+		.nv-main {
+			display: flex;
+			flex: 1;
+			flex-direction: column;
+			gap: 24px;
+			min-width: 0;
+		}
+
+		/* ---------- Sidebar menu (same rhythm as MyMenu) ---------- */
+		.side-menu {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			padding: 24px 16px 18px;
+		}
+		.side-profile {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 0 4px 14px;
+			border-bottom: 1px solid var(--nv-line-soft);
+			img {
+				width: 48px;
+				height: 48px;
+				flex-shrink: 0;
+				border-radius: 12px;
+				object-fit: cover;
+				border: 2px solid var(--nv-line-strong);
+				box-shadow: $nv-shadow-sm;
+			}
+			div {
+				display: flex;
+				flex-direction: column;
+				min-width: 0;
+			}
+			strong {
+				overflow: hidden;
+				font-family: $nv-font-head;
+				font-size: 17px;
+				font-weight: 700;
+				letter-spacing: -0.01em;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				color: var(--nv-ink);
+			}
+			small {
+				font-family: $nv-font-label;
+				font-size: 10px;
+				font-weight: 700;
+				letter-spacing: 0.14em;
+				text-transform: uppercase;
+				color: $nv-primary;
+			}
+		}
+		.side-contact {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			margin-top: -8px;
+			padding: 0 6px;
+			font-family: $nv-font-mono;
+			font-size: 12px;
+			color: var(--nv-text);
+			svg {
+				font-size: 16px;
+				color: $nv-primary;
+			}
+			&:hover {
+				color: $nv-primary;
+			}
+		}
+		.side-follow {
+			margin-top: -6px;
+		}
+		.side-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			width: 100%;
+			height: 40px;
+			border-radius: 10px;
+			font-family: $nv-font-label;
+			font-size: 13px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: filter 0.2s $nv-ease, background-color 0.2s $nv-ease, transform 0.1s $nv-ease;
+			svg {
+				font-size: 18px;
+			}
+			&:active {
+				transform: scale(0.98);
+			}
+			&:focus-visible {
+				@include nv-focus;
+			}
+			&.primary {
+				border: 0;
+				background: $nv-gradient;
+				box-shadow: var(--nv-btn-shadow);
+				color: var(--nv-on-primary);
+				&:hover {
+					filter: brightness(1.06);
+				}
+			}
+			&.ghost {
+				border: 1px solid var(--nv-line-accent);
+				background: var(--nv-primary-light);
+				color: var(--nv-primary-deep);
+				.hint {
+					font-weight: 500;
+					color: var(--nv-muted);
+				}
+				&:hover .hint {
+					color: $nv-primary;
+				}
+			}
+		}
+		.side-group {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+		.side-group-title {
+			@include nv-label;
+			padding: 0 12px 4px;
+			font-size: 10px;
+			color: var(--nv-subtle);
+		}
+		.side-link {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			width: 100%;
+			padding: 10px 14px;
+			border: 0;
+			border-left: 4px solid transparent;
+			border-radius: $nv-radius-control;
+			background: transparent;
+			font-family: $nv-font-label;
+			font-size: 13px;
+			font-weight: 500;
+			color: var(--nv-text);
+			text-align: left;
+			cursor: pointer;
+			transition: background-color 0.2s $nv-ease, color 0.2s $nv-ease;
+			svg {
+				font-size: 20px;
+				color: var(--nv-subtle);
+				transition: color 0.2s $nv-ease;
+			}
+			> span:first-of-type {
+				flex: 1;
+			}
+			&:hover {
+				background: var(--nv-primary-light);
+				color: var(--nv-ink);
+			}
+			&:focus-visible {
+				@include nv-focus;
+			}
+			&.active {
+				background: linear-gradient(90deg, var(--nv-primary-tint), var(--nv-primary-light), var(--nv-surface));
+				border-left-color: $nv-primary;
+				box-shadow: $nv-shadow-sm;
+				font-weight: 700;
+				color: var(--nv-primary-deep);
+				svg {
+					color: $nv-primary;
+				}
+				.side-count {
+					background: var(--nv-surface);
+					color: $nv-primary;
+				}
+			}
+		}
+		.side-count {
+			min-width: 24px;
+			padding: 1px 8px;
+			border-radius: 999px;
+			background: var(--nv-surface-sunken);
+			font-family: $nv-font-mono;
+			font-size: 11px;
+			font-weight: 700;
+			text-align: center;
+			color: var(--nv-muted);
+		}
+		.side-footer {
+			padding: 14px 12px 0;
+			border-top: 1px solid var(--nv-line-soft);
+			font-family: $nv-font-mono;
+			font-size: 10px;
+			color: var(--nv-subtle);
+		}
+
+		/* ---------- Hero (same as the My Profile hero) ---------- */
+		.nv-hero {
+			position: relative;
+			overflow: hidden;
+			border-radius: $nv-radius-card;
+			border: 1px solid var(--nv-line);
+			background: var(--nv-surface);
+			box-shadow: $nv-glow;
+		}
+		.hero-cover {
+			position: relative;
+			height: 196px;
+			overflow: hidden;
+			border-bottom: 1px solid var(--nv-line);
+			background: var(--nv-cover);
+			> img {
+				width: 100%;
+				height: 100%;
+				display: block;
+				object-fit: cover;
+			}
+			&.has-image::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(180deg, transparent 55%, rgba(12, 10, 9, 0.35));
+			}
+		}
+		.hero-watermark {
+			position: absolute;
+			right: 24px;
+			top: 12px;
+			font-family: $nv-font-head;
+			font-size: 120px;
+			font-weight: 700;
+			line-height: 1;
+			letter-spacing: -0.05em;
+			color: var(--nv-watermark);
+			user-select: none;
+		}
+		.cover-pill {
+			position: absolute;
+			z-index: 1;
+			top: 16px;
+			right: 16px;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 5px 12px;
+			border-radius: 999px;
+			border: 1px solid var(--nv-line);
+			background: var(--nv-glass);
+			-webkit-backdrop-filter: blur(12px);
+			backdrop-filter: blur(12px);
+			box-shadow: $nv-shadow-sm;
+			font-family: $nv-font-label;
+			font-size: 11px;
+			font-weight: 600;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			color: var(--nv-text);
+			strong {
+				font-family: $nv-font-mono;
+				font-weight: 700;
+				color: $nv-primary;
+			}
+			.pulse {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: var(--nv-primary-strong);
+			}
+		}
+		.hero-identity {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			align-items: flex-end;
+			justify-content: space-between;
+			gap: 24px;
+			margin-top: -64px;
+			padding: 0 24px 20px;
+		}
+		.hero-left {
+			display: flex;
+			align-items: flex-end;
+			gap: 20px;
+			min-width: 0;
+		}
+		.avatar-frame {
+			display: block;
+			width: 128px;
+			height: 128px;
+			flex-shrink: 0;
+			padding: 4px;
+			border-radius: 16px;
+			border: 2px solid var(--nv-line-strong);
+			background: var(--nv-surface);
+			box-shadow: var(--nv-shadow-lg);
+			img {
+				width: 100%;
+				height: 100%;
+				border-radius: 12px;
+				object-fit: cover;
+			}
+		}
+		.hero-text {
+			min-width: 0;
+			padding-bottom: 4px;
+		}
+		.hero-name-row {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 8px;
+		}
+		.hero-name {
+			margin: 0;
+			font-family: $nv-font-head;
+			font-size: 26px;
+			font-weight: 700;
+			line-height: 34px;
+			letter-spacing: -0.02em;
+			color: var(--nv-ink);
+		}
+		.role-badge,
+		.ref-chip {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			padding: 2px 10px;
+			border-radius: 999px;
+			font-family: $nv-font-label;
+			font-size: 11px;
+			font-weight: 700;
+		}
+		.role-badge {
+			border: 1px solid var(--nv-line-strong);
+			background: var(--nv-primary-light);
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			color: var(--nv-primary-deep);
+			svg {
+				font-size: 13px;
+				color: $nv-primary;
+			}
+		}
+		.ref-chip {
+			border: 1px solid var(--nv-neutral-line);
+			background: var(--nv-neutral-chip);
+			font-family: $nv-font-mono;
+			color: var(--nv-muted);
+		}
+		.hero-meta {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 4px 10px;
+			margin: 6px 0 0;
+			font-size: 12px;
+			color: var(--nv-muted);
+			> span,
+			> a {
+				display: inline-flex;
+				align-items: center;
+				gap: 4px;
+			}
+			svg {
+				font-size: 15px;
+				color: var(--nv-primary-strong);
+			}
+			.strong {
+				font-weight: 600;
+				color: var(--nv-ink);
+			}
+			.mono {
+				font-family: $nv-font-mono;
+				color: var(--nv-label);
+				&:hover {
+					color: $nv-primary;
+				}
+			}
+			.dot {
+				color: var(--nv-line-strong);
+			}
+		}
+		.hero-desc {
+			margin: 0;
+			padding: 0 24px 20px;
+			max-width: 760px;
+			font-size: 14px;
+			line-height: 22px;
+			color: var(--nv-text);
+		}
+		.hero-metrics {
+			display: grid;
+			margin: 0;
+			border-top: 1px solid var(--nv-line-soft);
+			background: var(--nv-surface-tint);
+			.metric {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+				padding: 16px;
+				& + .metric {
+					border-left: 1px solid var(--nv-line-soft);
+				}
+			}
+			.metric-label {
+				@include nv-label;
+				font-size: 10px;
+			}
+			.metric-value {
+				margin: 0;
+				font-family: $nv-font-head;
+				font-size: 18px;
+				font-weight: 700;
+				line-height: 26px;
+				font-variant-numeric: tabular-nums;
+				color: var(--nv-ink);
+			}
+			.metric-note {
+				margin: 0;
+				font-family: $nv-font-mono;
+				font-size: 11px;
+				color: $nv-primary;
+			}
+		}
+
+		/* ---------- Panels ---------- */
+		.nv-panel {
+			scroll-margin-top: 104px;
+			padding: 24px;
+			border-radius: $nv-radius-card;
+			border: 1px solid var(--nv-line);
+			background: var(--nv-surface);
+			box-shadow: $nv-glow;
+		}
+		.panel-head {
+			display: flex;
+			align-items: flex-end;
+			justify-content: space-between;
+			gap: 16px;
+			margin-bottom: 20px;
+			padding-bottom: 16px;
+			border-bottom: 1px solid var(--nv-line-soft);
+			h2 {
+				margin: 0;
+				font-family: $nv-font-head;
+				font-size: 22px;
+				font-weight: 700;
+				letter-spacing: -0.015em;
+				color: var(--nv-ink);
+			}
+			p {
+				margin: 4px 0 0;
+				font-size: 13px;
+				color: var(--nv-muted);
+			}
+		}
+		.panel-count {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			padding: 3px 10px;
+			border-radius: 999px;
+			border: 1px solid var(--nv-line-accent);
+			background: var(--nv-primary-light);
+			font-family: $nv-font-mono;
+			font-size: 11px;
+			font-weight: 700;
+			white-space: nowrap;
+			color: var(--nv-primary-deep);
+			svg {
+				font-size: 14px;
+				color: $nv-primary;
+			}
+		}
+		.panel-empty {
+			padding: 48px 16px;
+			border-radius: 12px;
+			border: 1px dashed var(--nv-line-accent);
+			background: var(--nv-section-tint);
+			text-align: center;
+			p {
+				margin: 0;
+				color: var(--nv-text);
+			}
+		}
+		.tab-grid {
+			display: grid;
+			gap: 20px;
+			&.three {
+				grid-template-columns: repeat(3, minmax(0, 1fr));
+			}
+			&.two {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+		.panel-pagination {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+			margin-top: 24px;
+			span {
+				font-family: $nv-font-mono;
+				font-size: 11px;
+				color: var(--nv-muted);
+			}
+			.MuiPaginationItem-root {
+				min-width: 34px;
+				height: 34px;
+				border-radius: 10px;
+				border: 1px solid var(--nv-line-accent);
+				background: var(--nv-surface);
+				font-family: $nv-font-mono;
+				font-size: 12px;
+				font-weight: 700;
+				color: var(--nv-ink);
+				&:hover {
+					background: var(--nv-primary-light);
+				}
+				&.Mui-selected {
+					border-color: transparent;
+					background: $nv-gradient;
+					color: var(--nv-on-primary);
+				}
+			}
+		}
+
+		/* Articles tab reuses the community article card */
+		@include nv-article-card;
+
+		/* ---------- Reviews (store page) ---------- */
+		.review-stack {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			margin-bottom: 24px;
+			.panel-pagination {
+				margin-top: 8px;
+			}
+		}
+		.review-card {
+			padding: 16px;
+			border-radius: 12px;
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-surface-muted);
+			.info .left {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				img {
+					width: 36px;
+					height: 36px;
+					border-radius: 50%;
+					object-fit: cover;
+				}
+				div {
+					display: flex;
+					flex-direction: column;
+				}
+				strong {
+					font-family: $nv-font-head;
+					font-size: 14px;
+					color: var(--nv-ink);
+				}
+				span {
+					font-family: $nv-font-label;
+					font-size: 11px;
+					color: var(--nv-muted);
+				}
+			}
+			> p {
+				margin: 10px 0 0;
+				font-size: 14px;
+				line-height: 22px;
+				color: var(--nv-text);
+			}
+		}
+		.review-form {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			label {
+				font-family: $nv-font-label;
+				font-size: 12px;
+				font-weight: 600;
+				color: var(--nv-text);
+			}
+			textarea {
+				width: 100%;
+				padding: 14px;
+				resize: vertical;
+				border-radius: 10px;
+				border: 1px solid var(--nv-line-soft);
+				background: var(--nv-surface-sunken);
+				font-family: $nv-font-body;
+				font-size: 14px;
+				color: var(--nv-ink);
+				outline: none;
+				&::placeholder {
+					color: var(--nv-subtle);
+				}
+				&:focus {
+					border-color: var(--nv-primary-soft);
+					box-shadow: 0 0 0 3px var(--nv-primary-ring);
+				}
+			}
+			.form-foot {
+				display: flex;
+				justify-content: flex-end;
+			}
+			.submit-review {
+				display: inline-flex;
+				gap: 8px;
+				height: 42px;
+				padding: 0 20px;
+				border-radius: 10px;
+				border: 1px solid var(--nv-line-accent);
+				background: var(--nv-surface-muted);
+				font-family: $nv-font-label;
+				font-size: 13px;
+				font-weight: 700;
+				text-transform: none;
+				color: var(--nv-ink);
+				svg {
+					font-size: 16px;
+				}
+				&:hover:not(:disabled) {
+					border-color: var(--nv-primary-soft);
+					background: var(--nv-primary-light);
+					color: $nv-primary;
+				}
+				&:disabled {
+					opacity: 0.5;
+				}
+			}
+		}
+	}
+}
