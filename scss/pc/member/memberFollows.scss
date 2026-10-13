@@ -1,170 +1,186 @@
+/** Followers / Followings list (MemberFollowers, MemberFollowings) on /member and My Page, --nv-* theme **/
+
 #pc-wrap {
 	#member-follows-page {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		align-items: center;
+		font-family: $nv-font-body;
 		.main-title-box {
 			width: 100%;
-			height: auto;
 			flex-direction: row;
+			align-items: flex-end;
 			justify-content: space-between;
-			.right-box {
-				width: 315px;
-				.main-title {
-					color: #181a20;
-					font-family: $font;
-					font-size: 30px;
-					font-style: normal;
-					font-weight: 600;
-					line-height: normal;
-					letter-spacing: 0.6px;
-					text-transform: capitalize;
-				}
+			margin-bottom: 16px;
+			padding-bottom: 16px;
+			border-bottom: 1px solid var(--nv-line-soft);
+			.main-title {
+				font-family: $nv-font-head;
+				font-size: 22px;
+				font-weight: 700;
+				letter-spacing: -0.015em;
+				color: var(--nv-ink);
 			}
 		}
 		.follows-list-box {
 			width: 100%;
-			margin-top: 85px;
-			gap: 15px;
+			gap: 10px;
 			.listing-title-box {
-				width: 100%;
-				height: auto;
-				flex-direction: row;
-				gap: 110px;
-				padding: 18px 34px 18px 33px;
-				border-radius: 12px;
-				background: #f6f6f6;
-				justify-content: space-between;
+				display: grid;
+				grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr) 180px;
+				padding: 10px 16px;
+				border-radius: 10px;
+				background: var(--nv-surface-sunken);
 				.title-text {
-					color: #181a20;
-					font-family: $font;
-					font-size: 15px;
-					font-style: normal;
-					font-weight: 600;
-					line-height: normal;
+					font-family: $nv-font-label;
+					font-size: 11px;
+					font-weight: 700;
+					letter-spacing: 0.06em;
+					text-transform: uppercase;
+					color: var(--nv-muted);
+				}
+			}
+			.no-data {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 8px;
+				padding: 48px 16px;
+				border-radius: 12px;
+				border: 1px dashed var(--nv-line-accent);
+				background: var(--nv-section-tint);
+				img {
+					width: 40px;
+					opacity: 0.6;
+				}
+				p {
+					margin: 0;
+					font-size: 14px;
+					color: var(--nv-text);
 				}
 			}
 			.follows-card-box {
-				padding-right: 30px;
-				padding-bottom: 5px;
-				width: 100%;
-				height: auto;
-				flex-direction: row;
+				display: grid;
+				grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr) 180px;
 				align-items: center;
-				gap: 10px;
-				border-bottom: 1px solid #ddd;
+				padding: 12px 16px;
+				border-radius: 12px;
+				border: 1px solid var(--nv-line-soft);
+				background: var(--nv-surface);
+				transition: border-color 0.2s $nv-ease, background-color 0.2s $nv-ease;
+				&:hover {
+					border-color: var(--nv-line-strong);
+					background: var(--nv-primary-light);
+				}
 				.info {
-					width: 300px;
-					display: flex;
 					flex-direction: row;
 					align-items: center;
+					gap: 12px;
+					min-width: 0;
 					cursor: pointer;
-					.image-box {
-						width: 110px;
-						height: 110px;
-						overflow: hidden;
-						margin-right: 25px;
-						img {
-							width: 100%;
-							height: 100%;
-							object-fit: cover;
-							border-radius: 50%;
-						}
+					.image-box img {
+						width: 44px;
+						height: 44px;
+						border-radius: 12px;
+						object-fit: cover;
+						border: 2px solid var(--nv-line-strong);
 					}
-					.information-box {
-						width: auto;
-						height: auto;
-						padding: 5px 0px;
-						.name {
-							color: #181a20;
-							font-family: $font;
-							font-size: 13px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
-						}
+					.name {
+						overflow: hidden;
+						font-family: $nv-font-head;
+						font-size: 15px;
+						font-weight: 700;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						color: var(--nv-ink);
+					}
+					&:hover .name {
+						color: $nv-primary;
 					}
 				}
 				.details-box {
-					width: 300px;
-					display: flex;
 					flex-direction: row;
-					justify-content: space-between;
+					align-items: center;
+					gap: 18px;
 					.info-box {
 						display: flex;
 						align-items: center;
-						img {
-							width: 24px;
-							height: 24px;
-						}
-						svg {
-							width: 24px;
-							height: 24px;
-							cursor: pointer;
-						}
+						gap: 4px;
+						font-family: $nv-font-label;
+						font-size: 12px;
+						color: var(--nv-muted);
 						p {
-							color: #181a20;
-							font-family: $font;
-							font-size: 15px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
+							margin: 0;
 						}
 						span {
-							margin-left: 4px;
-							color: #181a20;
-							font-family: $font;
-							font-size: 13px;
-							font-style: normal;
-							font-weight: 600;
-							line-height: normal;
+							font-family: $nv-font-mono;
+							font-weight: 700;
+							color: var(--nv-ink);
+						}
+						svg {
+							font-size: 18px;
+							color: var(--nv-primary-strong);
+							cursor: pointer;
 						}
 					}
 				}
 				.action-box {
-					width: 300px;
-					height: 100%;
 					flex-direction: row;
 					align-items: center;
 					justify-content: flex-end;
-					gap: 20px;
-					button {
-						border: 1px solid #b9b9b9;
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 400;
-						line-height: normal;
-					}
+					gap: 10px;
 					p {
-						color: #b9b9b9;
-						font-family: $font;
-						font-size: 14px;
-						font-style: italic;
-						font-weight: 400;
-						line-height: normal;
+						font-family: $nv-font-label;
+						font-size: 11px;
+						color: var(--nv-muted);
+					}
+				}
+				.follow-btn {
+					min-width: 0;
+					height: 34px;
+					padding: 0 16px;
+					border-radius: 10px;
+					box-shadow: none;
+					font-family: $nv-font-label;
+					font-size: 12px;
+					font-weight: 700;
+					text-transform: none;
+					&.primary {
+						border: 0;
+						background: $nv-gradient;
+						color: var(--nv-on-primary);
+						&:hover {
+							filter: brightness(1.06);
+						}
+					}
+					&.ghost {
+						border: 1px solid var(--nv-line-accent);
+						background: var(--nv-surface);
+						color: var(--nv-primary-deep);
+						&:hover {
+							background: var(--nv-primary-tint);
+						}
 					}
 				}
 			}
 		}
 		.pagination-config {
-			width: 100%;
-			height: auto;
-			justify-content: center;
 			align-items: center;
-			margin-top: 30px;
-			.total-result {
-				p {
-					color: #181a20;
-					text-align: center;
-					font-family: $font;
-					font-size: 14px;
-					font-style: normal;
-					font-weight: 400;
-					line-height: 26px;
+			gap: 10px;
+			margin-top: 24px;
+			.total-result p {
+				font-family: $nv-font-mono;
+				font-size: 11px;
+				color: var(--nv-muted);
+			}
+			.MuiPaginationItem-root {
+				border: 1px solid var(--nv-line-accent);
+				background: var(--nv-surface);
+				color: var(--nv-ink);
+				&.Mui-selected {
+					border-color: transparent;
+					background: $nv-gradient;
+					color: var(--nv-on-primary);
 				}
 			}
 		}
