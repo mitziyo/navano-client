@@ -410,5 +410,10 @@
   "from stores on Navano": "from stores on Navano",
   "photo": "photo",
   "photos": "photos",
-  "views": "views"
+  "views": "views",
+  "Store not found": "Store not found",
+  "This store link is missing or no longer works.": "This store link is missing or no longer works.",
+  "Browse all stores": "Browse all stores",
+  "Member not found": "Member not found",
+  "This profile link is missing or no longer works.": "This profile link is missing or no longer works."
 }
