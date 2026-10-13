@@ -24,5 +24,8 @@ export const userVar = makeVar<CustomJwtPayload>({
 	memberBlocks: 0,
 });
 
+// Open state of the floating chat, so pages (e.g. CS) can open it
+export const chatOpenVar = makeVar<boolean>(false);
+
 // @ts-ignore
 export const socketVar = makeVar<WebSocket>();

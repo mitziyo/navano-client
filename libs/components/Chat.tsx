@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import ScrollableFeed from 'react-scrollable-feed';
 import { RippleBadge } from '../../scss/MaterialTheme/styled';
 import { useReactiveVar } from '@apollo/client';
-import { socketVar, userVar } from '../../apollo/store';
+import { chatOpenVar, socketVar, userVar } from '../../apollo/store';
 import { Member } from '../types/member/member';
 import { Messages, REACT_APP_API_URL } from '../config';
 import { sweetErrorAlert } from '../sweetAlert';
@@ -54,7 +54,7 @@ const Chat = () => {
 	const [messagesList, setMessagesList] = useState<MessagePayload[]>([]);
 	const [onlineUsers, setOnlineUsers] = useState<number>(0);
 	const [messageInput, setMessageInput] = useState<string>('');
-	const [open, setOpen] = useState(false);
+	const open = useReactiveVar(chatOpenVar);
 	const [openButton, setOpenButton] = useState(false);
 	const router = useRouter();
 	const user = useReactiveVar(userVar);
@@ -96,7 +96,7 @@ const Chat = () => {
 
 	/** HANDLERS **/
 	const handleOpenChat = () => {
-		setOpen((prevState) => !prevState);
+		chatOpenVar(!open);
 	};
 
 	const getInputMessageHandler = useCallback(
