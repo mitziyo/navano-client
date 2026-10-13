@@ -61,6 +61,8 @@ const ProductDetail: NextPage = () => {
 	const [commentPage, setCommentPage] = useState<number>(1);
 	const [reviewText, setReviewText] = useState<string>('');
 	const [contact, setContact] = useState({ name: '', phone: '', message: '' });
+	const [mounted, setMounted] = useState<boolean>(false);
+	useEffect(() => setMounted(true), []);
 
 	/** APOLLO REQUESTS **/
 	const [likeTargetProduct] = useMutation(LIKE_TARGET_PRODUCT);
@@ -167,7 +169,10 @@ const ProductDetail: NextPage = () => {
 		return <div>PRODUCT DETAIL PAGE</div>;
 	}
 
-	if (!productId || (loading && !product)) {
+	// Without an id there is nothing to load; the check waits for hydration so server and client HTML match
+	const missingId = mounted && router.isReady && !productId;
+
+	if (!missingId && (!productId || (loading && !product))) {
 		return (
 			<div id={'product-detail-page'}>
 				<div className={'container pd-loading'} aria-busy="true">
