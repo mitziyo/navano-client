@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
-import { Stack } from '@mui/material';
 import MemberMenu from '../../libs/components/member/MemberMenu';
+import ProfileHero, { ProfileMetric } from '../../libs/components/member/ProfileHero';
+import moment from 'moment';
 import MemberProducts from '../../libs/components/member/MemberProducts';
 import { useRouter } from 'next/router';
 import MemberFollowers from '../../libs/components/member/MemberFollowers';
@@ -124,7 +125,7 @@ const MemberPage: NextPage = () => {
 		return <>MEMBER PAGE MOBILE</>;
 	} else if (memberMissing) {
 		return (
-			<div id="member-page" style={{ position: 'relative' }}>
+			<div id="member-page" className={'nv-profile'}>
 				<div className="container member-missing">
 					<h1>{t('Member not found')}</h1>
 					<p>{t('This profile link is missing or no longer works.')}</p>
@@ -133,38 +134,45 @@ const MemberPage: NextPage = () => {
 			</div>
 		);
 	} else {
+		const member = memberData?.getMember;
+		const metrics: ProfileMetric[] = [
+			{ label: t('Member since'), value: member ? moment(member.createdAt).format('YYYY') : '—' },
+			...(memberType === MemberType.AGENT ? [{ label: t('Products'), value: member?.memberProducts ?? 0 }] : []),
+			{ label: t('Followers'), value: member?.memberFollowers ?? 0 },
+			{ label: t('Followings'), value: member?.memberFollowings ?? 0 },
+			{ label: t('Articles'), value: member?.memberArticles ?? 0 },
+			{ label: t('Likes'), value: member?.memberLikes ?? 0 },
+		];
+
 		return (
-			<div id="member-page" style={{ position: 'relative' }}>
-				<div className="container">
-					<Stack className={'member-page'}>
-						<Stack className={'back-frame'}>
-							<Stack className={'left-config'}>
-								<MemberMenu subscribeHandler={subscribeHandler} unsubscribeHandler={unsubscribeHandler} />
-							</Stack>
-							<Stack className="main-config" mb={'76px'}>
-								<Stack className={'list-config'}>
-									{category === 'products' && <MemberProducts />}
-									{category === 'followers' && (
-										<MemberFollowers
-											subscribeHandler={subscribeHandler}
-											unsubscribeHandler={unsubscribeHandler}
-											likeMemberHandler={likeMemberHandler}
-											redirectToMemberPageHandler={redirectToMemberPageHandler}
-										/>
-									)}
-									{category === 'followings' && (
-										<MemberFollowings
-											subscribeHandler={subscribeHandler}
-											unsubscribeHandler={unsubscribeHandler}
-											likeMemberHandler={likeMemberHandler}
-											redirectToMemberPageHandler={redirectToMemberPageHandler}
-										/>
-									)}
-									{category === 'articles' && <MemberArticles />}
-								</Stack>
-							</Stack>
-						</Stack>
-					</Stack>
+			<div id="member-page" className={'nv-profile'}>
+				<div className="container nv-shell">
+					<aside className={'nv-side'}>
+						<MemberMenu subscribeHandler={subscribeHandler} unsubscribeHandler={unsubscribeHandler} />
+					</aside>
+					<section className={'nv-main'}>
+						<ProfileHero member={member} metrics={metrics} />
+						<div className={'nv-panel'}>
+							{category === 'products' && <MemberProducts />}
+							{category === 'followers' && (
+								<MemberFollowers
+									subscribeHandler={subscribeHandler}
+									unsubscribeHandler={unsubscribeHandler}
+									likeMemberHandler={likeMemberHandler}
+									redirectToMemberPageHandler={redirectToMemberPageHandler}
+								/>
+							)}
+							{category === 'followings' && (
+								<MemberFollowings
+									subscribeHandler={subscribeHandler}
+									unsubscribeHandler={unsubscribeHandler}
+									likeMemberHandler={likeMemberHandler}
+									redirectToMemberPageHandler={redirectToMemberPageHandler}
+								/>
+							)}
+							{category === 'articles' && <MemberArticles />}
+						</div>
+					</section>
 				</div>
 			</div>
 		);
