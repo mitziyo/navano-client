@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
@@ -8,7 +8,11 @@ import MemberProducts from '../../libs/components/member/MemberProducts';
 import { useRouter } from 'next/router';
 import MemberFollowers from '../../libs/components/member/MemberFollowers';
 import MemberArticles from '../../libs/components/member/MemberArticles';
-import { useMutation, useReactiveVar } from '@apollo/client';
+import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import { GET_MEMBER } from '../../apollo/user/query';
+import { MemberType } from '../../libs/enums/member.enum';
 import { sweetErrorHandling, sweetTopSmallSuccessAlert } from '../../libs/sweetAlert';
 import MemberFollowings from '../../libs/components/member/MemberFollowings';
 import { userVar } from '../../apollo/store';
@@ -26,27 +30,43 @@ const MemberPage: NextPage = () => {
 	const device = useDeviceDetect();
 	const router = useRouter();
 	const category: any = router.query?.category;
+	const memberId = typeof router.query?.memberId === 'string' ? router.query.memberId : '';
 	const user = useReactiveVar(userVar);
+	const { t } = useTranslation('common');
+	// The server render never knows the query, so the not-found check waits until after hydration
+	const [mounted, setMounted] = useState<boolean>(false);
 
 	/** APOLLO REQUESTS **/
 	const [subscribe] = useMutation(SUBSCRIBE);
 	const [unsubscribe] = useMutation(UNSUBSCRIBE);
 	const [likeTargetMember] = useMutation(LIKE_TARGET_MEMBER);
 
+	// Same query as MemberMenu (shared through the cache): the default tab depends on the member type
+	const { data: memberData, error: memberError } = useQuery(GET_MEMBER, {
+		fetchPolicy: 'cache-first',
+		variables: { input: memberId },
+		skip: !memberId,
+	});
+	const memberType: string | undefined = memberData?.getMember?.memberType;
+
 	/** LIFECYCLES **/
+	useEffect(() => setMounted(true), []);
+
+	// Stores open on Products; other members have no products, so they open on Articles
 	useEffect(() => {
-		if (!router.isReady) return;
-		if (!category) {
+		if (!router.isReady || !memberType) return;
+		const fallback = memberType === MemberType.AGENT ? 'products' : 'articles';
+		if (!category || (category === 'products' && memberType !== MemberType.AGENT)) {
 			router.replace(
 				{
 					pathname: router.pathname,
-					query: { ...router.query, category: 'products' },
+					query: { ...router.query, category: fallback },
 				},
 				undefined,
 				{ shallow: true },
 			);
 		}
-	}, [category, router]);
+	}, [category, memberType, router]);
 
 	/** HANDLERS **/
 	const subscribeHandler = async (id: string, refetch: any, query: any) => {
@@ -98,8 +118,20 @@ const MemberPage: NextPage = () => {
 		}
 	};
 
+	const memberMissing = mounted && router.isReady && (!memberId || Boolean(memberError));
+
 	if (device === 'mobile') {
 		return <>MEMBER PAGE MOBILE</>;
+	} else if (memberMissing) {
+		return (
+			<div id="member-page" style={{ position: 'relative' }}>
+				<div className="container member-missing">
+					<h1>{t('Member not found')}</h1>
+					<p>{t('This profile link is missing or no longer works.')}</p>
+					<Link href={'/community?articleCategory=FREE'}>{t('Go to community')}</Link>
+				</div>
+			</div>
+		);
 	} else {
 		return (
 			<div id="member-page" style={{ position: 'relative' }}>
