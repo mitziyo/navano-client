@@ -12,7 +12,7 @@
 		.community-hero {
 			position: relative;
 			width: 100%;
-			min-height: 380px;
+			min-height: 420px;
 			display: flex;
 			align-items: center;
 			overflow: hidden;
@@ -43,7 +43,7 @@
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			object-position: center 40%;
+			object-position: center 45%;
 		}
 		.community-hero-copy {
 			max-width: 620px;
@@ -176,7 +176,7 @@
 				font-family: $nv-font-label;
 				font-size: 10px;
 				font-weight: 700;
-				letter-spacing: 0.04em;
+				letter-spacing: 0.02em;
 				text-transform: uppercase;
 				white-space: nowrap;
 				color: $nv-primary;
