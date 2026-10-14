@@ -26,8 +26,6 @@
 
 	/* ---------- HERO ---------- */
 	.home-hero {
-		/* Warm cream the photo fades into; a dark grey fade over white reads as haze */
-		--hero-cream: #fbf5ef;
 		position: relative;
 		width: 100%;
 		padding: 80px 0 32px;
@@ -54,10 +52,6 @@
 		}
 	}
 
-	[data-theme='dark'] & .home-hero {
-		--hero-cream: var(--nv-surface);
-	}
-
 	/* Full-bleed band under the navbar: copy on the left, bouquet photo on the right */
 	.hero-card {
 		position: relative;
@@ -66,7 +60,7 @@
 		min-height: 600px;
 		overflow: hidden;
 		border-bottom: 1px solid var(--nv-line-soft);
-		background: var(--hero-cream);
+		background: var(--nv-hero-cream);
 	}
 	/* Bouquet photo on the right, fading into the band behind the copy */
 	.hero-media {
@@ -89,9 +83,9 @@
 			inset: 0;
 			background: linear-gradient(
 				90deg,
-				var(--hero-cream) 0%,
-				color-mix(in srgb, var(--hero-cream) 70%, transparent) 18%,
-				color-mix(in srgb, var(--hero-cream) 25%, transparent) 34%,
+				var(--nv-hero-cream) 0%,
+				color-mix(in srgb, var(--nv-hero-cream) 70%, transparent) 18%,
+				color-mix(in srgb, var(--nv-hero-cream) 25%, transparent) 34%,
 				transparent 48%
 			);
 		}

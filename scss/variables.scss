@@ -67,3 +67,136 @@ $nv-ease: cubic-bezier(0.22, 1, 0.36, 1);
 	text-transform: uppercase;
 	color: $nv-label;
 }
+
+/* ---------- Page hero band (same design as the home hero) ---------- */
+
+// Full-width cream band under the navbar; the copy sits in a .container child
+@mixin nv-hero-band($min-height: 480px) {
+	position: relative;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	min-height: $min-height;
+	overflow: hidden;
+	border-bottom: 1px solid var(--nv-line-soft);
+	background: var(--nv-hero-cream);
+	> .container {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+// Photo wrapper (<div><img /></div>) on the right, fading into the band with a warm cream wash
+@mixin nv-hero-photo($position: center 50%) {
+	position: absolute;
+	inset: 0 0 0 auto;
+	width: 62%;
+	pointer-events: none;
+	img {
+		width: 100%;
+		height: 100%;
+		display: block;
+		object-fit: cover;
+		object-position: $position;
+		-webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
+		mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
+	}
+	&::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			90deg,
+			var(--nv-hero-cream) 0%,
+			color-mix(in srgb, var(--nv-hero-cream) 70%, transparent) 18%,
+			color-mix(in srgb, var(--nv-hero-cream) 25%, transparent) 34%,
+			transparent 48%
+		);
+	}
+}
+
+// Serif headline with the accent line in the primary colour, and the lead paragraph
+@mixin nv-hero-title {
+	h1 {
+		margin: 0;
+		font-family: $nv-font-head;
+		font-size: 52px;
+		font-weight: 600;
+		line-height: 60px;
+		letter-spacing: -0.03em;
+		color: var(--nv-ink);
+		text-wrap: balance;
+		em {
+			display: block;
+			font: inherit;
+			font-style: normal;
+			color: $nv-primary;
+		}
+	}
+	> p {
+		max-width: 540px;
+		margin: 0;
+		font-size: 16px;
+		line-height: 26px;
+		color: var(--nv-text);
+	}
+}
+
+@mixin nv-hero-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 12px;
+	border-radius: 999px;
+	border: 1px solid var(--nv-line-accent);
+	background: var(--nv-glass);
+	-webkit-backdrop-filter: blur(12px);
+	backdrop-filter: blur(12px);
+	box-shadow: $nv-shadow-sm;
+	font-family: $nv-font-label;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: $nv-primary;
+	.pulse {
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--nv-primary-strong);
+	}
+}
+
+// Copy column of a page hero: breadcrumb, badge, headline, lead, then page extras, stacked with one rhythm
+@mixin nv-hero-copy($max-width: 640px) {
+	max-width: $max-width;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 14px;
+	padding: 56px 0;
+	@include nv-hero-title;
+	.breadcrumb {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin: 0;
+		font-family: $nv-font-label;
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		color: var(--nv-muted);
+		a {
+			color: var(--nv-muted);
+			&:hover {
+				color: $nv-primary;
+			}
+		}
+		.current {
+			color: $nv-primary;
+		}
+	}
+	.hero-badge {
+		@include nv-hero-badge;
+	}
+}
