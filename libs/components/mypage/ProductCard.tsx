@@ -2,13 +2,18 @@ import { Menu, MenuItem, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import IconButton from '@mui/material/IconButton';
-import ModeIcon from '@mui/icons-material/Mode';
-import DeleteIcon from '@mui/icons-material/Delete';
+import ModeIcon from '@mui/icons-material/ModeEditOutlineOutlined';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import { Product } from '../../types/product/product';
 import { formatterStr } from '../../utils';
 import Moment from 'react-moment';
 import { useRouter } from 'next/router';
 import { ProductStatus } from '../../enums/product.enum';
+import { useTranslation } from 'next-i18next';
+
+// Shopper-facing status words, same as the product cards
+const statusText = (status: string) =>
+	status === ProductStatus.ACTIVE ? 'On sale' : status === ProductStatus.SOLD ? 'Sold out' : status === ProductStatus.HOLD ? 'On hold' : status;
 
 interface ProductCardProps {
 	product: Product;
@@ -21,6 +26,7 @@ export const ProductCard = (props: ProductCardProps) => {
 	const { product, deleteProductHandler, memberPage, updateProductHandler } = props;
 	const device = useDeviceDetect();
 	const router = useRouter();
+	const { t } = useTranslation('common');
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 
@@ -71,11 +77,14 @@ export const ProductCard = (props: ProductCardProps) => {
 					</Typography>
 				</Stack>
 				<Stack className="status-box">
-					<Stack className="coloured-box" sx={{ background: '#E5F0FD' }} onClick={handleClick}>
-						<Typography className="status" sx={{ color: '#3554d1' }}>
-							{product.productStatus}
-						</Typography>
-					</Stack>
+					<button
+						type="button"
+						className={`coloured-box status-${product.productStatus.toLowerCase()}`}
+						onClick={handleClick}
+						aria-haspopup={!memberPage && product.productStatus === 'ACTIVE' ? 'menu' : undefined}
+					>
+						<span className="status">{t(statusText(product.productStatus))}</span>
+					</button>
 				</Stack>
 				{!memberPage && product.productStatus !== 'SOLD' && (
 					<Menu
@@ -85,7 +94,7 @@ export const ProductCard = (props: ProductCardProps) => {
 						PaperProps={{
 							elevation: 0,
 							sx: {
-								width: '70px',
+								minWidth: '140px',
 								mt: 1,
 								ml: '10px',
 								overflow: 'visible',
@@ -107,7 +116,7 @@ export const ProductCard = (props: ProductCardProps) => {
 										updateProductHandler(ProductStatus.SOLD, product?._id);
 									}}
 								>
-									Sold
+									{t('Mark as sold out')}
 								</MenuItem>
 							</>
 						)}
@@ -119,10 +128,10 @@ export const ProductCard = (props: ProductCardProps) => {
 				</Stack>
 				{!memberPage && product.productStatus === ProductStatus.ACTIVE && (
 					<Stack className="action-box">
-						<IconButton className="icon-button" onClick={() => pushEditProduct(product._id)}>
+						<IconButton className="icon-button" aria-label={t('Edit')} onClick={() => pushEditProduct(product._id)}>
 							<ModeIcon className="buttons" />
 						</IconButton>
-						<IconButton className="icon-button" onClick={() => deleteProductHandler(product._id)}>
+						<IconButton className="icon-button delete" aria-label={t('Delete')} onClick={() => deleteProductHandler(product._id)}>
 							<DeleteIcon className="buttons" />
 						</IconButton>
 					</Stack>
