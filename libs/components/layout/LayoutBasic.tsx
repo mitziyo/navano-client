@@ -15,7 +15,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 // Pages that render their own header instead of the photo banner
-const PAGES_WITHOUT_BANNER = ['/product', '/agent', '/agent/detail', '/member', '/community', '/cs'];
+const PAGES_WITHOUT_BANNER = ['/about', '/product', '/agent', '/agent/detail', '/member', '/community', '/cs'];
 
 const withLayoutBasic = (Component: any) => {
 	return (props: any) => {
