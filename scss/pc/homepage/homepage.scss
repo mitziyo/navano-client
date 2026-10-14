@@ -52,45 +52,40 @@
 		}
 	}
 
-	/* Full-bleed: the photo spans the whole page width under the navbar */
+	/* Full-bleed band under the navbar, same look as the /product hero */
 	.hero-card {
 		position: relative;
 		width: 100%;
 		height: 520px;
 		overflow: hidden;
 		border-bottom: 1px solid var(--nv-line-soft);
-		background: #0b0f10;
-		.hero-slide {
-			position: absolute;
-			inset: 0;
+		background: var(--nv-surface);
+	}
+	/* Bouquet photo on the right, fading into the band behind the copy */
+	.hero-media {
+		position: absolute;
+		inset: 0 0 0 auto;
+		width: 62%;
+		img {
 			width: 100%;
 			height: 100%;
+			display: block;
 			object-fit: cover;
-			opacity: 0;
-			transform: scale(1.03);
-			filter: brightness(0.92);
-			transition: opacity 0.9s $nv-ease, transform 6s linear;
-			&.is-active {
-				opacity: 1;
-				transform: scale(1);
-			}
-		}
-		.hero-shade {
-			position: absolute;
-			inset: 0;
-			background: linear-gradient(to top, rgba(12, 10, 9, 0.8), rgba(12, 10, 9, 0.3) 50%, transparent),
-				linear-gradient(to right, rgba(12, 10, 9, 0.7), rgba(12, 10, 9, 0.2) 50%, transparent);
+			object-position: center 40%;
+			-webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
+			mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
 		}
 	}
 
+	/* Copy centred vertically like the /product and /agent heroes; the bottom padding keeps it clear of the search console */
 	.hero-card > .hero-inner {
 		height: 100%;
+		flex-direction: column;
+		justify-content: center;
+		padding-bottom: 40px;
 	}
 
 	.hero-copy {
-		position: absolute;
-		left: 0;
-		bottom: 88px;
 		max-width: 640px;
 		display: flex;
 		flex-direction: column;
@@ -103,15 +98,15 @@
 			font-weight: 600;
 			line-height: 56px;
 			letter-spacing: -0.03em;
-			color: #fff;
+			color: var(--nv-ink);
 			text-wrap: balance;
 		}
 		p {
 			max-width: 560px;
 			margin: 0;
 			font-size: 15px;
-			line-height: 23px;
-			color: rgba(255, 255, 255, 0.88);
+			line-height: 24px;
+			color: var(--nv-text);
 		}
 	}
 
@@ -146,45 +141,6 @@
 				background: var(--nv-primary-soft);
 				animation: nv-ping 1.4s cubic-bezier(0, 0, 0.2, 1) infinite;
 			}
-		}
-	}
-
-	.hero-dots {
-		position: absolute;
-		right: 0;
-		bottom: 88px;
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 6px 12px;
-		border-radius: 999px;
-		border: 1px solid var(--nv-line-soft);
-		background: var(--nv-glass);
-		-webkit-backdrop-filter: blur(12px);
-		backdrop-filter: blur(12px);
-		box-shadow: $nv-shadow-sm;
-		button {
-			width: 8px;
-			height: 6px;
-			padding: 0;
-			border: 0;
-			border-radius: 999px;
-			background: var(--nv-primary-tint);
-			cursor: pointer;
-			transition: width 0.3s $nv-ease, background-color 0.3s $nv-ease;
-			&.is-active {
-				width: 24px;
-				background: $nv-primary;
-			}
-			&:focus-visible {
-				@include nv-focus;
-			}
-		}
-		.hero-count {
-			margin-left: 6px;
-			font-family: $nv-font-mono;
-			font-size: 10px;
-			color: var(--nv-text);
 		}
 	}
 
@@ -1148,10 +1104,6 @@
 
 @media (prefers-reduced-motion: reduce) {
 	#pc-wrap {
-		.hero-card .hero-slide {
-			transition: opacity 0.2s linear;
-			transform: none;
-		}
 		.hero-badge .pulse::after,
 		.card-skeletons .skeleton-block {
 			animation: none;

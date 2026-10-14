@@ -136,7 +136,7 @@ const NavanoLogo = (props: NavanoLogoProps) => {
 				x="60"
 				y="46"
 				fill="currentColor"
-				fontFamily="'Geist', 'Manrope', sans-serif"
+				fontFamily="'Nunito Sans', sans-serif"
 				fontSize="6.4"
 				fontWeight="600"
 				letterSpacing="1.6"
