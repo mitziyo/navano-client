@@ -26,9 +26,11 @@
 
 	/* ---------- HERO ---------- */
 	.home-hero {
+		/* Warm cream the photo fades into; a dark grey fade over white reads as haze */
+		--hero-cream: #fbf5ef;
 		position: relative;
 		width: 100%;
-		padding: 80px 0 56px;
+		padding: 80px 0 32px;
 		/* clip, not hidden: the glow stays inside but the search dropdowns can open below the hero */
 		overflow-x: clip;
 		background-color: var(--nv-bg);
@@ -52,14 +54,19 @@
 		}
 	}
 
-	/* Full-bleed band under the navbar, same look as the /product hero */
+	[data-theme='dark'] & .home-hero {
+		--hero-cream: var(--nv-surface);
+	}
+
+	/* Full-bleed band under the navbar: copy on the left, bouquet photo on the right */
 	.hero-card {
 		position: relative;
+		display: flex;
 		width: 100%;
-		height: 520px;
+		min-height: 600px;
 		overflow: hidden;
 		border-bottom: 1px solid var(--nv-line-soft);
-		background: var(--nv-surface);
+		background: var(--hero-cream);
 	}
 	/* Bouquet photo on the right, fading into the band behind the copy */
 	.hero-media {
@@ -75,38 +82,174 @@
 			-webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
 			mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
 		}
+		/* Cream wash over the fade zone so the dark backdrop turns warm instead of grey */
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(
+				90deg,
+				var(--hero-cream) 0%,
+				color-mix(in srgb, var(--hero-cream) 70%, transparent) 18%,
+				color-mix(in srgb, var(--hero-cream) 25%, transparent) 34%,
+				transparent 48%
+			);
+		}
 	}
 
 	/* Copy centred vertically like the /product and /agent heroes; the bottom padding keeps it clear of the search console */
 	.hero-card > .hero-inner {
-		height: 100%;
 		flex-direction: column;
 		justify-content: center;
-		padding-bottom: 40px;
+		padding: 56px 0 96px;
 	}
 
-	.hero-copy {
+	.home-hero .hero-copy {
 		max-width: 640px;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		gap: 12px;
+		gap: 14px;
 		h1 {
 			margin: 0;
 			font-family: $nv-font-head;
-			font-size: 48px;
+			font-size: 52px;
 			font-weight: 600;
-			line-height: 56px;
+			line-height: 60px;
 			letter-spacing: -0.03em;
 			color: var(--nv-ink);
 			text-wrap: balance;
+			em {
+				display: block;
+				font: inherit;
+				font-style: normal;
+				color: $nv-primary;
+			}
 		}
 		p {
-			max-width: 560px;
+			max-width: 540px;
 			margin: 0;
-			font-size: 15px;
-			line-height: 24px;
+			font-size: 16px;
+			line-height: 26px;
 			color: var(--nv-text);
+		}
+	}
+
+	/* Shortcuts into the three catalog categories */
+	.home-hero .hero-categories {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 4px 0 0;
+		padding: 0;
+		list-style: none;
+		a {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px 14px 6px 10px;
+			border-radius: 999px;
+			border: 1px solid var(--nv-line-accent);
+			background: var(--nv-glass);
+			font-family: $nv-font-label;
+			font-size: 13px;
+			font-weight: 600;
+			color: var(--nv-ink);
+			transition: border-color 0.2s $nv-ease, color 0.2s $nv-ease, background-color 0.2s $nv-ease;
+			svg {
+				font-size: 18px;
+				color: $nv-primary;
+			}
+			&:hover {
+				border-color: var(--nv-primary-soft);
+				background: var(--nv-primary-light);
+				color: $nv-primary;
+			}
+			&:focus-visible {
+				@include nv-focus;
+			}
+		}
+	}
+
+	.home-hero .hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 6px;
+	}
+	.home-hero .hero-cta {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		height: 48px;
+		padding: 0 24px;
+		border-radius: 12px;
+		font-family: $nv-font-label;
+		font-size: 14px;
+		font-weight: 700;
+		transition: filter 0.2s $nv-ease, transform 0.15s $nv-ease, border-color 0.2s $nv-ease, color 0.2s $nv-ease;
+		svg {
+			font-size: 18px;
+			transition: transform 0.2s $nv-ease;
+		}
+		&.is-primary {
+			background: var(--nv-gradient);
+			box-shadow: var(--nv-btn-shadow);
+			color: var(--nv-on-primary);
+			&:hover {
+				filter: brightness(1.08);
+				svg {
+					transform: translateX(3px);
+				}
+			}
+		}
+		&.is-secondary {
+			border: 1px solid var(--nv-line-strong);
+			background: var(--nv-surface);
+			color: var(--nv-ink);
+			&:hover {
+				border-color: $nv-primary;
+				color: $nv-primary;
+			}
+		}
+		&:active {
+			transform: scale(0.98);
+		}
+		&:focus-visible {
+			@include nv-focus;
+		}
+	}
+
+	/* Live counts from getAgents / getProductFacets */
+	.home-hero .hero-stats {
+		display: flex;
+		margin: 10px 0 0;
+		div {
+			display: flex;
+			flex-direction: column-reverse;
+			padding: 0 28px;
+			border-left: 1px solid var(--nv-line);
+			&:first-child {
+				padding-left: 0;
+				border-left: 0;
+			}
+		}
+		dd {
+			margin: 0;
+			font-family: $nv-font-head;
+			font-size: 28px;
+			font-weight: 600;
+			line-height: 34px;
+			font-variant-numeric: tabular-nums;
+			color: var(--nv-ink);
+		}
+		dt {
+			font-family: $nv-font-label;
+			font-size: 11px;
+			font-weight: 600;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--nv-muted);
 		}
 	}
 
