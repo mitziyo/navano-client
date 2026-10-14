@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Pagination, Stack, Typography } from '@mui/material';
+import { Pagination } from '@mui/material';
+import { useTranslation } from 'next-i18next';
+import HistoryIcon from '@mui/icons-material/History';
+import MyPageHeader from './MyPageHeader';
 import ProductCard from '../product/ProductCard';
 import { Product } from '../../types/product/product';
 import { T } from '../../types/common';
@@ -10,6 +13,7 @@ import { GET_VISITED } from '../../../apollo/user/query';
 
 const RecentlyVisited: NextPage = () => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const [recentlyVisited, setRecentlyVisited] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
 	const [searchVisited, setSearchVisited] = useState<T>({ page: 1, limit: 6 });
@@ -39,43 +43,43 @@ const RecentlyVisited: NextPage = () => {
 		return <div>NAVANO MY FAVORITES MOBILE</div>;
 	} else {
 		return (
-			<div id="my-favorites-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">Recently Visited</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
-				<Stack className="favorites-list-box">
+			<div className={'mp-tab'}>
+				<MyPageHeader group={'Manage Listings'} title={'Recently Visited'} desc={'Products you opened lately'} />
+				<section className={'mp-card'}>
+					<div className={'card-head'}>
+						<div className={'card-title'}>
+							<HistoryIcon aria-hidden />
+							<h3>{t('Viewed products')}</h3>
+						</div>
+						<span className={'card-tag'}>
+							{total} {t('products')}
+						</span>
+					</div>
 					{recentlyVisited?.length ? (
-						recentlyVisited?.map((product: Product) => {
-							return <ProductCard product={product} recentlyVisited={true} />;
-						})
+						<div className={'mp-grid'}>
+							{recentlyVisited?.map((product: Product) => (
+								<ProductCard product={product} recentlyVisited={true} key={product._id} />
+							))}
+						</div>
 					) : (
-						<div className={'no-data'}>
-							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Recently Visited Products found!</p>
+						<div className={'mp-empty'}>
+							<p>{t('You have not opened any products yet')}</p>
 						</div>
 					)}
-				</Stack>
-				{recentlyVisited?.length ? (
-					<Stack className="pagination-config">
-						<Stack className="pagination-box">
+					{recentlyVisited?.length ? (
+						<footer className={'mp-pagination'}>
 							<Pagination
 								count={Math.ceil(total / searchVisited.limit)}
 								page={searchVisited.page}
-								shape="circular"
-								color="primary"
+								shape="rounded"
 								onChange={paginationHandler}
 							/>
-						</Stack>
-						<Stack className="total-result">
-							<Typography>
-								Total {total} recently visited product{total > 1 ? 's' : ''}
-							</Typography>
-						</Stack>
-					</Stack>
-				) : null}
+							<span>
+								{total} {t('products')}
+							</span>
+						</footer>
+					) : null}
+				</section>
 			</div>
 		);
 	}

@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { Pagination, Stack, Typography } from '@mui/material';
-import CommunityCard from '../common/CommunityCard';
+import { Pagination } from '@mui/material';
+import Link from 'next/link';
+import { useTranslation } from 'next-i18next';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+import ArticleCard from '../community/ArticleCard';
+import MyPageHeader from './MyPageHeader';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { userVar } from '../../../apollo/store';
 import { T } from '../../types/common';
@@ -14,6 +19,7 @@ import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAler
 
 const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 	const device = useDeviceDetect();
+	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [searchCommunity, setSearchCommunity] = useState({
 		...initialInput,
@@ -63,49 +69,59 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 		return <>ARTICLE PAGE MOBILE</>;
 	} else
 		return (
-			<div id="my-articles-page">
-				<Stack className="main-title-box">
-					<Stack className="right-box">
-						<Typography className="main-title">Article</Typography>
-						<Typography className="sub-title">We are glad to see you again!</Typography>
-					</Stack>
-				</Stack>
-				<Stack className="article-list-box">
-					{boardArticles?.length > 0 ? (
-						boardArticles?.map((boardArticle: BoardArticle) => {
-							return (
-								<CommunityCard
-									boardArticle={boardArticle}
+			<div className={'mp-tab'}>
+				<MyPageHeader group={'Community'} title={'My Articles'} desc={'Your posts on the community boards'} actions={
+						<Link
+							href={{ pathname: '/mypage', query: { category: 'writeArticle' } }}
+							scroll={false}
+							className={'mp-btn mp-btn-primary'}
+						>
+							<EditNoteOutlinedIcon />
+							<span>{t('Write Article')}</span>
+						</Link>
+					} />
+				<section className={'mp-card'}>
+					<div className={'card-head'}>
+						<div className={'card-title'}>
+							<ArticleOutlinedIcon aria-hidden />
+							<h3>{t('Published articles')}</h3>
+						</div>
+						<span className={'card-tag'}>
+							{(totalCount ?? 0)} {t('articles')}
+						</span>
+					</div>
+					{boardArticles?.length ? (
+						<div className={'mp-grid two'}>
+							{boardArticles?.map((boardArticle: BoardArticle) => (
+								<ArticleCard
+									article={boardArticle}
 									key={boardArticle?._id}
-									size={'small'}
-									likeArticleHandler={likeBoardArticleHandler}
+									// ArticleCard passes (user, article); the existing handler takes (event, user, id)
+									likeArticleHandler={(current: any, article: BoardArticle) =>
+										likeBoardArticleHandler({ stopPropagation: () => undefined }, current, article._id)
+									}
 								/>
-							);
-						})
+							))}
+						</div>
 					) : (
-						<div className={'no-data'}>
-							<img src="/img/icons/icoAlert.svg" alt="" />
-							<p>No Articles found!</p>
+						<div className={'mp-empty'}>
+							<p>{t('You have not written any articles yet')}</p>
 						</div>
 					)}
-				</Stack>
-
-				{boardArticles?.length > 0 && (
-					<Stack className="pagination-conf">
-						<Stack className="pagination-box">
+					{boardArticles?.length ? (
+						<footer className={'mp-pagination'}>
 							<Pagination
-								count={Math.ceil(totalCount / searchCommunity.limit)}
+								count={Math.ceil((totalCount ?? 0) / searchCommunity.limit)}
 								page={searchCommunity.page}
-								shape="circular"
-								color="primary"
+								shape="rounded"
 								onChange={paginationHandler}
 							/>
-						</Stack>
-						<Stack className="total">
-							<Typography>Total {totalCount ?? 0} article(s) available</Typography>
-						</Stack>
-					</Stack>
-				)}
+							<span>
+								{(totalCount ?? 0)} {t('articles')}
+							</span>
+						</footer>
+					) : null}
+				</section>
 			</div>
 		);
 };
