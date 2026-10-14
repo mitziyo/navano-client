@@ -291,8 +291,35 @@
 	.hero-search {
 		position: relative;
 		z-index: 5;
-		max-width: 1024px;
-		margin: -40px auto 0;
+		width: 100%;
+		max-width: 1180px;
+		margin: -48px auto 0;
+		/* A larger console than the base sizes below: taller fields and buttons */
+		.search-console {
+			gap: 14px;
+			padding: 20px 22px;
+			border-radius: 18px;
+		}
+		.console-field .field-label {
+			font-size: 11px;
+		}
+		.console-field .field-select {
+			height: 52px;
+			padding: 0 12px 0 16px;
+			font-size: 15px;
+		}
+		.search-console .advanced-btn {
+			height: 52px;
+			padding: 0 20px;
+			font-size: 14px;
+		}
+		.search-console .search-btn {
+			width: 68px;
+			height: 52px;
+			svg {
+				font-size: 24px;
+			}
+		}
 	}
 
 	.search-console {
