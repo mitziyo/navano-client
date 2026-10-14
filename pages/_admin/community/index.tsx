@@ -1,239 +1,123 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
+import DeleteSweepOutlinedIcon from '@mui/icons-material/DeleteSweepOutlined';
+import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import withAdminLayout from '../../../libs/components/layout/LayoutAdmin';
-import { Box, Stack, MenuItem } from '@mui/material';
-import { List, ListItem } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Select from '@mui/material/Select';
-import { TabContext } from '@mui/lab';
-import TablePagination from '@mui/material/TablePagination';
 import CommunityArticleList from '../../../libs/components/admin/community/CommunityArticleList';
+import { AdminPageHeader, AdminPager, AdminSelect, AdminStats, AdminTabs, useAdminTotal } from '../../../libs/components/admin/AdminUI';
+import { BOARDS } from '../../../libs/components/community/boards';
 import { AllBoardArticlesInquiry } from '../../../libs/types/board-article/board-article.input';
 import { BoardArticle } from '../../../libs/types/board-article/board-article';
-import { BoardArticleCategory, BoardArticleStatus } from '../../../libs/enums/board-article.enum';
-import { sweetConfirmAlert, sweetErrorHandling } from '../../../libs/sweetAlert';
 import { BoardArticleUpdate } from '../../../libs/types/board-article/board-article.update';
-import { useMutation, useQuery } from '@apollo/client';
+import { BoardArticleCategory, BoardArticleStatus } from '../../../libs/enums/board-article.enum';
+import { Direction } from '../../../libs/enums/common.enum';
+import { sweetConfirmAlert, sweetErrorHandling } from '../../../libs/sweetAlert';
 import { REMOVE_BOARD_ARTICLE_BY_ADMIN, UPDATE_BOARD_ARTICLE_BY_ADMIN } from '../../../apollo/admin/mutation';
 import { GET_ALL_BOARD_ARTICLES_BY_ADMIN } from '../../../apollo/admin/query';
-import { T } from '../../../libs/types/common';
 
-const AdminCommunity: NextPage = ({ initialInquiry, ...props }: any) => {
-	const [anchorEl, setAnchorEl] = useState<any>([]);
-	const [communityInquiry, setCommunityInquiry] = useState<AllBoardArticlesInquiry>(initialInquiry);
-	const [articles, setArticles] = useState<BoardArticle[]>([]);
-	const [articleTotal, setArticleTotal] = useState<number>(0);
-	const [value, setValue] = useState(
-		communityInquiry?.search?.articleStatus ? communityInquiry?.search?.articleStatus : 'ALL',
-	);
-	const [searchType, setSearchType] = useState('ALL');
+const ROOT = 'getAllBoardArticlesByAdmin';
+const BOARD_OPTIONS = [{ value: 'ALL', label: 'All boards' }, ...BOARDS.map((board) => ({ value: board.value, label: board.label }))];
+
+const AdminCommunity: NextPage = () => {
+	const client = useApolloClient();
+	const [inquiry, setInquiry] = useState<AllBoardArticlesInquiry>({ page: 1, limit: 10, sort: 'createdAt', direction: Direction.DESC, search: {} });
 
 	/** APOLLO REQUESTS **/
 	const [updateBoardArticleByAdmin] = useMutation(UPDATE_BOARD_ARTICLE_BY_ADMIN);
 	const [removeBoardArticleByAdmin] = useMutation(REMOVE_BOARD_ARTICLE_BY_ADMIN);
-
-	const {
-		loading: getAllBoardArticleByAdminLoading,
-		data: getAllBoardArticlesByAdminData,
-		error: getAllBoardArticlesByAdminError,
-		refetch: getAllBoardArticlesByAdminRefetch,
-	} = useQuery(GET_ALL_BOARD_ARTICLES_BY_ADMIN, {
-		fetchPolicy: 'network-only',
-		variables: { input: communityInquiry },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setArticles(data?.getAllBoardArticlesByAdmin?.list);
-			setArticleTotal(data?.getAllBoardArticlesByAdmin?.metaCounter[0]?.total ?? 0);
-		},
+	const { data } = useQuery(GET_ALL_BOARD_ARTICLES_BY_ADMIN, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: inquiry },
 	});
+	const articles: BoardArticle[] = data?.[ROOT]?.list ?? [];
+	const total: number = data?.[ROOT]?.metaCounter?.[0]?.total ?? 0;
 
-	/** LIFECYCLES **/
-	useEffect(() => {
-		getAllBoardArticlesByAdminRefetch({ input: communityInquiry }).then();
-	}, [communityInquiry]);
+	const totals = {
+		all: useAdminTotal(GET_ALL_BOARD_ARTICLES_BY_ADMIN, ROOT, {}),
+		active: useAdminTotal(GET_ALL_BOARD_ARTICLES_BY_ADMIN, ROOT, { articleStatus: BoardArticleStatus.ACTIVE }),
+		delete: useAdminTotal(GET_ALL_BOARD_ARTICLES_BY_ADMIN, ROOT, { articleStatus: BoardArticleStatus.DELETE }),
+	};
 
 	/** HANDLERS **/
-	const changePageHandler = async (event: unknown, newPage: number) => {
-		communityInquiry.page = newPage + 1;
-		await getAllBoardArticlesByAdminRefetch({ input: communityInquiry });
-		setCommunityInquiry({ ...communityInquiry });
+	const setSearch = (patch: Partial<AllBoardArticlesInquiry['search']>) => {
+		const search = { ...inquiry.search, ...patch };
+		(Object.keys(search) as (keyof typeof search)[]).forEach((key) => !search[key] && delete search[key]);
+		setInquiry({ ...inquiry, page: 1, search });
 	};
 
-	const changeRowsPerPageHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		communityInquiry.limit = parseInt(event.target.value, 10);
-		communityInquiry.page = 1;
-		await getAllBoardArticlesByAdminRefetch({ input: communityInquiry });
-		setCommunityInquiry({ ...communityInquiry });
-	};
+	const refresh = () => client.refetchQueries({ include: [GET_ALL_BOARD_ARTICLES_BY_ADMIN] });
 
-	const menuIconClickHandler = (e: any, index: number) => {
-		const tempAnchor = anchorEl.slice();
-		tempAnchor[index] = e.currentTarget;
-		setAnchorEl(tempAnchor);
-	};
-
-	const menuIconCloseHandler = () => {
-		setAnchorEl([]);
-	};
-
-	const tabChangeHandler = async (event: any, newValue: string) => {
-		setValue(newValue);
-
-		setCommunityInquiry({ ...communityInquiry, page: 1, sort: 'createdAt' });
-
-		switch (newValue) {
-			case 'ACTIVE':
-				setCommunityInquiry({ ...communityInquiry, search: { articleStatus: BoardArticleStatus.ACTIVE } });
-				break;
-			case 'DELETE':
-				setCommunityInquiry({ ...communityInquiry, search: { articleStatus: BoardArticleStatus.DELETE } });
-				break;
-			default:
-				delete communityInquiry?.search?.articleStatus;
-				setCommunityInquiry({ ...communityInquiry });
-				break;
-		}
-	};
-
-	const searchTypeHandler = async (newValue: string) => {
+	const updateArticleHandler = async (input: BoardArticleUpdate) => {
 		try {
-			setSearchType(newValue);
-
-			if (newValue !== 'ALL') {
-				setCommunityInquiry({
-					...communityInquiry,
-					page: 1,
-					sort: 'createdAt',
-					search: {
-						...communityInquiry.search,
-						articleCategory: newValue as BoardArticleCategory,
-					},
-				});
-			} else {
-				delete communityInquiry?.search?.articleCategory;
-				setCommunityInquiry({ ...communityInquiry });
-			}
+			await updateBoardArticleByAdmin({ variables: { input } });
+			await refresh();
 		} catch (err: any) {
-			console.log('searchTypeHandler: ', err.message);
-		}
-	};
-
-	const updateArticleHandler = async (updateData: BoardArticleUpdate) => {
-		try {
-			console.log('+updateData: ', updateData);
-			await updateBoardArticleByAdmin({
-				variables: {
-					input: updateData,
-				},
-			});
-			menuIconCloseHandler();
-			await getAllBoardArticlesByAdminRefetch({ input: communityInquiry });
-		} catch (err: any) {
-			menuIconCloseHandler();
 			sweetErrorHandling(err).then();
 		}
 	};
 
+	// The API removes only articles that are already in DELETE status
 	const removeArticleHandler = async (id: string) => {
 		try {
-			if (await sweetConfirmAlert('are you sure to remove?')) {
-				await removeBoardArticleByAdmin({
-					variables: {
-						input: id,
-					},
-				});
-
-				await getAllBoardArticlesByAdminRefetch({ input: communityInquiry });
-			}
+			if (!(await sweetConfirmAlert('Remove this article for good?'))) return;
+			await removeBoardArticleByAdmin({ variables: { input: id } });
+			await refresh();
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
 	};
 
-	console.log('+communityInquiry', communityInquiry);
-	console.log('+articles', articles);
-
 	return (
-		<Box component={'div'} className={'content'}>
-			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Arricle List
-			</Typography>
-			<Box component={'div'} className={'table-wrap'}>
-				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
-					<TabContext value={value}>
-						<Box component={'div'}>
-							<List className={'tab-menu'}>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'ALL')}
-									value="ALL"
-									className={value === 'ALL' ? 'li on' : 'li'}
-								>
-									All
-								</ListItem>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'ACTIVE')}
-									value="ACTIVE"
-									className={value === 'ACTIVE' ? 'li on' : 'li'}
-								>
-									Active
-								</ListItem>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'DELETE')}
-									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
-								>
-									Delete
-								</ListItem>
-							</List>
-							<Divider />
-							<Stack className={'search-area'} sx={{ m: '24px' }}>
-								<Select sx={{ width: '160px', mr: '20px' }} value={searchType}>
-									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
-										ALL
-									</MenuItem>
-									{Object.values(BoardArticleCategory).map((category: string) => (
-										<MenuItem value={category} onClick={() => searchTypeHandler(category)} key={category}>
-											{category}
-										</MenuItem>
-									))}
-								</Select>
-							</Stack>
-							<Divider />
-						</Box>
-						<CommunityArticleList
-							articles={articles}
-							anchorEl={anchorEl}
-							menuIconClickHandler={menuIconClickHandler}
-							menuIconCloseHandler={menuIconCloseHandler}
-							updateArticleHandler={updateArticleHandler}
-							removeArticleHandler={removeArticleHandler}
-						/>
+		<>
+			<AdminPageHeader
+				title={'Article List'}
+				tag={`${totals.all} articles`}
+				desc={'Posts on the Free, Recommendation, News and Humor boards. Hide an article by setting it to Delete, then remove it for good.'}
+			/>
 
-						<TablePagination
-							rowsPerPageOptions={[10, 20, 40, 60]}
-							component="div"
-							count={articleTotal}
-							rowsPerPage={communityInquiry?.limit}
-							page={communityInquiry?.page - 1}
-							onPageChange={changePageHandler}
-							onRowsPerPageChange={changeRowsPerPageHandler}
-						/>
-					</TabContext>
-				</Box>
-			</Box>
-		</Box>
+			<AdminStats
+				items={[
+					{ label: 'Total articles', value: totals.all, note: 'On every community board', icon: <ArticleOutlinedIcon /> },
+					{ label: 'Active', value: totals.active, note: 'Visible on the boards', icon: <TaskAltOutlinedIcon />, tone: 'success' },
+					{ label: 'Deleted', value: totals.delete, note: 'Hidden, waiting to be removed', icon: <DeleteSweepOutlinedIcon />, tone: 'danger' },
+					{ label: 'Boards', value: BOARDS.length, note: BOARDS.map((board) => board.label).join(' · '), icon: <ForumOutlinedIcon />, tone: 'info' },
+				]}
+			/>
+
+			<AdminTabs
+				value={inquiry.search.articleStatus ?? 'ALL'}
+				onChange={(value) => setSearch({ articleStatus: value === 'ALL' ? undefined : (value as BoardArticleStatus) })}
+				tabs={[
+					{ value: 'ALL', label: 'All', count: totals.all },
+					{ value: BoardArticleStatus.ACTIVE, label: 'Active', count: totals.active },
+					{ value: BoardArticleStatus.DELETE, label: 'Deleted', count: totals.delete },
+				]}
+			/>
+
+			<div className={'admin-filters'}>
+				<AdminSelect
+					label={'Board'}
+					value={inquiry.search.articleCategory ?? 'ALL'}
+					options={BOARD_OPTIONS}
+					onChange={(value) => setSearch({ articleCategory: value === 'ALL' ? undefined : (value as BoardArticleCategory) })}
+				/>
+			</div>
+
+			<div className={'admin-table-card'}>
+				<CommunityArticleList articles={articles} updateArticleHandler={updateArticleHandler} removeArticleHandler={removeArticleHandler} />
+				<AdminPager
+					total={total}
+					page={inquiry.page}
+					limit={inquiry.limit}
+					onPage={(page) => setInquiry({ ...inquiry, page })}
+					onLimit={(limit) => setInquiry({ ...inquiry, page: 1, limit })}
+				/>
+			</div>
+		</>
 	);
-};
-
-AdminCommunity.defaultProps = {
-	initialInquiry: {
-		page: 1,
-		limit: 10,
-		sort: 'createdAt',
-		direction: 'DESC',
-		search: {},
-	},
 };
 
 export default withAdminLayout(AdminCommunity);

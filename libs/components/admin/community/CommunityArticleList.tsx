@@ -1,242 +1,107 @@
 import React from 'react';
 import Link from 'next/link';
-import {
-	Box,
-	Button,
-	Fade,
-	Menu,
-	MenuItem,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Tooltip,
-} from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import OpenInBrowserRoundedIcon from '@mui/icons-material/OpenInBrowserRounded';
 import Moment from 'react-moment';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
 import { BoardArticle } from '../../../types/board-article/board-article';
+import { BoardArticleUpdate } from '../../../types/board-article/board-article.update';
 import { REACT_APP_API_URL } from '../../../config';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Typography from '@mui/material/Typography';
 import { BoardArticleStatus } from '../../../enums/board-article.enum';
-
-interface Data {
-	category: string;
-	title: string;
-	writer: string;
-	register: string;
-	view: number;
-	like: number;
-	status: string;
-	article_id: string;
-}
-
-interface HeadCell {
-	disablePadding: boolean;
-	id: keyof Data;
-	label: string;
-	numeric: boolean;
-}
-
-const headCells: readonly HeadCell[] = [
-	{
-		id: 'article_id',
-		numeric: true,
-		disablePadding: false,
-		label: 'ARTICLE ID',
-	},
-	{
-		id: 'title',
-		numeric: true,
-		disablePadding: false,
-		label: 'TITLE',
-	},
-	{
-		id: 'category',
-		numeric: true,
-		disablePadding: false,
-		label: 'CATEGORY',
-	},
-	{
-		id: 'writer',
-		numeric: true,
-		disablePadding: false,
-		label: 'WRITER',
-	},
-	{
-		id: 'view',
-		numeric: false,
-		disablePadding: false,
-		label: 'VIEW',
-	},
-	{
-		id: 'like',
-		numeric: false,
-		disablePadding: false,
-		label: 'LIKE',
-	},
-	{
-		id: 'register',
-		numeric: true,
-		disablePadding: false,
-		label: 'REGISTER DATE',
-	},
-	{
-		id: 'status',
-		numeric: false,
-		disablePadding: false,
-		label: 'STATUS',
-	},
-];
-
-interface EnhancedTableProps {
-	numSelected: number;
-	onRequestSort: (event: React.MouseEvent<unknown>, product: keyof Data) => void;
-	onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-	rowCount: number;
-}
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-	return (
-		<TableHead>
-			<TableRow>
-				{headCells.map((headCell) => (
-					<TableCell
-						key={headCell.id}
-						align={headCell.numeric ? 'left' : 'center'}
-						padding={headCell.disablePadding ? 'none' : 'normal'}
-					>
-						{headCell.label}
-					</TableCell>
-				))}
-			</TableRow>
-		</TableHead>
-	);
-}
+import { boardLabel } from '../../community/boards';
+import { EmptyRow, StatusMenu, StatusPill, shortId } from '../AdminUI';
 
 interface CommunityArticleListProps {
 	articles: BoardArticle[];
-	anchorEl: any;
-	menuIconClickHandler: any;
-	menuIconCloseHandler: any;
-	updateArticleHandler: any;
-	removeArticleHandler: any;
+	updateArticleHandler: (input: BoardArticleUpdate) => void;
+	removeArticleHandler: (id: string) => void;
 }
 
-const CommunityArticleList = (props: CommunityArticleListProps) => {
-	const { articles, anchorEl, menuIconClickHandler, menuIconCloseHandler, updateArticleHandler, removeArticleHandler } =
-		props;
-
-	return (
-		<Stack>
-			<TableContainer>
-				<Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size={'medium'}>
-					{/*@ts-ignore*/}
-					<EnhancedTableHead />
-					<TableBody>
-						{articles.length === 0 && (
-							<TableRow>
-								<TableCell align="center" colSpan={8}>
-									<span className={'no-data'}>data not found!</span>
-								</TableCell>
-							</TableRow>
-						)}
-
-						{articles.length !== 0 &&
-							articles.map((article: BoardArticle, index: number) => (
-								<TableRow hover key={article._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-									<TableCell align="left">{article._id}</TableCell>
-									<TableCell align="left">
-										<Box component={'div'}>
-											{article.articleTitle}
-											{article.articleStatus === BoardArticleStatus.ACTIVE && (
-												<Link
-													href={`/community/detail?articleCategory=${article.articleCategory}&id=${article._id}`}
-													className={'img_box'}
-												>
-													<IconButton className="btn_window">
-														<Tooltip title={'Open window'}>
-															<OpenInBrowserRoundedIcon />
-														</Tooltip>
-													</IconButton>
-												</Link>
-											)}
-										</Box>
-									</TableCell>
-									<TableCell align="left">{article.articleCategory}</TableCell>
-									<TableCell align="left" className={'name'}>
-										<Link href={`/member?memberId=${article?.memberData?._id}`}>
-											<Avatar
-												alt="Remy Sharp"
-												src={
-													article?.memberData?.memberImage
-														? `${REACT_APP_API_URL}/${article?.memberData?.memberImage}`
-														: `/img/profile/defaultUser.svg`
-												}
-												sx={{ ml: '2px', mr: '10px' }}
-											/>
-											{article?.memberData?.memberNick}
-										</Link>
-									</TableCell>
-									<TableCell align="center">{article?.articleViews}</TableCell>
-									<TableCell align="center">{article?.articleLikes}</TableCell>
-									<TableCell align="left">
-										<Moment format={'DD.MM.YY HH:mm'}>{article?.createdAt}</Moment>
-									</TableCell>
-									<TableCell align="center">
-										{article.articleStatus === BoardArticleStatus.DELETE ? (
-											<Button
-												variant="outlined"
-												sx={{ p: '3px', border: 'none', ':hover': { border: '1px solid #000000' } }}
-												onClick={() => removeArticleHandler(article._id)}
-											>
-												<DeleteIcon fontSize="small" />
-											</Button>
-										) : (
-											<>
-												<Button onClick={(e: any) => menuIconClickHandler(e, index)} className={'badge success'}>
-													{article.articleStatus}
-												</Button>
-
-												<Menu
-													className={'menu-modal'}
-													MenuListProps={{
-														'aria-labelledby': 'fade-button',
-													}}
-													anchorEl={anchorEl[index]}
-													open={Boolean(anchorEl[index])}
-													onClose={menuIconCloseHandler}
-													TransitionComponent={Fade}
-													sx={{ p: 1 }}
-												>
-													{Object.values(BoardArticleStatus)
-														.filter((ele) => ele !== article.articleStatus)
-														.map((status: string) => (
-															<MenuItem
-																onClick={() => updateArticleHandler({ _id: article._id, articleStatus: status })}
-																key={status}
-															>
-																<Typography variant={'subtitle1'} component={'span'}>
-																	{status}
-																</Typography>
-															</MenuItem>
-														))}
-												</Menu>
-											</>
-										)}
-									</TableCell>
-								</TableRow>
-							))}
-					</TableBody>
-				</Table>
-			</TableContainer>
-		</Stack>
-	);
-};
+const CommunityArticleList = ({ articles, updateArticleHandler, removeArticleHandler }: CommunityArticleListProps) => (
+	<div className={'admin-table-scroll'}>
+		<table className={'admin-table'}>
+			<thead>
+				<tr>
+					<th>Board &amp; ID</th>
+					<th>Title</th>
+					<th>Writer</th>
+					<th className={'center'}>Views</th>
+					<th className={'center'}>Likes</th>
+					<th>Posted</th>
+					<th className={'center'}>Status</th>
+				</tr>
+			</thead>
+			<tbody>
+				{articles.length === 0 && <EmptyRow colSpan={7} text={'No articles match these filters'} />}
+				{articles.map((article) => {
+					const active = article.articleStatus === BoardArticleStatus.ACTIVE;
+					return (
+						<tr key={article._id}>
+							<td>
+								<span className={'cell-stack'}>
+									<strong>{boardLabel(article.articleCategory)}</strong>
+									<small>{shortId(article._id)}</small>
+								</span>
+							</td>
+							<td className={'wide'}>
+								{active ? (
+									<Link
+										href={`/community/detail?articleCategory=${article.articleCategory}&id=${article._id}`}
+										target={'_blank'}
+										className={'cell-link with-icon'}
+									>
+										{article.articleTitle}
+										<OpenInNewIcon aria-hidden />
+									</Link>
+								) : (
+									<span className={'muted'}>{article.articleTitle}</span>
+								)}
+							</td>
+							<td>
+								<Link href={`/member?memberId=${article.memberData?._id}`} className={'cell-identity'}>
+									<img
+										src={article.memberData?.memberImage ? `${REACT_APP_API_URL}/${article.memberData.memberImage}` : '/img/profile/defaultUser.svg'}
+										alt=""
+									/>
+									<span>
+										<strong>{article.memberData?.memberNick}</strong>
+									</span>
+								</Link>
+							</td>
+							<td className={'center mono'}>{article.articleViews}</td>
+							<td className={'center mono'}>{article.articleLikes}</td>
+							<td className={'mono'}>
+								<Moment format={'YYYY.MM.DD HH:mm'}>{article.createdAt}</Moment>
+							</td>
+							{/* The API changes only ACTIVE articles and removes only DELETE ones */}
+							<td className={'center'}>
+								{active ? (
+									<StatusMenu
+										label={'Active'}
+										tone={'success'}
+										options={[{ value: BoardArticleStatus.DELETE, label: 'Delete' }]}
+										onSelect={(status) => updateArticleHandler({ _id: article._id, articleStatus: status as BoardArticleStatus })}
+									/>
+								) : (
+									<span className={'cell-actions'}>
+										<StatusPill label={'Deleted'} tone={'neutral'} />
+										<button
+											type="button"
+											className={'icon-btn danger'}
+											aria-label={'Remove for good'}
+											title={'Remove for good'}
+											onClick={() => removeArticleHandler(article._id)}
+										>
+											<DeleteForeverOutlinedIcon />
+										</button>
+									</span>
+								)}
+							</td>
+						</tr>
+					);
+				})}
+			</tbody>
+		</table>
+	</div>
+);
 
 export default CommunityArticleList;
