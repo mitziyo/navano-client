@@ -1,4 +1,4 @@
-/** COMMUNITY (/community): boards and article cards on the --nv-* theme variables (light + dark) **/
+/** COMMUNITY (/community, and the shared shell of /community/detail): boards and article cards on the --nv-* theme variables (light + dark) **/
 
 /* Article card (ArticleCard), shared by /community and the /member Articles tab */
 @mixin nv-article-card {
@@ -229,7 +229,9 @@
 
 
 #pc-wrap {
-	#community-list-page {
+	/* /community/detail shares the hero, sidebar, board header and pagination */
+	#community-list-page,
+	#community-detail-page {
 		width: 100%;
 		padding: 80px 0 96px;
 		background-color: var(--nv-bg);
@@ -892,7 +894,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	#pc-wrap #community-list-page {
+	#pc-wrap #community-list-page,
+	#pc-wrap #community-detail-page {
 		.hero-badge .pulse,
 		.board-link .live-dot,
 		.article-like.on svg {

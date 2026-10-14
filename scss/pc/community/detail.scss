@@ -1,441 +1,378 @@
+/** COMMUNITY DETAIL (/community/detail): article and comments; the hero, sidebar and board header come from community.scss **/
+
 #pc-wrap {
 	#community-detail-page {
-		position: relative;
-		padding-bottom: 135px;
-		.container {
-			padding-top: 100px;
-			flex-direction: column;
-			gap: 64px;
-			.main-box {
-				flex-direction: row;
-				gap: 31px;
-				.left-config {
-					width: 266px;
-					height: fit-content;
-					gap: 30px;
-					padding: 30px 15px 57px 21px;
-					margin-top: 100px;
-					border-radius: 12px;
-					border: 1px solid rgba(196, 196, 196, 0.79);
-					background: #fff;
-					box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-					.image-info {
-						width: 100%;
-						flex-direction: row;
-						gap: 11px;
-						img {
-							width: 80px;
-							height: 80px;
-							border-radius: 50%;
-							object-fit: cover;
-						}
-						.community-name {
-							.name {
-								margin-top: 15px;
-								color: #181a20;
-								font-family: $font;
-								font-size: 15px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-							}
-						}
-					}
-					.tab-button {
-						width: 216.612px;
-						height: 36px;
-						padding: 0;
-						justify-content: center;
-						align-items: center;
-						border-radius: 6px;
-						border: 1px solid #181a20;
-						margin-bottom: 10px;
-						color: #181a20;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 500;
-						line-height: 150%;
-						letter-spacing: -0.266px;
-					}
-					.tab-button.active {
-						width: 216.612px;
-						height: 36px;
-						padding: 0;
-						justify-content: center;
-						align-items: center;
-						background-color: #000000;
-						color: #ffffff;
-						border-radius: 6px;
-						margin-bottom: 10px;
-						font-family: $font;
-						font-size: 14px;
-						font-style: normal;
-						font-weight: 500;
-						line-height: 150%;
-						letter-spacing: -0.266px;
-					}
-				}
-				.community-detail-config {
-					.title-box {
-						width: 100%;
-						height: auto;
-						flex-direction: row;
-						justify-content: space-between;
-						align-items: center;
-						margin-bottom: 45px;
-						.left {
-							width: 60%;
-							height: auto;
-							.title {
-								color: #000;
-								font-family: $font;
-								font-size: 24px;
-								font-style: normal;
-								font-weight: 600;
-								line-height: normal;
-								letter-spacing: 0.24px;
-							}
-							.sub-title {
-								color: #757575;
-								font-family: $font;
-								font-size: 13px;
-								font-style: normal;
-								font-weight: 700;
-								line-height: normal;
-								letter-spacing: 0.325px;
-							}
-						}
-						.right {
-							width: 91px;
-							height: 32px;
-							border-radius: 4px;
-							background: #eb6753;
-							color: #fff;
-							font-family: $font;
-							font-size: 13px;
-							font-style: normal;
-							font-weight: 500;
-							line-height: normal;
-							letter-spacing: 0.39px;
-						}
-					}
-					.config {
-						.first-box-config {
-							width: 1012px;
-							min-height: 500px;
-							border-radius: 8px 8px 0px 0px;
-							border: 1px solid #eee;
-							box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-							.content-and-info {
-								width: 100%;
-								height: 126px;
-								padding: 35px 25px;
-								flex-direction: row;
-								justify-content: space-between;
-								border-bottom: 1px solid #eee;
-								.content {
-									gap: 12px;
-									.content-data {
-										color: #000;
-										font-family: $font;
-										font-size: 18px;
-										font-style: normal;
-										font-weight: 700;
-										line-height: normal;
-									}
-									.member-info {
-										width: auto;
-										height: auto;
-										flex-direction: row;
-										align-items: center;
-										gap: 5px;
-										.member-img {
-											width: 30.023px;
-											height: 30px;
-											cursor: pointer;
-										}
-										.member-nick {
-											color: #000;
-											font-family: $font;
-											font-size: 13px;
-											font-style: normal;
-											font-weight: 400;
-											line-height: normal;
-											letter-spacing: 0.13px;
-											cursor: pointer;
-										}
-										.divider {
-											width: 1px;
-											height: 16px;
-											background: #eee;
-										}
-										.time-added {
-											color: #bdbdbd;
-											font-family: $font;
-											font-size: 12px;
-											font-style: normal;
-											font-weight: 400;
-											line-height: normal;
-											letter-spacing: 0.12px;
-										}
-									}
-								}
-								.info {
-									width: auto;
-									height: auto;
-									gap: 15px;
-									flex-direction: row;
-									align-items: flex-end;
-									.icon-info {
-										flex-direction: row;
-										align-items: center;
-										justify-content: center;
-										gap: 4px;
-										img {
-											width: 18.714px;
-											height: 16.15px;
-										}
-										.text {
-											padding-top: 2 px;
-											color: #000;
-											font-family: $font;
-											font-size: 11px;
-											font-style: normal;
-											font-weight: 400;
-											line-height: normal;
-											letter-spacing: -0.22px;
-										}
-									}
-									.divider {
-										width: 1px;
-										height: 21px;
-										background: #eeeeee;
-									}
-								}
-							}
-							.like-and-dislike {
-								width: 100%;
-								height: 100%;
-								align-items: center;
-								justify-content: flex-end;
-								gap: 60px;
-								padding: 25px 25px;
-								.top {
-									width: 100%;
-									height: auto;
-									flex-direction: row;
-									align-items: center;
-									justify-content: center;
-									gap: 17px;
-									button {
-										width: 105.081px;
-										height: 45px;
-										gap: 5px;
-										border-radius: 2px;
-										border: 1px solid #eee;
-										background: #eb6753;
-										p {
-											color: #fff;
-											font-family: $font;
-											font-size: 13px;
-											font-style: normal;
-											font-weight: 700;
-											line-height: normal;
-											letter-spacing: -0.26px;
-										}
-									}
-								}
-							}
-						}
-						.second-box-config {
-							width: 1012px;
-							height: auto;
-							padding: 30px 24px;
-							gap: 11px;
-							.title-text {
-								align-self: flex-start;
-								color: #000;
-								text-align: center;
-								font-family: $font;
-								font-size: 17px;
-								font-style: normal;
-								font-weight: 700;
-								line-height: normal;
-								letter-spacing: -0.34px;
-							}
-							.leave-comment {
-								input {
-									width: 100%;
-									height: 61px;
-									outline: none;
-									padding: 22px 17px;
-									border: 1px solid #eee;
-									::placeholder {
-										color: #c0c0c0;
-										font-family: $font;
-										font-size: 14px;
-										font-style: normal;
-										font-weight: 500;
-										line-height: normal;
-										letter-spacing: -0.56px;
-									}
-								}
-								.button-box {
-									width: 100%;
-									height: 42px;
-									flex-direction: row;
-									justify-content: space-between;
-									align-items: center;
-									padding-left: 17px;
-									border: 1px solid #eee;
-									border-top: none;
-									p {
-										color: #000;
-										font-family: $font;
-										font-size: 14px;
-										font-style: normal;
-										font-weight: 400;
-										line-height: normal;
-										letter-spacing: 0.56px;
-									}
-									button {
-										width: 100.077px;
-										height: 100%;
-										border-radius: 0;
-										background: #eb6753;
-										color: #fff;
-										font-family: $font;
-										font-size: 14px;
-										font-style: normal;
-										font-weight: 400;
-										line-height: normal;
-										letter-spacing: 0.56px;
-									}
-								}
-							}
-						}
-						.comments {
-							width: 100%;
-							height: auto;
-							border: 1px solid #efefef;
-							border-top: none;
-							.comments-title {
-								width: 112.087px;
-								display: flex;
-								align-items: center;
-								justify-content: center;
-								padding: 16px 15px;
-								border-bottom: 2px solid #eb6753;
-								color: #eb6753;
-								font-family: $font;
-								font-size: 14px;
-								font-style: normal;
-								font-weight: 700;
-								line-height: normal;
-								letter-spacing: 0.56px;
-							}
-						}
-						.pagination-box {
-							width: 100%;
-							height: auto;
-							margin-top: 30px;
-							align-items: center;
-							justify-content: center;
-						}
-						.comments-box {
-							.main-comment {
-								width: 100%;
-								height: auto;
-								padding: 20px 24px;
-								gap: 17px;
-								border: 1px solid #efefef;
-								border-top: none;
-								.member-info {
-									width: 100%;
-									height: auto;
-									flex-direction: row;
-									justify-content: space-between;
-									.name-date {
-										width: auto;
-										height: auto;
-										flex-direction: row;
-										gap: 8px;
-										cursor: pointer;
-										img {
-											width: 45.035px;
-											height: 45px;
-											border-radius: 50%;
-											cursor: pointer;
-											object-fit: cover;
-										}
-										.name-date-column {
-											.name {
-												color: #000;
-												font-family: $font;
-												font-size: 16px;
-												font-style: normal;
-												font-weight: 700;
-												line-height: normal;
-												cursor: pointer;
-											}
-											.date {
-												color: #757575;
-												font-family: $font;
-												font-size: 13px;
-												font-style: normal;
-												font-weight: 400;
-												line-height: normal;
-												letter-spacing: -0.39px;
-												cursor: pointer;
-											}
-										}
-									}
-									.buttons {
-										flex-direction: row;
-									}
-								}
-								.content {
-									width: 100%;
-									height: auto;
-									p {
-										color: #000;
-										font-family: $font;
-										font-size: 16px;
-										font-style: normal;
-										font-weight: 400;
-										line-height: normal;
-										letter-spacing: -0.48px;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			.similar-articles-config {
-				width: 100%;
-				height: auto;
-				gap: 75px;
-				padding: 30px 9px 28px 9px;
+		/* Author, date and counts under the article title in the hero */
+		.article-meta {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 12px;
+			margin-top: 4px;
+			font-size: 13px;
+			color: var(--nv-text);
+		}
+		.meta-author {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			img {
+				width: 36px;
+				height: 36px;
 				border-radius: 10px;
-				border: 1px solid #c4c4c4;
-				.similar-articles-title {
-					padding-left: 56px;
-					color: #000;
-					font-family: $font;
-					font-size: 30px;
-					font-style: normal;
-					font-weight: 600;
-					line-height: normal;
+				object-fit: cover;
+				box-shadow: 0 0 0 2px var(--nv-line-accent);
+			}
+			strong {
+				display: block;
+				font-size: 13px;
+				font-weight: 700;
+				color: var(--nv-ink);
+			}
+			small {
+				display: block;
+				font-family: $nv-font-label;
+				font-size: 10px;
+				font-weight: 700;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				color: $nv-primary;
+			}
+			&:hover strong {
+				color: $nv-primary;
+			}
+		}
+		.meta-divider {
+			width: 1px;
+			height: 16px;
+			background: var(--nv-line);
+		}
+		.meta-date {
+			font-family: $nv-font-mono;
+			font-size: 12px;
+		}
+		.meta-stat {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			font-family: $nv-font-mono;
+			font-size: 12px;
+			svg {
+				font-size: 16px;
+				color: var(--nv-subtle);
+			}
+		}
+
+		/* ---------- Article ---------- */
+		.article-panel,
+		.comments-panel {
+			border-radius: 16px;
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-surface);
+			box-shadow: $nv-shadow-sm;
+		}
+		.article-body {
+			min-height: 160px;
+			padding: 32px 36px;
+		}
+		/* Toast UI viewer: follow the theme instead of its own black-on-white defaults */
+		.article-viewer .toastui-editor-contents {
+			font-family: $nv-font-body;
+			font-size: 15px;
+			line-height: 1.75;
+			color: var(--nv-ink);
+			p,
+			li,
+			blockquote {
+				color: var(--nv-text);
+			}
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6 {
+				border-bottom-color: var(--nv-line-soft);
+				font-family: $nv-font-head;
+				color: var(--nv-ink);
+			}
+			a {
+				color: $nv-primary;
+			}
+			blockquote {
+				border-left-color: var(--nv-line-strong);
+			}
+			img {
+				max-width: 100%;
+				border-radius: 12px;
+			}
+			pre,
+			code {
+				background: var(--nv-surface-sunken);
+				color: var(--nv-ink);
+			}
+			hr,
+			table th,
+			table td {
+				border-color: var(--nv-line-soft);
+			}
+		}
+		.article-actions {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			padding: 16px 36px;
+			border-top: 1px solid var(--nv-line-soft);
+		}
+		.back-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			font-family: $nv-font-label;
+			font-size: 12px;
+			font-weight: 700;
+			color: var(--nv-text);
+			svg {
+				font-size: 16px;
+			}
+			&:hover {
+				color: $nv-primary;
+			}
+		}
+		.like-btn {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			height: 40px;
+			padding: 0 16px;
+			border-radius: 12px;
+			border: 1px solid var(--nv-line-accent);
+			background: var(--nv-primary-light);
+			font-family: $nv-font-label;
+			font-size: 12px;
+			font-weight: 700;
+			color: var(--nv-primary-deep);
+			cursor: pointer;
+			transition: background-color 0.2s $nv-ease, transform 0.1s $nv-ease;
+			svg {
+				font-size: 18px;
+				color: $nv-primary;
+			}
+			span {
+				padding: 1px 8px;
+				border-radius: 6px;
+				background: var(--nv-surface);
+				font-family: $nv-font-mono;
+				font-size: 11px;
+			}
+			&:hover {
+				background: var(--nv-primary-tint);
+			}
+			&:active {
+				transform: scale(0.97);
+			}
+			&.on {
+				border-color: transparent;
+				background: $nv-gradient;
+				box-shadow: var(--nv-btn-shadow);
+				color: var(--nv-on-primary);
+				svg {
+					color: var(--nv-on-primary);
 				}
-				.articles-box-row {
-					width: 100%;
-					height: auto;
-					flex-direction: row;
-					gap: 5px;
+				span {
+					background: rgba(255, 255, 255, 0.22);
 				}
 			}
+			&:disabled {
+				cursor: progress;
+			}
+			&:focus-visible {
+				@include nv-focus;
+			}
+		}
+
+		/* ---------- Comments ---------- */
+		.comments-panel {
+			padding: 22px 24px;
+		}
+		.comments-head {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			margin-bottom: 16px;
+			h3 {
+				margin: 0;
+				font-family: $nv-font-head;
+				font-size: 18px;
+				font-weight: 700;
+				color: var(--nv-ink);
+			}
+		}
+		.comment-form {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding-bottom: 18px;
+			border-bottom: 1px solid var(--nv-line-soft);
+			> img {
+				width: 40px;
+				height: 40px;
+				flex-shrink: 0;
+				border-radius: 12px;
+				object-fit: cover;
+			}
+			.write-btn:disabled {
+				background: var(--nv-surface-sunken);
+				box-shadow: none;
+				color: var(--nv-subtle);
+				cursor: not-allowed;
+				filter: none;
+			}
+		}
+		.comment-field {
+			position: relative;
+			flex: 1;
+		}
+		.comment-field input,
+		.comment-edit input {
+			width: 100%;
+			height: 42px;
+			padding: 0 64px 0 14px;
+			border-radius: 12px;
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-surface-muted);
+			font-family: $nv-font-body;
+			font-size: 14px;
+			color: var(--nv-ink);
+			outline: none;
+			transition: border-color 0.15s $nv-ease, box-shadow 0.15s $nv-ease;
+			&::placeholder {
+				color: var(--nv-subtle);
+			}
+			&:focus {
+				border-color: var(--nv-primary-soft);
+				box-shadow: 0 0 0 3px var(--nv-primary-ring);
+			}
+		}
+		.comment-count {
+			position: absolute;
+			top: 50%;
+			right: 14px;
+			transform: translateY(-50%);
+			font-family: $nv-font-mono;
+			font-size: 11px;
+			color: var(--nv-subtle);
+		}
+		.comments-empty {
+			margin: 0;
+			padding: 28px 0 8px;
+			font-size: 13px;
+			text-align: center;
+			color: var(--nv-muted);
+		}
+		.comment-list {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		.comment-item {
+			display: flex;
+			gap: 12px;
+			padding: 16px 0;
+			border-bottom: 1px solid var(--nv-line-soft);
+			&:last-child {
+				border-bottom: 0;
+			}
+		}
+		.comment-avatar img {
+			width: 40px;
+			height: 40px;
+			border-radius: 12px;
+			object-fit: cover;
+		}
+		.comment-main {
+			flex: 1;
+			min-width: 0;
+			p {
+				margin: 6px 0 0;
+				font-size: 14px;
+				line-height: 22px;
+				color: var(--nv-text);
+				overflow-wrap: anywhere;
+			}
+		}
+		.comment-top {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+		.comment-nick {
+			font-size: 13px;
+			font-weight: 700;
+			color: var(--nv-ink);
+			&:hover {
+				color: $nv-primary;
+			}
+		}
+		.comment-date {
+			font-family: $nv-font-mono;
+			font-size: 11px;
+			color: var(--nv-subtle);
+		}
+		.comment-tools {
+			display: flex;
+			gap: 2px;
+			margin-left: auto;
+			button {
+				display: grid;
+				place-items: center;
+				width: 30px;
+				height: 30px;
+				border: 0;
+				border-radius: 8px;
+				background: transparent;
+				color: var(--nv-subtle);
+				cursor: pointer;
+				svg {
+					font-size: 18px;
+				}
+				&:hover {
+					background: var(--nv-primary-light);
+					color: $nv-primary;
+				}
+				&:focus-visible {
+					@include nv-focus;
+				}
+			}
+		}
+		.comment-edit {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-top: 8px;
+			input {
+				flex: 1;
+				padding-right: 14px;
+			}
+		}
+		.ghost-btn {
+			height: 42px;
+			padding: 0 16px;
+			border-radius: 12px;
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-surface);
+			font-family: $nv-font-label;
+			font-size: 12px;
+			font-weight: 700;
+			color: var(--nv-text);
+			cursor: pointer;
+			&:hover {
+				border-color: var(--nv-line-strong);
+			}
+		}
+		.comments-panel .board-pagination {
+			margin-top: 12px;
 		}
 	}
 }
