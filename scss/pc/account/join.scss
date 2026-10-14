@@ -1,194 +1,387 @@
+/** JOIN (/account/join): sign in and create account, split panel on the --nv-* theme variables (light + dark) **/
+
 #pc-wrap {
-  .join-page {
-    position: relative;
-    padding: 90px 0px;
-    width: 100%;
-    height: auto;
-   .container {
-     align-items: center;
-     .main {
-       width: 1200px;
-       height: 900px;
-       display: flex;
-       flex-direction: row;
-       border-radius: 12px 0px 0px 12px;
-       background: #FFF;
-       box-shadow: 0px 1px 4px 0px rgba(24, 26, 32, 0.07);
-       .left {
-         width: 50%;
-         height: 100%;
-         display: flex;
-         flex-direction: column;
-         align-items: center;
-         justify-content: center;
-         .logo {
-           display: flex;
-           flex-direction: row;
-           align-items: center;
-           img {
-             width: 40px;
-             height: 40px;
-           }
-           span {
-             margin-left: 10px;
-             font-family: $font ;
-             font-size: 22px;
-             font-style: normal;
-             font-weight: 600;
-             line-height: normal;
-             letter-spacing: 0.44px;
-             color:#181A20;
-           }
-         }
-         .info {
-           margin-top: 30px;
-           display: flex;
-           flex-direction: column;
-           align-items: center;
-           span {
-             font-family: $font;
-             font-size: 20px;
-             font-style: normal;
-             font-weight: 600;
-             line-height: normal;
-             text-transform: uppercase;
-             color:  #181A20;
-           }
-           p {
-             margin-top: 5px;
-             font-family: $font;
-             font-size: 14px;
-             font-style: normal;
-             font-weight: 400;
-             line-height: 26px;
-             color: #181A20;
+	#join-page {
+		width: 100%;
+		padding: 128px 0 96px;
+		background-color: var(--nv-bg);
+		background-image: linear-gradient(to right, var(--nv-line-soft) 1px, transparent 1px),
+			linear-gradient(to bottom, var(--nv-line-soft) 1px, transparent 1px);
+		background-size: 32px 32px;
+		font-family: $nv-font-body;
+		color: var(--nv-ink);
 
-           }
-         }
-         .input-wrap {
-           margin-top: 45px;
-           width: 470px;
-           display: flex;
-           flex-direction: column;
+		> .container {
+			flex-direction: column;
+		}
 
-          .input-box {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            &:first-child {
-              margin-top: 0px;
-            }
-            span {
-              margin-bottom: 8px;
-              font-family: $font;
-              font-size: 14px;
-              font-style: normal;
-              font-weight: 600;
-              line-height: normal;
-              color:  #181A20;
-            }
-            input {
-              padding: 0px 15px;
-              width: 100%;
-              height: 55px;
-              border-radius: 8px;
-              border: 1px solid #DDD;
-              background:  #FFF;
-              font-family: $font;
-              font-size: 14px;
-              font-style: normal;
-              font-weight: 400;
-              line-height: 26px;
-              color: #717171;
-            }
-          }
-         }
-         .register {
-           margin-top: 45px;
-           width: 470px;
-           display: flex;
-           flex-direction: column;
-           align-items: center;
-           .type-option {
-             display: flex;
-             flex-direction: row;
-             align-items: center;
-             span.text {
-               font-family: $font;
-               font-size: 14px;
-               font-style: normal;
-               font-weight: 600;
-               line-height: normal;
-               color:  #181A20;
-             }
-             div {
-               margin-left: 20px;
-               display: flex;
-               flex-direction: row;
-               &:nth-child(1){
-                 margin-right: 25px;
-               }
-             }
-           }
-           .remember-info {
-             width: 100%;
-             display: flex;
-             flex-direction: row;
-             justify-content: space-between;
-             align-items: center;
-             a {
-               font-family: $font;
-               font-size: 14px;
-               font-style: normal;
-               font-weight: 400;
-               line-height: 26px;
-               cursor: pointer;
-               color:  #181A20;
-             }
-           }
-           button {
-             margin-top: 25px;
-             width: 100%;
-             height: 55px;
-             border-radius: 12px;
-             background:  #EB6753;
-             font-family: $font;
-             font-size: 15px;
-             font-style: normal;
-             font-weight: 600;
-             line-height: normal;
-             color:  #FFF;
-             img {
-               filter: brightness(0) invert(1);
-             }
-           }
-         }
-         .ask-info {
-           margin-top: 90px;
-           p {
-             font-family: $font;
-             font-size: 20px;
-             font-style: normal;
-             line-height: normal;
-             font-weight: 400;
-             color:  #181A20;
-             b {
-               margin-left: 10px;
-               font-weight: 600;
-               font-size: 32px;
-               cursor: pointer;
-               text-decoration: underline;
-             }
-           }
-         }
-       }
-       .right {
-         width: 50%;
-         height: 100%;
-         background-image: url("/img/banner/joinBg.svg");
-         background-size: cover;
-       }
-     }
-   }
-  }
+		.join-panel {
+			display: grid;
+			grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+			min-height: 680px;
+			overflow: hidden;
+			border-radius: 20px;
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-surface);
+			box-shadow: var(--nv-shadow-lg);
+		}
+
+		/* ---------- Form side ---------- */
+		.join-form-side {
+			display: flex;
+			flex-direction: column;
+			padding: 44px 48px;
+			border-right: 1px solid var(--nv-line-soft);
+		}
+		.join-brand {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding-bottom: 22px;
+			margin-bottom: 28px;
+			border-bottom: 1px solid var(--nv-line-soft);
+			strong {
+				display: block;
+				font-family: $nv-font-brand;
+				font-size: 18px;
+				font-weight: 700;
+				letter-spacing: 0.08em;
+				color: var(--nv-ink);
+			}
+			small {
+				font-family: $nv-font-label;
+				font-size: 10px;
+				font-weight: 600;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				color: var(--nv-muted);
+			}
+		}
+		.join-title {
+			margin-bottom: 24px;
+			h1 {
+				margin: 0;
+				font-family: $nv-font-head;
+				font-size: 36px;
+				font-weight: 600;
+				line-height: 44px;
+				letter-spacing: -0.025em;
+				color: var(--nv-ink);
+			}
+			p {
+				max-width: 400px;
+				margin: 8px 0 0;
+				font-size: 14px;
+				line-height: 22px;
+				color: var(--nv-text);
+			}
+		}
+
+		/* Segmented Sign in / Create account switch */
+		.join-tabs {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 4px;
+			margin-bottom: 24px;
+			padding: 4px;
+			border-radius: 12px;
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-surface-sunken);
+			button {
+				height: 38px;
+				border: 1px solid transparent;
+				border-radius: 9px;
+				background: transparent;
+				font-family: $nv-font-label;
+				font-size: 12px;
+				font-weight: 700;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				color: var(--nv-muted);
+				cursor: pointer;
+				transition: background-color 0.2s $nv-ease, color 0.2s $nv-ease, border-color 0.2s $nv-ease;
+				&:hover {
+					color: var(--nv-ink);
+				}
+				&.active {
+					border-color: var(--nv-line-accent);
+					background: var(--nv-surface);
+					box-shadow: $nv-shadow-sm;
+					color: $nv-primary;
+				}
+				&:focus-visible {
+					@include nv-focus;
+				}
+			}
+		}
+
+		.join-form {
+			display: flex;
+			flex-direction: column;
+			gap: 18px;
+			margin-bottom: 32px;
+		}
+		.join-field {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			.field-label {
+				font-family: $nv-font-label;
+				font-size: 11px;
+				font-weight: 700;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				color: var(--nv-ink);
+			}
+		}
+		.field-control {
+			position: relative;
+			display: flex;
+			align-items: center;
+			> svg {
+				position: absolute;
+				left: 14px;
+				font-size: 19px;
+				color: var(--nv-subtle);
+				pointer-events: none;
+			}
+			input {
+				width: 100%;
+				height: 48px;
+				padding: 0 44px 0 44px;
+				border-radius: 12px;
+				border: 1px solid var(--nv-line-soft);
+				background: var(--nv-surface-muted);
+				font-family: $nv-font-body;
+				font-size: 14px;
+				color: var(--nv-ink);
+				outline: none;
+				transition: border-color 0.15s $nv-ease, box-shadow 0.15s $nv-ease;
+				&::placeholder {
+					color: var(--nv-subtle);
+				}
+				&:hover {
+					border-color: var(--nv-line-strong);
+				}
+				&:focus {
+					border-color: var(--nv-primary-soft);
+					box-shadow: 0 0 0 3px var(--nv-primary-ring);
+				}
+			}
+		}
+		.field-toggle {
+			position: absolute;
+			right: 8px;
+			display: grid;
+			place-items: center;
+			width: 32px;
+			height: 32px;
+			border: 0;
+			border-radius: 8px;
+			background: transparent;
+			color: var(--nv-muted);
+			cursor: pointer;
+			svg {
+				font-size: 19px;
+			}
+			&:hover {
+				color: var(--nv-ink);
+			}
+			&:focus-visible {
+				@include nv-focus;
+			}
+		}
+
+		/* Customer / Store choice on sign up */
+		.role-switch {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 10px;
+			button {
+				height: 44px;
+				border-radius: 12px;
+				border: 1px solid var(--nv-line-soft);
+				background: var(--nv-surface-muted);
+				font-family: $nv-font-label;
+				font-size: 13px;
+				font-weight: 600;
+				color: var(--nv-text);
+				cursor: pointer;
+				transition: border-color 0.2s $nv-ease, color 0.2s $nv-ease, background-color 0.2s $nv-ease;
+				&:hover {
+					border-color: var(--nv-line-strong);
+				}
+				&.active {
+					border-color: var(--nv-primary-soft);
+					background: var(--nv-primary-light);
+					color: $nv-primary;
+				}
+				&:focus-visible {
+					@include nv-focus;
+				}
+			}
+		}
+
+		.join-submit {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			height: 52px;
+			margin-top: 6px;
+			border: 0;
+			border-radius: 12px;
+			background: var(--nv-gradient);
+			box-shadow: var(--nv-btn-shadow);
+			font-family: $nv-font-label;
+			font-size: 14px;
+			font-weight: 700;
+			letter-spacing: 0.06em;
+			text-transform: uppercase;
+			color: var(--nv-on-primary);
+			cursor: pointer;
+			transition: filter 0.2s $nv-ease, transform 0.15s $nv-ease, opacity 0.2s $nv-ease;
+			svg {
+				font-size: 18px;
+			}
+			&:hover:not(:disabled) {
+				filter: brightness(1.08);
+			}
+			&:active:not(:disabled) {
+				transform: scale(0.98);
+			}
+			&:disabled {
+				opacity: 0.45;
+				box-shadow: none;
+				cursor: not-allowed;
+			}
+			&:focus-visible {
+				@include nv-focus;
+			}
+		}
+
+		.join-switch {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			margin: auto 0 0;
+			padding-top: 24px;
+			border-top: 1px solid var(--nv-line-soft);
+			font-size: 14px;
+			color: var(--nv-text);
+			button {
+				padding: 0;
+				border: 0;
+				background: transparent;
+				font-family: $nv-font-label;
+				font-size: 13px;
+				font-weight: 700;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				text-decoration: underline;
+				text-underline-offset: 4px;
+				color: var(--nv-ink);
+				cursor: pointer;
+				&:hover {
+					color: $nv-primary;
+				}
+				&:focus-visible {
+					@include nv-focus;
+				}
+			}
+		}
+		/* ---------- Visual side: shop photo with the perks over it (text stays white on the photo in both themes) ---------- */
+		.join-visual-side {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			overflow: hidden;
+			background: #0b0f10;
+			&::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(to top, rgba(12, 10, 9, 0.88) 0%, rgba(12, 10, 9, 0.45) 45%, rgba(12, 10, 9, 0.15) 100%);
+			}
+		}
+		.join-visual {
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center 40%;
+		}
+		.join-visual-copy {
+			position: relative;
+			z-index: 1;
+			padding: 40px;
+			.eyebrow {
+				font-family: $nv-font-label;
+				font-size: 11px;
+				font-weight: 700;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: #fda4af;
+			}
+			h2 {
+				max-width: 520px;
+				margin: 8px 0 22px;
+				font-family: $nv-font-head;
+				font-size: 28px;
+				font-weight: 600;
+				line-height: 36px;
+				letter-spacing: -0.02em;
+				color: #fff;
+			}
+		}
+		.join-perks {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			li {
+				display: flex;
+				align-items: flex-start;
+				gap: 14px;
+				padding: 14px 16px;
+				border-radius: 14px;
+				border: 1px solid rgba(255, 255, 255, 0.14);
+				background: rgba(16, 20, 21, 0.55);
+				-webkit-backdrop-filter: blur(12px);
+				backdrop-filter: blur(12px);
+			}
+			strong {
+				display: block;
+				font-family: $nv-font-head;
+				font-size: 16px;
+				font-weight: 600;
+				color: #fff;
+			}
+			p {
+				margin: 2px 0 0;
+				font-size: 13px;
+				line-height: 20px;
+				color: rgba(255, 255, 255, 0.78);
+			}
+		}
+		.perk-icon {
+			display: grid;
+			place-items: center;
+			flex-shrink: 0;
+			width: 38px;
+			height: 38px;
+			border-radius: 10px;
+			border: 1px solid rgba(253, 164, 175, 0.4);
+			background: rgba(225, 29, 72, 0.18);
+			color: #fda4af;
+			svg {
+				font-size: 20px;
+			}
+		}
+	}
 }
