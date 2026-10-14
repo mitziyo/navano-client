@@ -1,7 +1,8 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { useReactiveVar } from '@apollo/client';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
@@ -18,6 +19,8 @@ import NavanoLogo from '../../libs/components/common/NavanoLogo';
 import { logIn, signUp } from '../../libs/auth';
 import { sweetMixinErrorAlert } from '../../libs/sweetAlert';
 import { MemberType } from '../../libs/enums/member.enum';
+import { Messages } from '../../libs/config';
+import { userVar } from '../../apollo/store';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -32,6 +35,9 @@ const perks = [
 	{ Icon: StorefrontOutlinedIcon, title: 'Sell on Navano', text: 'Open a store account, list your products and talk to customers directly' },
 ];
 
+// Only same-site paths, so ?referrer= cannot send the user to another site
+const safeReferrer = (value: unknown) => (typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') ? value : '/');
+
 const Join: NextPage = () => {
 	const router = useRouter();
 	const device = useDeviceDetect();
@@ -39,8 +45,16 @@ const Join: NextPage = () => {
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: MemberType.USER as string });
 	const [loginView, setLoginView] = useState<boolean>(true);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
+	const [submitting, setSubmitting] = useState<boolean>(false);
+	const user = useReactiveVar(userVar);
 
 	const canSubmit = loginView ? !!input.nick && !!input.password : !!input.nick && !!input.password && !!input.phone;
+
+	/** LIFECYCLES **/
+	// A signed-in member (already, or right after submit) leaves the page
+	useEffect(() => {
+		if (router.isReady && user?._id) router.replace(safeReferrer(router.query.referrer));
+	}, [router.isReady, user?._id]);
 
 	/** HANDLERS **/
 	const handleInput = (name: keyof typeof input, value: string) => {
@@ -49,13 +63,16 @@ const Join: NextPage = () => {
 
 	const submitHandler = async (e: FormEvent) => {
 		e.preventDefault();
-		if (!canSubmit) return;
+		if (!canSubmit || submitting) return;
+		setSubmitting(true);
 		try {
 			if (loginView) await logIn(input.nick, input.password);
 			else await signUp(input.nick, input.password, input.phone, input.type);
-			await router.push(`${router.query.referrer ?? '/'}`);
 		} catch (err: any) {
-			await sweetMixinErrorAlert(err.message);
+			// Server messages were already shown by the Apollo error link; only network failures need one here
+			if (!err?.graphQLErrors?.length) await sweetMixinErrorAlert(Messages.error1);
+		} finally {
+			setSubmitting(false);
 		}
 	};
 
@@ -170,7 +187,7 @@ const Join: NextPage = () => {
 								</>
 							)}
 
-							<button type="submit" className={'join-submit'} disabled={!canSubmit}>
+							<button type="submit" className={'join-submit'} disabled={!canSubmit || submitting} aria-busy={submitting}>
 								{loginView ? t('Sign in') : t('Create account')}
 								<NorthEastIcon aria-hidden />
 							</button>
