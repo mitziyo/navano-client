@@ -15,7 +15,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 // Pages that render their own header instead of the photo banner
-const PAGES_WITHOUT_BANNER = ['/about', '/product', '/agent', '/agent/detail', '/member', '/community', '/cs', '/account/join'];
+const PAGES_WITHOUT_BANNER = ['/about', '/product', '/agent', '/agent/detail', '/member', '/community', '/community/detail', '/cs', '/account/join'];
 
 const withLayoutBasic = (Component: any) => {
 	return (props: any) => {
@@ -54,11 +54,6 @@ const withLayoutBasic = (Component: any) => {
 					title = 'Community';
 					desc = 'Home / For Rent';
 					bgImage = '/img/banner/header2.svg';
-					break;
-				case '/community/detail':
-					title = 'Community Detail';
-					desc = 'Stories from florists, bakers and chocolatiers';
-					bgImage = '/img/banner/stores-hero.jpg';
 					break;
 				case '/cs':
 					title = 'CS';

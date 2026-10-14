@@ -16,8 +16,9 @@ const TViewer = (props: any) => {
 	}, [props.markdown]);
 
 	return (
-		<Stack sx={{ background: 'white', mt: '30px', borderRadius: '10px' }}>
-			<Box component={'div'} sx={{ m: '40px' }}>
+		// Colours and spacing come from the page (.article-body), so the viewer follows the light / dark theme
+		<Stack className={'article-viewer'}>
+			<Box component={'div'}>
 				{editorLoaded ? (
 					<Viewer
 						initialValue={props.markdown}
