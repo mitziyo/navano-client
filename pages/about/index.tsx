@@ -102,7 +102,9 @@ const About: NextPage = () => {
 		<div id="about-page">
 			{/* Hero: photo across the full width */}
 			<section className={'about-hero'}>
-				<img className={'about-hero-media'} src={'/img/banner/hero-florist.jpg'} alt="" aria-hidden />
+				<div className={'about-hero-media'} aria-hidden>
+					<img src={'/img/banner/stores-hero.jpg'} alt="" />
+				</div>
 				<div className={'container'}>
 					<div className={'about-hero-copy'}>
 						<nav className={'breadcrumb'} aria-label={'breadcrumb'}>

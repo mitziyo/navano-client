@@ -237,110 +237,15 @@
 		color: var(--nv-ink);
 
 		/* ---------- Hero: the photo spans the full page width ---------- */
+		/* Same hero band as the home page */
 		.community-hero {
-			position: relative;
-			width: 100%;
-			min-height: 420px;
-			display: flex;
-			align-items: center;
-			overflow: hidden;
-			border-bottom: 1px solid var(--nv-line-soft);
-			background-color: var(--nv-surface-sunken);
-			/* Veil: solid page colour behind the copy, clear over the people on the right, fading into the page at the bottom */
-			&::after {
-				content: '';
-				position: absolute;
-				inset: 0;
-				background: linear-gradient(
-						90deg,
-						color-mix(in srgb, var(--nv-bg) 94%, transparent) 0%,
-						color-mix(in srgb, var(--nv-bg) 82%, transparent) 30%,
-						color-mix(in srgb, var(--nv-bg) 30%, transparent) 55%,
-						transparent 75%
-					),
-					linear-gradient(180deg, transparent 70%, var(--nv-bg) 100%);
-				pointer-events: none;
-			}
-			> .container {
-				z-index: 1;
-			}
+			@include nv-hero-band;
 		}
 		.community-hero-media {
-			position: absolute;
-			inset: 0;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			object-position: center 45%;
+			@include nv-hero-photo(center 55%);
 		}
 		.community-hero-copy {
-			max-width: 620px;
-			padding: 56px 0 64px;
-			h1 {
-				margin: 14px 0 0;
-				font-family: $nv-font-head;
-				font-size: 48px;
-				font-weight: 600;
-				line-height: 56px;
-				letter-spacing: -0.03em;
-				color: var(--nv-ink);
-				em {
-					font-style: normal;
-					background: $nv-gradient;
-					-webkit-background-clip: text;
-					background-clip: text;
-					color: transparent;
-				}
-			}
-			p {
-				max-width: 540px;
-				margin: 14px 0 0;
-				font-size: 15px;
-				line-height: 24px;
-				color: var(--nv-text);
-			}
-		}
-		.breadcrumb {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			margin-bottom: 14px;
-			font-family: $nv-font-mono;
-			font-size: 11px;
-			color: var(--nv-muted);
-			a {
-				color: var(--nv-muted);
-				&:hover {
-					color: $nv-primary;
-				}
-			}
-			.current {
-				color: $nv-primary;
-				font-weight: 600;
-			}
-		}
-		.hero-badge {
-			display: inline-flex;
-			align-items: center;
-			gap: 8px;
-			padding: 5px 14px;
-			border-radius: 999px;
-			border: 1px solid var(--nv-line-accent);
-			background: var(--nv-glass);
-			backdrop-filter: blur(8px);
-			font-family: $nv-font-label;
-			font-size: 10px;
-			font-weight: 700;
-			letter-spacing: 0.1em;
-			text-transform: uppercase;
-			color: var(--nv-primary-deep);
-			.pulse {
-				width: 7px;
-				height: 7px;
-				border-radius: 50%;
-				background: var(--nv-primary-strong);
-				animation: nv-community-pulse 1.8s ease-out infinite;
-			}
+			@include nv-hero-copy;
 		}
 
 		/* ---------- Layout ---------- */

@@ -66,111 +66,20 @@
 		}
 
 		/* ---------- Hero ---------- */
+		/* Same hero band as the home page */
 		.about-hero {
-			position: relative;
-			width: 100%;
-			overflow: hidden;
-			border-bottom: 1px solid var(--nv-line-soft);
-			background-color: var(--nv-surface-sunken);
-			&::after {
-				content: '';
-				position: absolute;
-				inset: 0;
-				background: linear-gradient(
-						90deg,
-						color-mix(in srgb, var(--nv-bg) 95%, transparent) 0%,
-						color-mix(in srgb, var(--nv-bg) 84%, transparent) 36%,
-						color-mix(in srgb, var(--nv-bg) 30%, transparent) 62%,
-						transparent 85%
-					),
-					linear-gradient(180deg, transparent 72%, var(--nv-bg) 100%);
-				pointer-events: none;
-			}
-			> .container {
-				z-index: 1;
-			}
+			@include nv-hero-band;
 		}
 		.about-hero-media {
-			position: absolute;
-			inset: 0;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			object-position: center 45%;
+			@include nv-hero-photo(center 55%);
 		}
 		.about-hero-copy {
-			max-width: 640px;
-			padding: 72px 0 84px;
-			h1 {
-				margin: 16px 0 0;
-				font-family: $nv-font-head;
-				font-size: 50px;
-				font-weight: 700;
-				line-height: 58px;
-				letter-spacing: -0.03em;
-				color: var(--nv-ink);
-				em {
-					display: block;
-					font-style: normal;
-					background: $nv-gradient;
-					-webkit-background-clip: text;
-					background-clip: text;
-					color: transparent;
-				}
-			}
-			> p {
-				max-width: 560px;
-				margin: 16px 0 0;
-				font-size: 16px;
-				line-height: 26px;
-				color: var(--nv-text);
-			}
-		}
-		.breadcrumb {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			margin-bottom: 14px;
-			font-family: $nv-font-mono;
-			font-size: 11px;
-			color: var(--nv-muted);
-			a {
-				color: var(--nv-muted);
-				&:hover {
-					color: $nv-primary;
-				}
-			}
-			.current {
-				font-weight: 600;
-				color: $nv-primary;
-			}
-		}
-		.hero-badge {
-			display: inline-flex;
-			align-items: center;
-			gap: 8px;
-			padding: 5px 14px;
-			border-radius: 999px;
-			border: 1px solid var(--nv-line-accent);
-			background: var(--nv-glass);
-			backdrop-filter: blur(8px);
-			font-family: $nv-font-label;
-			font-size: 10px;
-			font-weight: 700;
-			letter-spacing: 0.1em;
-			text-transform: uppercase;
-			color: var(--nv-primary-deep);
-			.pulse {
-				width: 7px;
-				height: 7px;
-				border-radius: 50%;
-				background: var(--nv-primary-strong);
-			}
+			@include nv-hero-copy;
 		}
 		.hero-actions {
 			display: flex;
 			gap: 12px;
-			margin-top: 28px;
+			margin-top: 6px;
 		}
 
 		/* ---------- Body ---------- */

@@ -171,7 +171,9 @@ const Community: NextPage = () => {
 	return (
 		<div id="community-list-page">
 			<section className={'community-hero'}>
-				<img className={'community-hero-media'} src={'/img/banner/community-hero.jpg'} alt="" aria-hidden />
+				<div className={'community-hero-media'} aria-hidden>
+					<img src={'/img/banner/stores-hero.jpg'} alt="" />
+				</div>
 				<div className={'container'}>
 					<div className={'community-hero-copy'}>
 						<nav className={'breadcrumb'} aria-label={'breadcrumb'}>

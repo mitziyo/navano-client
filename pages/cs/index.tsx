@@ -74,7 +74,9 @@ const CS: NextPage = () => {
 	return (
 		<div id="cs-page">
 			<section className={'cs-hero'}>
-				<img className={'cs-hero-media'} src={'/img/banner/cs-hero.jpg'} alt="" aria-hidden />
+				<div className={'cs-hero-media'} aria-hidden>
+					<img src={'/img/banner/stores-hero.jpg'} alt="" />
+				</div>
 				<div className={'container'}>
 					<div className={'cs-hero-copy'}>
 						<span className={'hero-badge'}>
