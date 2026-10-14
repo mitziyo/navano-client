@@ -38,6 +38,16 @@ const perks = [
 // Only same-site paths, so ?referrer= cannot send the user to another site
 const safeReferrer = (value: unknown) => (typeof value === 'string' && value.startsWith('/') && !value.startsWith('//') ? value : '/');
 
+// Same limits as the API (MemberInput / LoginInput); the phone is counted in digits
+const isNick = (value: string) => value.length >= 3 && value.length <= 12;
+const isPassword = (value: string) => value.length >= 5 && value.length <= 12;
+const isPhone = (value: string) => {
+	const digits = value.replace(/\D/g, '').length;
+	return /^\+?[\d\s-]+$/.test(value) && digits >= 9 && digits <= 15;
+};
+
+type FieldName = 'nick' | 'password' | 'phone';
+
 const Join: NextPage = () => {
 	const router = useRouter();
 	const device = useDeviceDetect();
@@ -46,9 +56,14 @@ const Join: NextPage = () => {
 	const [loginView, setLoginView] = useState<boolean>(true);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const [submitting, setSubmitting] = useState<boolean>(false);
+	const [touched, setTouched] = useState<Record<FieldName, boolean>>({ nick: false, password: false, phone: false });
 	const user = useReactiveVar(userVar);
 
-	const canSubmit = loginView ? !!input.nick && !!input.password : !!input.nick && !!input.password && !!input.phone;
+	const valid: Record<FieldName, boolean> = { nick: isNick(input.nick), password: isPassword(input.password), phone: isPhone(input.phone) };
+	const canSubmit = valid.nick && valid.password && (loginView || valid.phone);
+	// A field shows its error only after the user has left it
+	const hasError = (name: FieldName) => touched[name] && !valid[name];
+	const touch = (name: FieldName) => setTouched((prev) => ({ ...prev, [name]: true }));
 
 	/** LIFECYCLES **/
 	// A signed-in member (already, or right after submit) leaves the page
@@ -120,10 +135,14 @@ const Join: NextPage = () => {
 										type="text"
 										autoComplete="username"
 										placeholder={t('Enter your nickname')}
+										maxLength={12}
+										aria-invalid={hasError('nick')}
 										value={input.nick}
 										onChange={(e) => handleInput('nick', e.target.value)}
+										onBlur={() => touch('nick')}
 									/>
 								</span>
+								<small className={`field-hint ${hasError('nick') ? 'is-error' : ''}`}>{t('3–12 characters')}</small>
 							</label>
 
 							<label className={'join-field'}>
@@ -134,8 +153,11 @@ const Join: NextPage = () => {
 										type={showPassword ? 'text' : 'password'}
 										autoComplete={loginView ? 'current-password' : 'new-password'}
 										placeholder={t('Enter your password')}
+										maxLength={12}
+										aria-invalid={hasError('password')}
 										value={input.password}
 										onChange={(e) => handleInput('password', e.target.value)}
+										onBlur={() => touch('password')}
 									/>
 									<button
 										type="button"
@@ -146,6 +168,7 @@ const Join: NextPage = () => {
 										{showPassword ? <VisibilityOffOutlinedIcon /> : <VisibilityOutlinedIcon />}
 									</button>
 								</span>
+								<small className={`field-hint ${hasError('password') ? 'is-error' : ''}`}>{t('5–12 characters')}</small>
 							</label>
 
 							{!loginView && (
@@ -158,10 +181,13 @@ const Join: NextPage = () => {
 												type="tel"
 												autoComplete="tel"
 												placeholder={t('Enter your phone number')}
+												aria-invalid={hasError('phone')}
 												value={input.phone}
 												onChange={(e) => handleInput('phone', e.target.value)}
+												onBlur={() => touch('phone')}
 											/>
 										</span>
+										<small className={`field-hint ${hasError('phone') ? 'is-error' : ''}`}>{t('9–15 digits')}</small>
 									</label>
 
 									<div className={'join-field'}>
