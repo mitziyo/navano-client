@@ -1,257 +1,131 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
+import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
+import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
+import PauseCircleOutlineIcon from '@mui/icons-material/PauseCircleOutline';
+import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import withAdminLayout from '../../../libs/components/layout/LayoutAdmin';
-import { Box, List, ListItem, Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { TabContext } from '@mui/lab';
-import TablePagination from '@mui/material/TablePagination';
 import { ProductPanelList } from '../../../libs/components/admin/products/ProductList';
+import { AdminPageHeader, AdminPager, AdminSelect, AdminStats, AdminTabs, toLabel, useAdminTotal } from '../../../libs/components/admin/AdminUI';
 import { AllProductsInquiry } from '../../../libs/types/product/product.input';
 import { Product } from '../../../libs/types/product/product';
-import { ProductLocation, ProductStatus } from '../../../libs/enums/product.enum';
-import { sweetConfirmAlert, sweetErrorHandling } from '../../../libs/sweetAlert';
 import { ProductUpdate } from '../../../libs/types/product/product.update';
+import { ProductLocation, ProductStatus } from '../../../libs/enums/product.enum';
+import { Direction } from '../../../libs/enums/common.enum';
+import { sweetConfirmAlert, sweetErrorHandling } from '../../../libs/sweetAlert';
 import { REMOVE_PRODUCT_BY_ADMIN, UPDATE_PRODUCT_BY_ADMIN } from '../../../apollo/admin/mutation';
-import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_PRODUCTS_BY_ADMIN } from '../../../apollo/admin/query';
-import { T } from '../../../libs/types/common';
 
-const AdminProducts: NextPage = ({ initialInquiry, ...props }: any) => {
-	const [anchorEl, setAnchorEl] = useState<[] | HTMLElement[]>([]);
-	const [productsInquiry, setProductsInquiry] = useState<AllProductsInquiry>(initialInquiry);
-	const [products, setProducts] = useState<Product[]>([]);
-	const [productsTotal, setProductsTotal] = useState<number>(0);
-	const [value, setValue] = useState(
-		productsInquiry?.search?.productStatus ? productsInquiry?.search?.productStatus : 'ALL',
-	);
-	const [searchType, setSearchType] = useState('ALL');
+const ROOT = 'getAllProductsByAdmin';
+const LOCATION_OPTIONS = [
+	{ value: 'ALL', label: 'All cities' },
+	...Object.values(ProductLocation).map((location) => ({ value: location, label: toLabel(location) })),
+];
+
+const AdminProducts: NextPage = () => {
+	const client = useApolloClient();
+	const [inquiry, setInquiry] = useState<AllProductsInquiry>({ page: 1, limit: 10, sort: 'createdAt', direction: Direction.DESC, search: {} });
 
 	/** APOLLO REQUESTS **/
 	const [updateProductByAdmin] = useMutation(UPDATE_PRODUCT_BY_ADMIN);
 	const [removeProductByAdmin] = useMutation(REMOVE_PRODUCT_BY_ADMIN);
-
-	const {
-		loading: getAllProductsByAdminLoading,
-		data: getAllProductsByAdminData,
-		error: getAllProductsByAdminError,
-		refetch: getAllProductsByAdminRefetch,
-	} = useQuery(GET_ALL_PRODUCTS_BY_ADMIN, {
-		fetchPolicy: 'network-only',
-		variables: { input: productsInquiry },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setProducts(data?.getAllProductsByAdmin?.list);
-			setProductsTotal(data?.getAllProductsByAdmin?.metaCounter[0]?.total ?? 0);
-		},
+	const { data } = useQuery(GET_ALL_PRODUCTS_BY_ADMIN, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: inquiry },
 	});
+	const products: Product[] = data?.[ROOT]?.list ?? [];
+	const total: number = data?.[ROOT]?.metaCounter?.[0]?.total ?? 0;
 
-	/** LIFECYCLES **/
-	useEffect(() => {
-		getAllProductsByAdminRefetch({ input: productsInquiry }).then();
-	}, [productsInquiry]);
+	const totals = {
+		all: useAdminTotal(GET_ALL_PRODUCTS_BY_ADMIN, ROOT, {}),
+		active: useAdminTotal(GET_ALL_PRODUCTS_BY_ADMIN, ROOT, { productStatus: ProductStatus.ACTIVE }),
+		hold: useAdminTotal(GET_ALL_PRODUCTS_BY_ADMIN, ROOT, { productStatus: ProductStatus.HOLD }),
+		sold: useAdminTotal(GET_ALL_PRODUCTS_BY_ADMIN, ROOT, { productStatus: ProductStatus.SOLD }),
+		delete: useAdminTotal(GET_ALL_PRODUCTS_BY_ADMIN, ROOT, { productStatus: ProductStatus.DELETE }),
+	};
 
 	/** HANDLERS **/
-	const changePageHandler = async (event: unknown, newPage: number) => {
-		productsInquiry.page = newPage + 1;
-		await getAllProductsByAdminRefetch({ input: productsInquiry });
-		setProductsInquiry({ ...productsInquiry });
+	const setSearch = (patch: Partial<AllProductsInquiry['search']>) => {
+		const search = { ...inquiry.search, ...patch };
+		(Object.keys(search) as (keyof typeof search)[]).forEach((key) => !search[key] && delete search[key]);
+		setInquiry({ ...inquiry, page: 1, search });
 	};
 
-	const changeRowsPerPageHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		productsInquiry.limit = parseInt(event.target.value, 10);
-		productsInquiry.page = 1;
-		await getAllProductsByAdminRefetch({ input: productsInquiry });
-		setProductsInquiry({ ...productsInquiry });
-	};
+	const refresh = () => client.refetchQueries({ include: [GET_ALL_PRODUCTS_BY_ADMIN] });
 
-	const menuIconClickHandler = (e: any, index: number) => {
-		const tempAnchor = anchorEl.slice();
-		tempAnchor[index] = e.currentTarget;
-		setAnchorEl(tempAnchor);
-	};
-
-	const menuIconCloseHandler = () => {
-		setAnchorEl([]);
-	};
-
-	const tabChangeHandler = async (event: any, newValue: string) => {
-		setValue(newValue);
-
-		setProductsInquiry({ ...productsInquiry, page: 1, sort: 'createdAt' });
-
-		switch (newValue) {
-			case 'ACTIVE':
-				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.ACTIVE } });
-				break;
-			case 'HOLD':
-				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.HOLD } });
-				break;
-			case 'SOLD':
-				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.SOLD } });
-				break;
-			case 'DELETE':
-				setProductsInquiry({ ...productsInquiry, search: { productStatus: ProductStatus.DELETE } });
-				break;
-			default:
-				delete productsInquiry?.search?.productStatus;
-				setProductsInquiry({ ...productsInquiry });
-				break;
+	const updateProductHandler = async (input: ProductUpdate) => {
+		try {
+			await updateProductByAdmin({ variables: { input } });
+			await refresh();
+		} catch (err: any) {
+			sweetErrorHandling(err).then();
 		}
 	};
 
+	// The API removes only products that are already in DELETE status
 	const removeProductHandler = async (id: string) => {
 		try {
-			if (await sweetConfirmAlert('Are you sure to remove?')) {
-				await removeProductByAdmin({
-					variables: {
-						input: id,
-					},
-				});
-
-				await getAllProductsByAdminRefetch({ input: productsInquiry });
-			}
-			menuIconCloseHandler();
+			if (!(await sweetConfirmAlert('Remove this product for good?'))) return;
+			await removeProductByAdmin({ variables: { input: id } });
+			await refresh();
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
 	};
 
-	const searchTypeHandler = async (newValue: string) => {
-		try {
-			setSearchType(newValue);
-
-			if (newValue !== 'ALL') {
-				setProductsInquiry({
-					...productsInquiry,
-					page: 1,
-					sort: 'createdAt',
-					search: {
-						...productsInquiry.search,
-						productLocationList: [newValue as ProductLocation],
-					},
-				});
-			} else {
-				delete productsInquiry?.search?.productLocationList;
-				setProductsInquiry({ ...productsInquiry });
-			}
-		} catch (err: any) {
-			console.log('searchTypeHandler: ', err.message);
-		}
-	};
-
-	const updateProductHandler = async (updateData: ProductUpdate) => {
-		try {
-			console.log('+updateData: ', updateData);
-			await updateProductByAdmin({
-				variables: {
-					input: updateData,
-				},
-			});
-			menuIconCloseHandler();
-			getAllProductsByAdminRefetch({ input: productsInquiry }).then();
-		} catch (err: any) {
-			menuIconCloseHandler();
-			sweetErrorHandling(err).then();
-		}
-	};
+	const location = inquiry.search.productLocationList?.[0] ?? 'ALL';
 
 	return (
-		<Box component={'div'} className={'content'}>
-			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Product List
-			</Typography>
-			<Box component={'div'} className={'table-wrap'}>
-				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
-					<TabContext value={value}>
-						<Box component={'div'}>
-							<List className={'tab-menu'}>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'ALL')}
-									value="ALL"
-									className={value === 'ALL' ? 'li on' : 'li'}
-								>
-									All
-								</ListItem>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'ACTIVE')}
-									value="ACTIVE"
-									className={value === 'ACTIVE' ? 'li on' : 'li'}
-								>
-									Active
-								</ListItem>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'HOLD')}
-									value="HOLD"
-									className={value === 'HOLD' ? 'li on' : 'li'}
-								>
-									On hold
-								</ListItem>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'SOLD')}
-									value="SOLD"
-									className={value === 'SOLD' ? 'li on' : 'li'}
-								>
-									Sold out
-								</ListItem>
-								<ListItem
-									onClick={(e:any) => tabChangeHandler(e, 'DELETE')}
-									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
-								>
-									Delete
-								</ListItem>
-							</List>
-							<Divider />
-							<Stack className={'search-area'} sx={{ m: '24px' }}>
-								<Select sx={{ width: '160px', mr: '20px' }} value={searchType}>
-									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
-										ALL
-									</MenuItem>
-									{Object.values(ProductLocation).map((location: string) => (
-										<MenuItem value={location} onClick={() => searchTypeHandler(location)} key={location}>
-											{location}
-										</MenuItem>
-									))}
-								</Select>
-							</Stack>
-							<Divider />
-						</Box>
-						<ProductPanelList
-							products={products}
-							anchorEl={anchorEl}
-							menuIconClickHandler={menuIconClickHandler}
-							menuIconCloseHandler={menuIconCloseHandler}
-							updateProductHandler={updateProductHandler}
-							removeProductHandler={removeProductHandler}
-						/>
+		<>
+			<AdminPageHeader
+				title={'Product List'}
+				tag={`${totals.all} products`}
+				desc={'Flowers, chocolates and cakes listed by the stores. Active products can be put on hold, sold out or deleted from their status pill; deleted products can be removed for good.'}
+			/>
 
-						<TablePagination
-							rowsPerPageOptions={[10, 20, 40, 60]}
-							component="div"
-							count={productsTotal}
-							rowsPerPage={productsInquiry?.limit}
-							page={productsInquiry?.page - 1}
-							onPageChange={changePageHandler}
-							onRowsPerPageChange={changeRowsPerPageHandler}
-						/>
-					</TabContext>
-				</Box>
-			</Box>
-		</Box>
+			<AdminStats
+				items={[
+					{ label: 'Total products', value: totals.all, note: 'Listed by every store', icon: <Inventory2OutlinedIcon /> },
+					{ label: 'Active', value: totals.active, note: 'Shown in search and on store pages', icon: <TaskAltOutlinedIcon />, tone: 'success' },
+					{ label: 'On hold', value: totals.hold, note: 'Hidden until the store or an admin activates it', icon: <PauseCircleOutlineIcon />, tone: 'warning' },
+					{ label: 'Sold out', value: totals.sold, note: 'Kept on the store page as sold', icon: <SellOutlinedIcon />, tone: 'info' },
+				]}
+			/>
+
+			<AdminTabs
+				value={inquiry.search.productStatus ?? 'ALL'}
+				onChange={(value) => setSearch({ productStatus: value === 'ALL' ? undefined : (value as ProductStatus) })}
+				tabs={[
+					{ value: 'ALL', label: 'All', count: totals.all },
+					{ value: ProductStatus.ACTIVE, label: 'Active', count: totals.active },
+					{ value: ProductStatus.HOLD, label: 'On hold', count: totals.hold },
+					{ value: ProductStatus.SOLD, label: 'Sold out', count: totals.sold },
+					{ value: ProductStatus.DELETE, label: 'Deleted', count: totals.delete },
+				]}
+			/>
+
+			<div className={'admin-filters'}>
+				<AdminSelect
+					label={'City'}
+					value={location}
+					options={LOCATION_OPTIONS}
+					onChange={(value) => setSearch({ productLocationList: value === 'ALL' ? undefined : [value as ProductLocation] })}
+				/>
+			</div>
+
+			<div className={'admin-table-card'}>
+				<ProductPanelList products={products} updateProductHandler={updateProductHandler} removeProductHandler={removeProductHandler} />
+				<AdminPager
+					total={total}
+					page={inquiry.page}
+					limit={inquiry.limit}
+					onPage={(page) => setInquiry({ ...inquiry, page })}
+					onLimit={(limit) => setInquiry({ ...inquiry, page: 1, limit })}
+				/>
+			</div>
+		</>
 	);
-};
-
-AdminProducts.defaultProps = {
-	initialInquiry: {
-		page: 1,
-		limit: 10,
-		sort: 'createdAt',
-		direction: 'DESC',
-		search: {},
-	},
 };
 
 export default withAdminLayout(AdminProducts);
