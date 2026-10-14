@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Head from 'next/head';
@@ -15,14 +15,13 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 
 // Pages that render their own header instead of the photo banner
-const PAGES_WITHOUT_BANNER = ['/about', '/product', '/agent', '/agent/detail', '/member', '/community', '/cs'];
+const PAGES_WITHOUT_BANNER = ['/about', '/product', '/agent', '/agent/detail', '/member', '/community', '/cs', '/account/join'];
 
 const withLayoutBasic = (Component: any) => {
 	return (props: any) => {
 		const router = useRouter();
 		const { t, i18n } = useTranslation('common');
 		const device = useDeviceDetect();
-		const [authHeader, setAuthHeader] = useState<boolean>(false);
 		const user = useReactiveVar(userVar);
 
 		const memoizedValues = useMemo(() => {
@@ -65,12 +64,6 @@ const withLayoutBasic = (Component: any) => {
 					title = 'CS';
 					desc = 'We are glad to see you again!';
 					bgImage = '/img/banner/header2.svg';
-					break;
-				case '/account/join':
-					title = 'Login/Signup';
-					desc = 'Sign in or create an account to shop and sell on Navano';
-					bgImage = '/img/banner/stores-hero.jpg';
-					setAuthHeader(true);
 					break;
 				case '/member':
 					title = 'Member Page';
@@ -127,7 +120,7 @@ const withLayoutBasic = (Component: any) => {
 						</Stack>
 
 						{!PAGES_WITHOUT_BANNER.includes(router.pathname) && (
-							<section className={`header-basic ${authHeader ? 'auth' : ''}`}>
+							<section className={'header-basic'}>
 								<div className={'header-basic-media'} aria-hidden>
 									<img src={memoizedValues.bgImage} alt="" />
 								</div>

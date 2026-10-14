@@ -48,14 +48,11 @@ body::-webkit-scrollbar {
 }
 
 #pc-wrap {
-	/* Layout banner (My Page, community detail, join): same hero band as the home page */
+	/* Layout banner (My Page, community detail): same hero band as the home page */
 	.header-basic {
 		@include nv-hero-band(420px);
 		margin-top: 80px;
 		font-family: $nv-font-body;
-		&.auth {
-			min-height: 320px;
-		}
 		> .container {
 			flex-direction: column;
 		}
