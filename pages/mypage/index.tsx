@@ -104,7 +104,9 @@ const MyPage: NextPage = () => {
 							<Stack className={'left-config'} component={'aside'}>
 								<MyMenu />
 							</Stack>
-							<Stack className={`main-config ${category === 'myProfile' ? 'is-profile' : ''}`}>
+							<Stack
+								className={`main-config ${category === 'followers' || category === 'followings' ? '' : 'is-profile'}`}
+							>
 								<Stack className={'list-config'}>
 									{category === 'addProduct' && <AddProduct />}
 									{category === 'myProducts' && <MyProducts />}
