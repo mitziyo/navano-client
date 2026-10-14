@@ -1,35 +1,38 @@
 import type { ComponentType } from 'react';
 import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import MenuList from '../admin/AdminMenuList';
-import Toolbar from '@mui/material/Toolbar';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import { Menu, MenuItem } from '@mui/material';
-import Drawer from '@mui/material/Drawer';
-import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-import { getJwtToken, logOut, updateUserInfo } from '../../auth';
 import { useReactiveVar } from '@apollo/client';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AdminMenuList from '../admin/AdminMenuList';
+import NavanoLogo from '../common/NavanoLogo';
+import { getJwtToken, logOut, updateUserInfo } from '../../auth';
 import { userVar } from '../../../apollo/store';
 import { REACT_APP_API_URL } from '../../config';
 import { MemberType } from '../../enums/member.enum';
-const drawerWidth = 280;
+import { sweetConfirmAlert } from '../../sweetAlert';
+import useThemeMode from '../../hooks/useThemeMode';
+
+// Breadcrumb of each admin route: section / page
+const CRUMBS: Record<string, [string, string]> = {
+	'/_admin/users': ['Users', 'Member List'],
+	'/_admin/products': ['Products', 'Product List'],
+	'/_admin/community': ['Community', 'Article List'],
+	'/_admin/cs/faq': ['CS', 'FAQ Management'],
+	'/_admin/cs/notice': ['CS', 'Notice Management'],
+	'/_admin/cs/inquiry': ['CS', '1:1 Inquiry'],
+};
 
 const withAdminLayout = (Component: ComponentType) => {
 	return (props: object) => {
 		const router = useRouter();
 		const user = useReactiveVar(userVar);
-		const [settingsState, setSettingsStateState] = useState(false);
-		const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-		const [openMenu, setOpenMenu] = useState(false);
-		const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-		const [title, setTitle] = useState('admin');
 		const [loading, setLoading] = useState(true);
+		const { mode, toggleMode } = useThemeMode();
 
 		/** LIFECYCLES **/
 		useEffect(() => {
@@ -45,138 +48,93 @@ const withAdminLayout = (Component: ComponentType) => {
 		}, [loading, user, router]);
 
 		/** HANDLERS **/
-		const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-			setAnchorElUser(event.currentTarget);
-		};
-
-		const handleCloseUserMenu = () => {
-			setAnchorElUser(null);
-		};
-
-		const logoutHandler = () => {
-			logOut();
-			router.push('/').then();
+		const logoutHandler = async () => {
+			if (await sweetConfirmAlert('Do you want to logout?')) logOut();
 		};
 
 		if (!user || user?.memberType !== MemberType.ADMIN) return null;
 
+		const [section, page] = CRUMBS[router.pathname] ?? ['Admin', ''];
+		// updateUserInfo already puts the local placeholder path in memberImage when the member has no photo
+		const image = user?.memberImage;
+		const avatar = image && !image.startsWith('/') ? `${REACT_APP_API_URL}/${image}` : '/img/profile/defaultUser.svg';
+
 		return (
-			<main id="pc-wrap" className="admin">
-				<Box component={'div'} sx={{ display: 'flex' }}>
-					<AppBar
-						position="fixed"
-						sx={{
-							width: `calc(100% - ${drawerWidth}px)`,
-							ml: `${drawerWidth}px`,
-							boxShadow: 'rgb(100 116 139 / 12%) 0px 1px 4px',
-							background: 'none',
-						}}
-					>
-						<Toolbar>
-							<Tooltip title="Open settings">
-								<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-									<Avatar
-										src={
-											user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'
-										}
-									/>
-								</IconButton>
-							</Tooltip>
-							<Menu
-								sx={{ mt: '45px' }}
-								id="menu-appbar"
-								className={'pop-menu'}
-								anchorEl={anchorElUser}
-								anchorOrigin={{
-									vertical: 'top',
-									horizontal: 'right',
-								}}
-								keepMounted
-								transformOrigin={{
-									vertical: 'top',
-									horizontal: 'right',
-								}}
-								open={Boolean(anchorElUser)}
-								onClose={handleCloseUserMenu}
-							>
-								<Box
-									component={'div'}
-									onClick={handleCloseUserMenu}
-									sx={{
-										width: '200px',
-									}}
+			<>
+				<Head>
+					<title>{page ? `${page} · Navano Admin` : 'Navano Admin'}</title>
+				</Head>
+				<main id="admin-shell">
+					<aside className={'admin-aside'}>
+						<Link href={'/'} className={'aside-brand'}>
+							<NavanoLogo variant={'mark'} width={40} height={40} />
+							<span>
+								<strong>Navano</strong>
+								<small>Admin console</small>
+							</span>
+						</Link>
+
+						<div className={'aside-operator'}>
+							<span className={'operator-avatar'}>
+								<img src={avatar} alt="" />
+								<span className={'online'} aria-hidden />
+							</span>
+							<span className={'operator-text'}>
+								<strong>{user.memberNick}</strong>
+								<small>{user.memberPhone}</small>
+							</span>
+							<span className={'operator-role'}>Admin</span>
+						</div>
+
+						<AdminMenuList />
+
+						<div className={'aside-footer'}>
+							<Link href={'/'} className={'aside-link'}>
+								<OpenInNewIcon aria-hidden />
+								Back to the site
+							</Link>
+							<button type="button" className={'aside-link danger'} onClick={logoutHandler}>
+								<LogoutIcon aria-hidden />
+								Logout
+							</button>
+						</div>
+					</aside>
+
+					<div className={'admin-main'}>
+						<header className={'admin-topbar'}>
+							<nav className={'topbar-crumbs'} aria-label={'breadcrumb'}>
+								<span>Admin console</span>
+								<span aria-hidden>/</span>
+								<span>{section}</span>
+								{page && (
+									<>
+										<span aria-hidden>/</span>
+										<span className={'current'}>{page}</span>
+									</>
+								)}
+							</nav>
+							<div className={'topbar-actions'}>
+								<Link href={'/'} target={'_blank'} className={'topbar-btn'}>
+									<OpenInNewIcon aria-hidden />
+									View site
+								</Link>
+								<button
+									type="button"
+									className={'topbar-icon'}
+									aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+									onClick={toggleMode}
 								>
-									<Stack sx={{ px: '20px', my: '12px' }}>
-										<Typography variant={'h6'} component={'h6'} sx={{ mb: '4px' }}>
-											{user?.memberNick}
-										</Typography>
-										<Typography variant={'subtitle1'} component={'p'} color={'#757575'}>
-											{user?.memberPhone}
-										</Typography>
-									</Stack>
-									<Divider />
-									<Box component={'div'} sx={{ p: 1, py: '6px' }} onClick={logoutHandler}>
-										<MenuItem sx={{ px: '16px', py: '6px' }}>
-											<Typography variant={'subtitle1'} component={'span'}>
-												Logout
-											</Typography>
-										</MenuItem>
-									</Box>
-								</Box>
-							</Menu>
-						</Toolbar>
-					</AppBar>
+									{mode === 'dark' ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
+								</button>
+							</div>
+						</header>
 
-					<Drawer
-						sx={{
-							width: drawerWidth,
-							flexShrink: 0,
-							'& .MuiDrawer-paper': {
-								width: drawerWidth,
-								boxSizing: 'border-box',
-							},
-						}}
-						variant="permanent"
-						anchor="left"
-						className="aside"
-					>
-						<Toolbar sx={{ flexDirection: 'column', alignItems: 'flexStart' }}>
-							<Stack className={'logo-box'}>
-								<img src={'/img/logo/logoText.svg'} alt={'logo'} />
-							</Stack>
-
-							<Stack
-								className="user"
-								direction={'row'}
-								alignItems={'center'}
-								sx={{
-									bgcolor: openMenu ? 'rgba(255, 255, 255, 0.04)' : 'none',
-									borderRadius: '8px',
-									px: '24px',
-									py: '11px',
-								}}
-							>
-								<Avatar
-									src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'}
-								/>
-								<Typography variant={'body2'} p={1} ml={1}>
-									{user?.memberNick} <br />
-									{user?.memberPhone}
-								</Typography>
-							</Stack>
-						</Toolbar>
-
-						<Divider />
-
-						<MenuList />
-					</Drawer>
-
-					<Box component={'div'} id="bunker" sx={{ flexGrow: 1 }}>
-						{/*@ts-ignore*/}
-						<Component {...props} setSnackbar={setSnackbar} setTitle={setTitle} />
-					</Box>
-				</Box>
-			</main>
+						<div className={'admin-content'}>
+							<Component {...props} />
+						</div>
+					</div>
+				</main>
+			</>
 		);
 	};
 };
