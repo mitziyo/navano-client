@@ -288,20 +288,14 @@
 				}
 			}
 		}
-		/* ---------- Visual side: shop photo with the perks over it (text stays white on the photo in both themes) ---------- */
+		/* ---------- Visual side: the photo as it is, copy on light cards over it ---------- */
 		.join-visual-side {
 			position: relative;
 			display: flex;
 			flex-direction: column;
 			justify-content: flex-end;
 			overflow: hidden;
-			background: #0b0f10;
-			&::after {
-				content: '';
-				position: absolute;
-				inset: 0;
-				background: linear-gradient(to top, rgba(12, 10, 9, 0.88) 0%, rgba(12, 10, 9, 0.45) 45%, rgba(12, 10, 9, 0.15) 100%);
-			}
+			background: #e9e1d6;
 		}
 		.join-visual {
 			position: absolute;
@@ -309,35 +303,39 @@
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			object-position: center 40%;
+			object-position: center 16%;
 		}
+		/* One light card at the bottom; the photo stays light in both themes, so the colours are fixed */
 		.join-visual-copy {
 			position: relative;
 			z-index: 1;
-			padding: 40px;
+			margin: 28px;
+			padding: 22px 24px;
+			border-radius: 16px;
+			background: rgba(255, 255, 255, 0.72);
+			box-shadow: 0 20px 40px -16px rgba(76, 5, 25, 0.25);
 			.eyebrow {
 				font-family: $nv-font-label;
 				font-size: 11px;
 				font-weight: 700;
 				letter-spacing: 0.12em;
 				text-transform: uppercase;
-				color: #fda4af;
+				color: #be123c;
 			}
 			h2 {
-				max-width: 520px;
-				margin: 8px 0 22px;
+				margin: 6px 0 14px;
 				font-family: $nv-font-head;
-				font-size: 28px;
+				font-size: 24px;
 				font-weight: 600;
-				line-height: 36px;
+				line-height: 32px;
 				letter-spacing: -0.02em;
-				color: #fff;
+				color: #1c1917;
+				text-wrap: balance;
 			}
 		}
 		.join-perks {
 			display: flex;
 			flex-direction: column;
-			gap: 12px;
 			margin: 0;
 			padding: 0;
 			list-style: none;
@@ -345,39 +343,34 @@
 				display: flex;
 				align-items: flex-start;
 				gap: 14px;
-				padding: 14px 16px;
-				border-radius: 14px;
-				border: 1px solid rgba(255, 255, 255, 0.14);
-				background: rgba(16, 20, 21, 0.55);
-				-webkit-backdrop-filter: blur(12px);
-				backdrop-filter: blur(12px);
+				padding: 12px 0;
+				border-top: 1px solid #f3e8e3;
 			}
 			strong {
 				display: block;
 				font-family: $nv-font-head;
-				font-size: 16px;
+				font-size: 15px;
 				font-weight: 600;
-				color: #fff;
+				color: #1c1917;
 			}
 			p {
 				margin: 2px 0 0;
 				font-size: 13px;
 				line-height: 20px;
-				color: rgba(255, 255, 255, 0.78);
+				color: #57534e;
 			}
 		}
 		.perk-icon {
 			display: grid;
 			place-items: center;
 			flex-shrink: 0;
-			width: 38px;
-			height: 38px;
+			width: 36px;
+			height: 36px;
 			border-radius: 10px;
-			border: 1px solid rgba(253, 164, 175, 0.4);
-			background: rgba(225, 29, 72, 0.18);
-			color: #fda4af;
+			background: #fff1f2;
+			color: #e11d48;
 			svg {
-				font-size: 20px;
+				font-size: 19px;
 			}
 		}
 	}
