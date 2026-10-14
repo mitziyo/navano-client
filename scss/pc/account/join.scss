@@ -262,9 +262,11 @@
 			&:active:not(:disabled) {
 				transform: scale(0.98);
 			}
+			/* Neutral until the form is ready, so the empty button does not outshine the fields */
 			&:disabled {
-				opacity: 0.45;
+				background: var(--nv-surface-sunken);
 				box-shadow: none;
+				color: var(--nv-subtle);
 				cursor: not-allowed;
 			}
 			&:focus-visible {
