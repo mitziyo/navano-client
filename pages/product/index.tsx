@@ -177,7 +177,7 @@ const ProductList: NextPage = () => {
 		<div id="product-list-page">
 			<header className={'catalog-header'}>
 				<div className={'catalog-hero-media'} aria-hidden>
-					<img src={'/img/banner/product-hero.jpg'} alt="" />
+					<img src={'/img/banner/stores-hero.jpg'} alt="" />
 				</div>
 				<div className={'container'}>
 					<div className={'catalog-intro'}>

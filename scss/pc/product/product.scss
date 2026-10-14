@@ -13,86 +13,22 @@
 			flex-direction: column;
 		}
 
-		/* ---------- Header ---------- */
-		/* Full-bleed band under the navbar; the text stays in the page container */
+		/* ---------- Header: same hero band as the home page ---------- */
 		.catalog-header {
-			position: relative;
-			display: flex;
-			align-items: center;
-			width: 100%;
-			min-height: 420px;
+			@include nv-hero-band;
 			margin-bottom: 32px;
-			padding: 40px 0;
-			overflow: hidden;
-			border-bottom: 1px solid var(--nv-line-soft);
-			background: var(--nv-surface);
-			> .container {
-				position: relative;
-				z-index: 1;
-			}
 		}
-		/* Bouquet photo on the right, fading into the band behind the text */
 		.catalog-hero-media {
-			position: absolute;
-			inset: 0 0 0 auto;
-			width: 62%;
-			img {
-				width: 100%;
-				height: 100%;
-				display: block;
-				object-fit: cover;
-				object-position: center 40%;
-				/* Eased fade so the dark photo melts into the band instead of a hard grey edge */
-				-webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
-				mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
-			}
+			@include nv-hero-photo(center 55%);
 		}
 		.catalog-intro {
-			position: relative;
-			z-index: 1;
-			max-width: 640px;
-			.breadcrumb {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-				margin-bottom: 8px;
-				font-family: $nv-font-label;
-				font-size: 11px;
-				font-weight: 600;
-				letter-spacing: 0.04em;
-				color: var(--nv-muted);
-				a {
-					color: var(--nv-muted);
-					&:hover {
-						color: $nv-primary;
-					}
-				}
-				.current {
-					color: $nv-primary;
-				}
-			}
-			h1 {
-				margin: 0;
-				font-family: $nv-font-head;
-				font-size: 48px;
-				font-weight: 600;
-				line-height: 56px;
-				letter-spacing: -0.03em;
-				color: var(--nv-ink);
-			}
-			p {
-				max-width: 560px;
-				margin: 12px 0 0;
-				font-size: 15px;
-				line-height: 24px;
-				color: var(--nv-text);
-			}
+			@include nv-hero-copy;
 		}
 		.catalog-badges {
 			display: flex;
 			flex-wrap: wrap;
 			gap: 10px;
-			margin: 22px 0 0;
+			margin: 4px 0 0;
 			padding: 0;
 			list-style: none;
 			li {

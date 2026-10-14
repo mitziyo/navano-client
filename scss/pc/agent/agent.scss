@@ -25,113 +25,26 @@
 			gap: 28px;
 		}
 
-		/* ---------- Hero ---------- */
-		/* Full-bleed band under the navbar (same as /product); the copy stays in the page container */
+		/* ---------- Hero: same band as the home page ---------- */
 		.store-hero {
-			position: relative;
-			display: flex;
-			align-items: center;
-			width: 100%;
-			min-height: 420px;
+			@include nv-hero-band;
 			margin-bottom: 32px;
-			padding: 40px 0;
-			overflow: hidden;
-			border-bottom: 1px solid var(--nv-line-soft);
-			background: radial-gradient(ellipse at 85% 0%, var(--nv-hero-glow), transparent 60%), var(--nv-surface);
 			> .container {
-				position: relative;
-				z-index: 1;
 				flex-direction: column;
 			}
 		}
-		/* Lit flower shop at dusk on the right, fading into the band behind the copy */
 		.store-hero-media {
-			position: absolute;
-			inset: 0 0 0 auto;
-			width: 64%;
-			img {
-				width: 100%;
-				height: 100%;
-				display: block;
-				object-fit: cover;
-				object-position: center 55%;
-				-webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
-				mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%);
-			}
+			@include nv-hero-photo(center 55%);
 		}
 		.store-hero-copy {
-			position: relative;
-			z-index: 1;
-			max-width: 600px;
-		}
-		.breadcrumb {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			margin-bottom: 14px;
-			font-family: $nv-font-mono;
-			font-size: 11px;
-			color: var(--nv-muted);
-			a {
-				color: var(--nv-muted);
-				&:hover {
-					color: $nv-primary;
-				}
-			}
-			.current {
-				color: $nv-primary;
-			}
-		}
-		.hero-badge {
-			display: inline-flex;
-			align-items: center;
-			gap: 8px;
-			padding: 4px 12px;
-			border-radius: 999px;
-			border: 1px solid var(--nv-line-accent);
-			background: var(--nv-primary-light);
-			font-family: $nv-font-label;
-			font-size: 10px;
-			font-weight: 700;
-			letter-spacing: 0.1em;
-			text-transform: uppercase;
-			color: var(--nv-primary-deep);
-			.pulse {
-				width: 7px;
-				height: 7px;
-				border-radius: 50%;
-				background: var(--nv-primary-strong);
-			}
-		}
-		.store-hero-copy {
-			h1 {
-				margin: 14px 0 0;
-				font-family: $nv-font-head;
-				font-size: 44px;
-				font-weight: 600;
-				line-height: 52px;
-				letter-spacing: -0.03em;
-				color: var(--nv-ink);
-				em {
-					display: block;
-					font-style: normal;
-					color: $nv-primary;
-				}
-			}
-			p {
-				max-width: 560px;
-				margin: 14px 0 0;
-				font-size: 15px;
-				line-height: 24px;
-				color: var(--nv-text);
-			}
+			@include nv-hero-copy;
 		}
 		.hero-stats {
 			display: grid;
 			grid-template-columns: repeat(4, minmax(0, 1fr));
 			gap: 12px;
 			max-width: 560px;
-			margin: 24px 0 0;
+			margin: 4px 0 0;
 			div {
 				padding: 12px 14px;
 				border-radius: 12px;
