@@ -8,18 +8,25 @@
 		font-family: $nv-font-body;
 		color: var(--nv-ink);
 
-		/* ---------- Hero: same band as the home page; the glance card sits over the photo ---------- */
+		/* ---------- Hero: same band as the home page ---------- */
 		.cs-hero {
 			@include nv-hero-band;
 			> .container {
-				display: grid;
-				grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-				align-items: center;
-				gap: 40px;
+				flex-direction: column;
 			}
 		}
+		/* Photo sits lower than on the other pages, its top edge fading into the band */
 		.cs-hero-media {
 			@include nv-hero-photo(center 55%);
+			top: 64px;
+			img {
+				-webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%),
+					linear-gradient(180deg, transparent 0, #000 72px);
+				-webkit-mask-composite: source-in;
+				mask-image: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.12) 12%, rgba(0, 0, 0, 0.45) 24%, rgba(0, 0, 0, 0.85) 36%, #000 48%),
+					linear-gradient(180deg, transparent 0, #000 72px);
+				mask-composite: intersect;
+			}
 		}
 		.cs-hero-copy {
 			@include nv-hero-copy;
@@ -100,116 +107,63 @@
 			}
 		}
 
-		/* ---------- Glance card ---------- */
-		.glance-card {
-			position: relative;
-			padding: 22px;
-			border-radius: 18px;
+		/* Hotline row under the hero buttons */
+		.hero-hotline {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			width: 100%;
+			max-width: 480px;
+			margin-top: 4px;
+			padding: 10px 14px;
+			border-radius: 14px;
 			border: 1px solid var(--nv-line-accent);
 			background: var(--nv-glass-strong);
-			backdrop-filter: blur(14px);
-			box-shadow: var(--nv-shadow-lg);
-			header {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				padding-bottom: 16px;
-				margin-bottom: 14px;
-				border-bottom: 1px solid var(--nv-line-soft);
-				strong {
-					display: block;
-					font-family: $nv-font-head;
-					font-size: 14px;
-					font-weight: 700;
-					color: var(--nv-ink);
-				}
-				small {
-					font-family: $nv-font-label;
-					font-size: 10px;
-					letter-spacing: 0.06em;
-					text-transform: uppercase;
-					color: var(--nv-muted);
-				}
+			box-shadow: $nv-shadow-sm;
+			transition: border-color 0.2s $nv-ease, box-shadow 0.2s $nv-ease;
+			&:hover {
+				border-color: var(--nv-primary-soft);
+				box-shadow: var(--nv-shadow-md);
 			}
-			dl {
-				display: flex;
-				flex-direction: column;
-				gap: 10px;
-				margin: 0;
-				> div {
-					display: flex;
-					align-items: center;
-					justify-content: space-between;
-					gap: 12px;
-					padding: 10px 12px;
-					border-radius: 12px;
-					border: 1px solid var(--nv-line-soft);
-					background: var(--nv-surface-muted);
-				}
-			}
-			dt {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-				font-size: 12px;
-				font-weight: 500;
-				color: var(--nv-text);
-				svg {
-					font-size: 18px;
-					color: var(--nv-primary-strong);
-				}
-			}
-			dd {
-				display: flex;
-				flex-direction: column;
-				align-items: flex-end;
-				margin: 0;
-				text-align: right;
-				strong {
-					font-family: $nv-font-head;
-					font-size: 13px;
-					font-weight: 700;
-					color: var(--nv-ink);
-				}
-				small {
-					font-family: $nv-font-label;
-					font-size: 10px;
-					color: var(--nv-muted);
-				}
+			&:focus-visible {
+				@include nv-focus;
 			}
 		}
-		.glance-icon {
+		.hotline-icon {
 			display: grid;
 			place-items: center;
-			width: 34px;
-			height: 34px;
+			flex-shrink: 0;
+			width: 36px;
+			height: 36px;
 			border-radius: 10px;
-			border: 1px solid var(--nv-line-accent);
 			background: var(--nv-primary-light);
 			color: $nv-primary;
 			svg {
 				font-size: 19px;
 			}
 		}
-		.live-pill {
-			display: inline-flex;
-			align-items: center;
-			gap: 6px;
+		.hotline-label {
+			font-size: 13px;
+			font-weight: 600;
+			color: var(--nv-text);
+		}
+		.hotline-value {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-end;
 			margin-left: auto;
-			padding: 3px 10px;
-			border-radius: 999px;
-			border: 1px solid rgba(16, 185, 129, 0.35);
-			background: rgba(16, 185, 129, 0.1);
-			font-family: $nv-font-label;
-			font-size: 10px;
-			font-weight: 700;
-			text-transform: uppercase;
-			color: #059669;
-			span {
-				width: 6px;
-				height: 6px;
-				border-radius: 50%;
-				background: #10b981;
+			text-align: right;
+			strong {
+				font-family: $nv-font-head;
+				font-size: 15px;
+				font-weight: 700;
+				font-variant-numeric: tabular-nums;
+				color: var(--nv-ink);
+			}
+			small {
+				font-family: $nv-font-label;
+				font-size: 10px;
+				color: var(--nv-muted);
 			}
 		}
 
@@ -833,7 +787,6 @@
 		background: rgba(16, 185, 129, 0.12);
 		color: #6ee7b7;
 	}
-	.live-pill,
 	.channel-badge.green {
 		color: #34d399;
 	}

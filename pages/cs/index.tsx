@@ -4,15 +4,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useQuery } from '@apollo/client';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import HeadsetMicOutlinedIcon from '@mui/icons-material/HeadsetMicOutlined';
-import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined';
-import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
-import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
-import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
-import QuizOutlinedIcon from '@mui/icons-material/QuizOutlined';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
@@ -23,9 +17,7 @@ import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Notice from '../../libs/components/cs/Notice';
 import Faq from '../../libs/components/cs/Faq';
 import { CS_PHONE, CS_PHONE_HREF, FAQS, FAQ_CATEGORIES, NOTICES } from '../../libs/components/cs/csContent';
-import { GET_AGENTS, GET_PRODUCT_FACETS } from '../../apollo/user/query';
 import { chatOpenVar } from '../../apollo/store';
-import { Direction } from '../../libs/enums/common.enum';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -42,16 +34,6 @@ const CS: NextPage = () => {
 	// Footer and FAQ links use ?tab=notice|faq; anything else falls back to notices
 	const tab: Tab = router.query.tab === 'faq' ? 'faq' : 'notice';
 
-	/** APOLLO REQUESTS **/
-	const { data: agentsData } = useQuery(GET_AGENTS, {
-		fetchPolicy: 'cache-first',
-		variables: { input: { page: 1, limit: 1, sort: 'createdAt', direction: Direction.DESC, search: {} } },
-	});
-	const { data: facetsData } = useQuery(GET_PRODUCT_FACETS, { fetchPolicy: 'cache-first' });
-	const storeCount: number = agentsData?.getAgents?.metaCounter?.[0]?.total ?? 0;
-	const productCount: number = facetsData?.getProductFacets?.total ?? 0;
-	const cityCount: number = facetsData?.getProductFacets?.locations?.length ?? 0;
-
 	/** HANDLERS **/
 	const changeTabHandler = (next: Tab) => {
 		router.push({ pathname: '/cs', query: { tab: next } }, undefined, { scroll: false });
@@ -63,13 +45,6 @@ const CS: NextPage = () => {
 		return <h1>CS PAGE MOBILE</h1>;
 	}
 
-	const glance = [
-		{ icon: <CallOutlinedIcon />, label: t('Customer care'), value: CS_PHONE, sub: t('Call us about a store, a product or your account') },
-		{ icon: <StorefrontOutlinedIcon />, label: t('Stores on Navano'), value: storeCount, sub: t('Florists, bakers and chocolatiers') },
-		{ icon: <Inventory2OutlinedIcon />, label: t('Products'), value: productCount, sub: t('Active listings right now') },
-		{ icon: <PlaceOutlinedIcon />, label: t('Cities'), value: cityCount, sub: t('Cities with active products') },
-		{ icon: <QuizOutlinedIcon />, label: t('Help articles'), value: NOTICES.length + FAQS.length, sub: `${NOTICES.length} ${t('notices')} · ${FAQS.length} ${t('FAQ')}` },
-	];
 
 	return (
 		<div id="cs-page">
@@ -104,37 +79,17 @@ const CS: NextPage = () => {
 								{t('Contact us')}
 							</a>
 						</div>
+						<a href={CS_PHONE_HREF} className={'hero-hotline'}>
+							<span className={'hotline-icon'}>
+								<CallOutlinedIcon aria-hidden />
+							</span>
+							<span className={'hotline-label'}>{t('Customer care')}</span>
+							<span className={'hotline-value'}>
+								<strong>{CS_PHONE}</strong>
+								<small>{t('Call us about a store, a product or your account')}</small>
+							</span>
+						</a>
 					</div>
-
-					<aside className={'glance-card'} aria-label={t('Support at a glance')}>
-						<header>
-							<span className={'glance-icon'}>
-								<SupportAgentOutlinedIcon aria-hidden />
-							</span>
-							<div>
-								<strong>{t('Support at a glance')}</strong>
-								<small>{t('Live numbers from Navano')}</small>
-							</div>
-							<span className={'live-pill'}>
-								<span aria-hidden />
-								{t('Live')}
-							</span>
-						</header>
-						<dl>
-							{glance.map((row) => (
-								<div key={row.label}>
-									<dt>
-										{row.icon}
-										{row.label}
-									</dt>
-									<dd>
-										<strong>{row.value}</strong>
-										<small>{row.sub}</small>
-									</dd>
-								</div>
-							))}
-						</dl>
-					</aside>
 				</div>
 			</section>
 
