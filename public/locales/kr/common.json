@@ -538,5 +538,15 @@
   "Celebration cakes and handmade chocolates from local makers": "동네 메이커의 축하 케이크와 수제 초콜릿",
   "Open a store account, list your products and talk to customers directly": "스토어 계정을 만들고 상품을 등록해 고객과 직접 소통하세요",
   "5–12 characters": "5–12자",
-  "9–15 digits": "숫자 9–15자리"
+  "9–15 digits": "숫자 9–15자리",
+  "Comment posted": "댓글이 등록되었습니다",
+  "Do you want to delete the comment?": "댓글을 삭제하시겠습니까?",
+  "Back to {{board}}": "{{board}}(으)로 돌아가기",
+  "Liked": "좋아요 누름",
+  "Comments": "댓글",
+  "Leave a comment": "댓글을 남겨 주세요",
+  "Comment": "댓글 달기",
+  "No comments yet. Be the first to reply": "아직 댓글이 없습니다. 첫 댓글을 남겨 보세요",
+  "Cancel": "취소",
+  "Save": "저장"
 }

@@ -538,5 +538,15 @@
 	"Celebration cakes and handmade chocolates from local makers": "Праздничные торты и шоколад ручной работы от местных мастеров",
 	"Open a store account, list your products and talk to customers directly": "Откройте магазин, добавьте товары и общайтесь с покупателями напрямую",
 	"5–12 characters": "5–12 символов",
-	"9–15 digits": "9–15 цифр"
+	"9–15 digits": "9–15 цифр",
+	"Comment posted": "Комментарий опубликован",
+	"Do you want to delete the comment?": "Удалить комментарий?",
+	"Back to {{board}}": "Назад: {{board}}",
+	"Liked": "Нравится",
+	"Comments": "Комментарии",
+	"Leave a comment": "Оставьте комментарий",
+	"Comment": "Отправить",
+	"No comments yet. Be the first to reply": "Комментариев пока нет. Будьте первым",
+	"Cancel": "Отмена",
+	"Save": "Сохранить"
 }
