@@ -96,7 +96,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 		setOpenAdvancedFilter(status);
 	};
 
-	// null clears the filter; picking a value moves on to the next field
+	// Picking a value moves on to the next field; picking the selected value again (null) clears the filter
 	const selectHandler = (key: 'locationList' | 'occasionList' | 'typeList', value: string | null, next: Field) => {
 		setSearchFilter((prev) => {
 			const search: any = { ...prev.search };
@@ -164,14 +164,6 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						<AnimatePresence>
 							{openField === 'location' && (
 								<motion.div className={'field-dropdown city-grid'} role="listbox" {...dropdownMotion}>
-									<motion.button
-										type="button"
-										variants={optionVariants}
-										className={`city all ${!location ? 'active' : ''}`}
-										onClick={() => selectHandler('locationList', null, 'occasion')}
-									>
-										<span>{t('All locations')}</span>
-									</motion.button>
 									{productLocations.map((value) => (
 										<motion.button
 											type="button"
@@ -180,7 +172,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 											role="option"
 											aria-selected={location === value}
 											className={`city ${location === value ? 'active' : ''}`}
-											onClick={() => selectHandler('locationList', value, 'occasion')}
+											onClick={() => selectHandler('locationList', location === value ? null : value, 'occasion')}
 										>
 											<img src={`/img/banner/cities/${value}.webp`} alt="" loading="lazy" />
 											<span>{toLabel(value)}</span>
@@ -209,14 +201,6 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						<AnimatePresence>
 							{openField === 'occasion' && (
 								<motion.div className={'field-dropdown'} role="listbox" {...dropdownMotion}>
-									<motion.button
-										type="button"
-										variants={optionVariants}
-										className={!occasion ? 'active' : ''}
-										onClick={() => selectHandler('occasionList', null, 'type')}
-									>
-										{t('All occasions')}
-									</motion.button>
 									{productOccasions.map((value) => (
 										<motion.button
 											type="button"
@@ -225,7 +209,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 											role="option"
 											aria-selected={occasion === value}
 											className={occasion === value ? 'active' : ''}
-											onClick={() => selectHandler('occasionList', value, 'type')}
+											onClick={() => selectHandler('occasionList', occasion === value ? null : value, 'type')}
 										>
 											{t(toLabel(value))}
 										</motion.button>
@@ -253,14 +237,6 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 						<AnimatePresence>
 							{openField === 'type' && (
 								<motion.div className={'field-dropdown'} role="listbox" {...dropdownMotion}>
-									<motion.button
-										type="button"
-										variants={optionVariants}
-										className={!type ? 'active' : ''}
-										onClick={() => selectHandler('typeList', null, null)}
-									>
-										{t('All categories')}
-									</motion.button>
 									{productTypes.map((value) => (
 										<motion.button
 											type="button"
@@ -269,7 +245,7 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 											role="option"
 											aria-selected={type === value}
 											className={type === value ? 'active' : ''}
-											onClick={() => selectHandler('typeList', value, null)}
+											onClick={() => selectHandler('typeList', type === value ? null : value, null)}
 										>
 											{t(toLabel(value))}
 										</motion.button>
