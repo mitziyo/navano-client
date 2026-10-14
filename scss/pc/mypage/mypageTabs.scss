@@ -1,0 +1,439 @@
+/** MY PAGE TABS (products, add product, favorites, recently visited, articles, write article)
+	in the My Profile style, on the --nv-* theme variables (light + dark) **/
+
+#pc-wrap {
+	#my-page {
+		.mp-tab {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			gap: 24px;
+			font-family: $nv-font-body;
+			color: var(--nv-ink);
+
+			@include mp-page-header;
+			@include mp-card;
+			@include mp-form-grid;
+			@include nv-article-card;
+
+			/* The shared rules were written for MUI Stack; plain elements need flex here */
+			.profile-header,
+			.profile-header .breadcrumb,
+			.profile-header .header-actions,
+			.mp-card .card-title {
+				display: flex;
+			}
+			.page-title,
+			.page-desc {
+				margin: 0;
+			}
+			.page-desc {
+				margin-top: 4px;
+			}
+			.card-title h3 {
+				margin: 0;
+			}
+		}
+
+		/* ---------- Segmented status switch ---------- */
+		.segmented {
+			display: inline-flex;
+			gap: 4px;
+			padding: 4px;
+			border-radius: 12px;
+			border: 1px solid var(--nv-line);
+			background: var(--nv-surface-muted);
+			button {
+				padding: 8px 18px;
+				border: 0;
+				border-radius: 8px;
+				background: transparent;
+				font-family: $nv-font-label;
+				font-size: 12px;
+				font-weight: 700;
+				color: var(--nv-text);
+				cursor: pointer;
+				transition: background-color 0.2s $nv-ease, color 0.2s $nv-ease;
+				&:hover {
+					color: $nv-primary;
+				}
+				&:focus-visible {
+					@include nv-focus;
+				}
+				&.active {
+					background: $nv-gradient;
+					box-shadow: var(--nv-btn-shadow);
+					color: var(--nv-on-primary);
+				}
+			}
+		}
+
+		/* ---------- My Products table ---------- */
+		.mp-table {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+			--mp-cols: minmax(0, 2.4fr) 140px 120px 70px;
+			&.with-actions {
+				--mp-cols: minmax(0, 2.4fr) 140px 120px 70px 90px;
+			}
+		}
+		.mp-table-head {
+			display: grid;
+			grid-template-columns: var(--mp-cols);
+			gap: 16px;
+			padding: 10px 16px;
+			border-radius: 10px;
+			background: var(--nv-surface-sunken);
+			span {
+				font-family: $nv-font-label;
+				font-size: 11px;
+				font-weight: 700;
+				letter-spacing: 0.06em;
+				text-transform: uppercase;
+				color: var(--nv-muted);
+			}
+		}
+		.product-card-box {
+			display: grid;
+			grid-template-columns: var(--mp-cols);
+			align-items: center;
+			gap: 16px;
+			padding: 12px 16px;
+			border-radius: 12px;
+			border: 1px solid var(--nv-line-soft);
+			background: var(--nv-surface);
+			transition: border-color 0.2s $nv-ease, background-color 0.2s $nv-ease;
+			&:hover {
+				border-color: var(--nv-line-strong);
+				background: var(--nv-primary-light);
+			}
+			/* image + text share the first column */
+			.image-box {
+				grid-column: 1;
+				grid-row: 1;
+				width: 64px;
+				height: 64px;
+				img {
+					width: 64px;
+					height: 64px;
+					border-radius: 10px;
+					object-fit: cover;
+					border: 1px solid var(--nv-line-soft);
+				}
+			}
+			.information-box {
+				grid-column: 1;
+				grid-row: 1;
+				min-width: 0;
+				padding-left: 80px;
+				.name {
+					overflow: hidden;
+					font-family: $nv-font-head;
+					font-size: 15px;
+					font-weight: 700;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					color: var(--nv-ink);
+				}
+				.address {
+					overflow: hidden;
+					font-family: $nv-font-body;
+					font-size: 12px;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					color: var(--nv-muted);
+				}
+				.price {
+					font-family: $nv-font-head;
+					font-size: 14px;
+					font-weight: 700;
+					color: $nv-primary;
+				}
+			}
+			.date {
+				font-family: $nv-font-label;
+				font-size: 12px;
+				color: var(--nv-text);
+			}
+			.coloured-box {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				width: fit-content;
+				padding: 4px 10px;
+				border-radius: 999px;
+				border: 1px solid var(--nv-line-accent);
+				background: var(--nv-primary-light);
+				cursor: pointer;
+				&::before {
+					content: '';
+					width: 6px;
+					height: 6px;
+					border-radius: 50%;
+					background: currentColor;
+				}
+				.status {
+					font-family: $nv-font-label;
+					font-size: 11px;
+					font-weight: 700;
+				}
+				&.status-active {
+					color: #059669;
+					border-color: rgba(16, 185, 129, 0.35);
+					background: rgba(16, 185, 129, 0.1);
+				}
+				&.status-sold {
+					color: var(--nv-muted);
+					border-color: var(--nv-line-soft);
+					background: var(--nv-surface-sunken);
+					cursor: default;
+				}
+				&.status-hold {
+					color: #b45309;
+					border-color: rgba(245, 158, 11, 0.4);
+					background: rgba(245, 158, 11, 0.1);
+				}
+				&:focus-visible {
+					@include nv-focus;
+				}
+			}
+			.views {
+				font-family: $nv-font-mono;
+				font-size: 13px;
+				font-weight: 700;
+				color: var(--nv-ink);
+			}
+			.action-box {
+				flex-direction: row;
+				gap: 4px;
+				.icon-button {
+					width: 34px;
+					height: 34px;
+					border-radius: 10px;
+					border: 1px solid var(--nv-line-soft);
+					background: var(--nv-surface);
+					color: var(--nv-text);
+					svg {
+						font-size: 18px;
+					}
+					&:hover {
+						border-color: var(--nv-primary-soft);
+						color: $nv-primary;
+					}
+					&.delete:hover {
+						border-color: #fca5a5;
+						color: #dc2626;
+					}
+				}
+			}
+		}
+
+		/* ---------- Grids, empty state, pagination ---------- */
+		.mp-grid {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 20px;
+			&.two {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+		.mp-empty {
+			padding: 48px 16px;
+			border-radius: 12px;
+			border: 1px dashed var(--nv-line-accent);
+			background: var(--nv-section-tint);
+			text-align: center;
+			p {
+				margin: 0;
+				color: var(--nv-text);
+			}
+		}
+		.mp-pagination {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 10px;
+			margin-top: 24px;
+			span {
+				font-family: $nv-font-mono;
+				font-size: 11px;
+				color: var(--nv-muted);
+			}
+			.MuiPaginationItem-root {
+				min-width: 34px;
+				height: 34px;
+				border-radius: 10px;
+				border: 1px solid var(--nv-line-accent);
+				background: var(--nv-surface);
+				font-family: $nv-font-mono;
+				font-size: 12px;
+				font-weight: 700;
+				color: var(--nv-ink);
+				&:hover {
+					background: var(--nv-primary-light);
+				}
+				&.Mui-selected {
+					border-color: transparent;
+					background: $nv-gradient;
+					color: var(--nv-on-primary);
+				}
+			}
+		}
+
+		/* ---------- Form extras ---------- */
+		.select-wrap {
+			select {
+				width: 100%;
+				height: 44px;
+				padding: 0 40px 0 14px;
+				border: 0;
+				outline: none;
+				appearance: none;
+				background: transparent;
+				font-family: $nv-font-body;
+				font-size: 14px;
+				font-weight: 600;
+				color: var(--nv-ink);
+				cursor: pointer;
+				option {
+					background: var(--nv-surface);
+					color: var(--nv-ink);
+				}
+			}
+			.suffix-icon {
+				position: absolute;
+				right: 0;
+				pointer-events: none;
+			}
+		}
+		.upload-zone {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 6px;
+			width: 100%;
+			padding: 32px 16px;
+			border-radius: 12px;
+			border: 2px dashed var(--nv-line-accent);
+			background: var(--nv-surface-muted);
+			color: var(--nv-text);
+			cursor: pointer;
+			transition: border-color 0.2s $nv-ease, background-color 0.2s $nv-ease;
+			> svg {
+				font-size: 40px;
+				color: var(--nv-primary-strong);
+			}
+			strong {
+				font-family: $nv-font-head;
+				font-size: 16px;
+				color: var(--nv-ink);
+			}
+			> span:not(.mp-btn) {
+				font-size: 12px;
+				color: var(--nv-muted);
+			}
+			.mp-btn {
+				margin-top: 8px;
+			}
+			&:hover {
+				border-color: var(--nv-primary-soft);
+				background: var(--nv-primary-light);
+			}
+			&:focus-visible {
+				@include nv-focus;
+			}
+		}
+		.upload-gallery {
+			display: grid;
+			grid-template-columns: repeat(5, minmax(0, 1fr));
+			gap: 12px;
+			margin-top: 16px;
+			.gallery-item {
+				position: relative;
+				aspect-ratio: 1;
+				overflow: hidden;
+				border-radius: 12px;
+				border: 1px solid var(--nv-line-soft);
+				img {
+					width: 100%;
+					height: 100%;
+					display: block;
+					object-fit: cover;
+				}
+				small {
+					position: absolute;
+					left: 8px;
+					top: 8px;
+					padding: 2px 8px;
+					border-radius: 6px;
+					background: var(--nv-glass-strong);
+					font-family: $nv-font-label;
+					font-size: 10px;
+					font-weight: 700;
+					text-transform: uppercase;
+					color: $nv-primary;
+				}
+			}
+		}
+		.save-bar {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			padding: 16px 20px;
+			border-radius: $nv-radius-card;
+			border: 1px solid var(--nv-line);
+			background: var(--nv-glass);
+			-webkit-backdrop-filter: blur(12px);
+			backdrop-filter: blur(12px);
+			box-shadow: $nv-glow;
+			> span {
+				font-size: 13px;
+				color: var(--nv-muted);
+			}
+			.mp-btn {
+				min-height: 42px;
+				padding: 0 22px;
+			}
+		}
+
+		/* ---------- Article editor ---------- */
+		.article-editor {
+			display: flex;
+			flex-direction: column;
+			gap: 20px;
+			.save-bar {
+				padding: 0;
+				border: 0;
+				background: transparent;
+				box-shadow: none;
+				-webkit-backdrop-filter: none;
+				backdrop-filter: none;
+			}
+		}
+		.editor-frame {
+			overflow: hidden;
+			border-radius: 12px;
+			border: 1px solid var(--nv-line);
+			.toastui-editor-defaultUI {
+				border: 0;
+			}
+		}
+	}
+}
+
+/* The Toast UI editor is light by design; tone its chrome down in the dark theme */
+[data-theme='dark'] #pc-wrap #my-page .editor-frame {
+	.toastui-editor-defaultUI-toolbar,
+	.toastui-editor-mode-switch {
+		background: var(--nv-surface-sunken);
+		border-color: var(--nv-line);
+	}
+	.toastui-editor-main,
+	.toastui-editor-ww-container,
+	.ProseMirror {
+		background: var(--nv-surface);
+		color: var(--nv-ink);
+	}
+}
