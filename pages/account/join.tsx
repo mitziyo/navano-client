@@ -185,7 +185,7 @@ const Join: NextPage = () => {
 					</section>
 
 					<aside className={'join-visual-side'}>
-						<img className={'join-visual'} src={'/img/banner/stores-hero.jpg'} alt="" aria-hidden />
+						<img className={'join-visual'} src={'/img/banner/join-daisy-vase.jpg'} alt="" aria-hidden />
 						<div className={'join-visual-copy'}>
 							<span className={'eyebrow'}>{t('Handmade by local stores')}</span>
 							<h2>{t('Flowers, cakes & chocolates for every occasion')}</h2>
