@@ -1,288 +1,129 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { NextPage } from 'next';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
+import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
+import TaskAltOutlinedIcon from '@mui/icons-material/TaskAltOutlined';
+import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
 import withAdminLayout from '../../../libs/components/layout/LayoutAdmin';
 import { MemberPanelList } from '../../../libs/components/admin/users/MemberList';
-import { Box, InputAdornment, List, ListItem, Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { TabContext } from '@mui/lab';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import TablePagination from '@mui/material/TablePagination';
-import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+import { AdminPageHeader, AdminPager, AdminSearch, AdminSelect, AdminStats, AdminTabs, useAdminTotal } from '../../../libs/components/admin/AdminUI';
 import { MembersInquiry } from '../../../libs/types/member/member.input';
 import { Member } from '../../../libs/types/member/member';
-import { MemberStatus, MemberType } from '../../../libs/enums/member.enum';
-import { sweetErrorHandling } from '../../../libs/sweetAlert';
 import { MemberUpdate } from '../../../libs/types/member/member.update';
-import { useMutation, useQuery } from '@apollo/client';
+import { MemberStatus, MemberType } from '../../../libs/enums/member.enum';
+import { Direction } from '../../../libs/enums/common.enum';
+import { sweetErrorHandling } from '../../../libs/sweetAlert';
 import { UPDATE_MEMBER_BY_ADMIN } from '../../../apollo/admin/mutation';
 import { GET_ALL_MEMBERS_BY_ADMIN } from '../../../apollo/admin/query';
-import { T } from '../../../libs/types/common';
 
-const AdminUsers: NextPage = ({ initialInquiry, ...props }: any) => {
-	const [anchorEl, setAnchorEl] = useState<[] | HTMLElement[]>([]);
-	const [membersInquiry, setMembersInquiry] = useState<MembersInquiry>(initialInquiry);
-	const [members, setMembers] = useState<Member[]>([]);
-	const [membersTotal, setMembersTotal] = useState<number>(0);
-	const [value, setValue] = useState(
-		membersInquiry?.search?.memberStatus ? membersInquiry?.search?.memberStatus : 'ALL',
-	);
-	const [searchText, setSearchText] = useState('');
-	const [searchType, setSearchType] = useState('ALL');
+const ROOT = 'getAllMembersByAdmin';
+const TYPE_OPTIONS = [
+	{ value: 'ALL', label: 'All member types' },
+	{ value: MemberType.USER, label: 'Customers' },
+	{ value: MemberType.AGENT, label: 'Stores' },
+	{ value: MemberType.ADMIN, label: 'Admins' },
+];
+
+const AdminUsers: NextPage = () => {
+	const client = useApolloClient();
+	const [inquiry, setInquiry] = useState<MembersInquiry>({ page: 1, limit: 10, sort: 'createdAt', direction: Direction.DESC, search: {} });
+	const [searchText, setSearchText] = useState<string>('');
 
 	/** APOLLO REQUESTS **/
 	const [updateMemberByAdmin] = useMutation(UPDATE_MEMBER_BY_ADMIN);
-
-	const {
-		loading: getAllMembersByAdminLoading,
-		data: getAllMembersByAdminData,
-		error: getAllMembersByAdminError,
-		refetch: getAllMembersRefetch,
-	} = useQuery(GET_ALL_MEMBERS_BY_ADMIN, {
-		fetchPolicy: 'network-only',
-		variables: { input: membersInquiry },
-		notifyOnNetworkStatusChange: true,
-		onCompleted: (data: T) => {
-			setMembers(data?.getAllMembersByAdmin?.list);
-			setMembersTotal(data?.getAllMembersByAdmin?.metaCounter[0]?.total ?? 0);
-		},
+	const { data } = useQuery(GET_ALL_MEMBERS_BY_ADMIN, {
+		fetchPolicy: 'cache-and-network',
+		variables: { input: inquiry },
 	});
+	const members: Member[] = data?.[ROOT]?.list ?? [];
+	const total: number = data?.[ROOT]?.metaCounter?.[0]?.total ?? 0;
 
-	/** LIFECYCLES **/
-	useEffect(() => {
-		getAllMembersRefetch({ input: membersInquiry }).then();
-	}, [membersInquiry]);
+	const totals = {
+		all: useAdminTotal(GET_ALL_MEMBERS_BY_ADMIN, ROOT, {}),
+		stores: useAdminTotal(GET_ALL_MEMBERS_BY_ADMIN, ROOT, { memberType: MemberType.AGENT }),
+		active: useAdminTotal(GET_ALL_MEMBERS_BY_ADMIN, ROOT, { memberStatus: MemberStatus.ACTIVE }),
+		block: useAdminTotal(GET_ALL_MEMBERS_BY_ADMIN, ROOT, { memberStatus: MemberStatus.BLOCK }),
+		delete: useAdminTotal(GET_ALL_MEMBERS_BY_ADMIN, ROOT, { memberStatus: MemberStatus.DELETE }),
+	};
 
 	/** HANDLERS **/
-	const changePageHandler = async (event: unknown, newPage: number) => {
-		membersInquiry.page = newPage + 1;
-		getAllMembersRefetch({ input: membersInquiry });
-		setMembersInquiry({ ...membersInquiry });
+	// Every filter change starts again from page 1
+	const setSearch = (patch: Partial<MembersInquiry['search']>) => {
+		const search = { ...inquiry.search, ...patch };
+		(Object.keys(search) as (keyof typeof search)[]).forEach((key) => !search[key] && delete search[key]);
+		setInquiry({ ...inquiry, page: 1, search });
 	};
 
-	const changeRowsPerPageHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		membersInquiry.limit = parseInt(event.target.value, 10);
-		membersInquiry.page = 1;
-		getAllMembersRefetch({ input: membersInquiry });
-		setMembersInquiry({ ...membersInquiry });
-	};
-
-	const menuIconClickHandler = (e: any, index: number) => {
-		const tempAnchor = anchorEl.slice();
-		tempAnchor[index] = e.currentTarget;
-		setAnchorEl(tempAnchor);
-	};
-
-	const menuIconCloseHandler = () => {
-		setAnchorEl([]);
-	};
-
-	const tabChangeHandler = async (event: any, newValue: string) => {
-		setValue(newValue);
-		setSearchText('');
-
-		setMembersInquiry({ ...membersInquiry, page: 1, sort: 'createdAt' });
-
-		switch (newValue) {
-			case 'ACTIVE':
-				setMembersInquiry({ ...membersInquiry, search: { memberStatus: MemberStatus.ACTIVE } });
-				break;
-			case 'BLOCK':
-				setMembersInquiry({ ...membersInquiry, search: { memberStatus: MemberStatus.BLOCK } });
-				break;
-			case 'DELETE':
-				setMembersInquiry({ ...membersInquiry, search: { memberStatus: MemberStatus.DELETE } });
-				break;
-			default:
-				delete membersInquiry?.search?.memberStatus;
-				setMembersInquiry({ ...membersInquiry });
-				break;
-		}
-	};
-
-	const updateMemberHandler = async (updateData: MemberUpdate) => {
+	const updateMemberHandler = async (input: MemberUpdate) => {
 		try {
-			await updateMemberByAdmin({
-				variables: {
-					input: updateData,
-				},
-			});
-			menuIconCloseHandler();
-			getAllMembersRefetch({ input: membersInquiry });
+			await updateMemberByAdmin({ variables: { input } });
+			// Refreshes the list and every count on the page
+			await client.refetchQueries({ include: [GET_ALL_MEMBERS_BY_ADMIN] });
 		} catch (err: any) {
 			sweetErrorHandling(err).then();
 		}
 	};
 
-	const textHandler = useCallback((value: string) => {
-		try {
-			setSearchText(value);
-		} catch (err: any) {
-			console.log('textHandler: ', err.message);
-		}
-	}, []);
-
-	const searchTextHandler = () => {
-		try {
-			setMembersInquiry({
-				...membersInquiry,
-				search: {
-					...membersInquiry.search,
-					text: searchText,
-				},
-			});
-		} catch (err: any) {
-			console.log('searchTextHandler: ', err.message);
-		}
-	};
-
-	const searchTypeHandler = async (newValue: string) => {
-		try {
-			setSearchType(newValue);
-
-			if (newValue !== 'ALL') {
-				setMembersInquiry({
-					...membersInquiry,
-					page: 1,
-					sort: 'createdAt',
-					search: {
-						...membersInquiry.search,
-						memberType: newValue as MemberType,
-					},
-				});
-			} else {
-				delete membersInquiry?.search?.memberType;
-				setMembersInquiry({ ...membersInquiry });
-			}
-		} catch (err: any) {
-			console.log('searchTypeHandler: ', err.message);
-		}
-	};
-
 	return (
-		<Box component={'div'} className={'content'}>
-			<Typography variant={'h2'} className={'tit'} sx={{ mb: '24px' }}>
-				Member List
-			</Typography>
-			<Box component={'div'} className={'table-wrap'}>
-				<Box component={'div'} sx={{ width: '100%', typography: 'body1' }}>
-					<TabContext value={value}>
-						<Box component={'div'}>
-							<List className={'tab-menu'}>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'ALL')}
-									value="ALL"
-									className={value === 'ALL' ? 'li on' : 'li'}
-								>
-									All
-								</ListItem>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'ACTIVE')}
-									value="ACTIVE"
-									className={value === 'ACTIVE' ? 'li on' : 'li'}
-								>
-									Active
-								</ListItem>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'BLOCK')}
-									value="BLOCK"
-									className={value === 'BLOCK' ? 'li on' : 'li'}
-								>
-									Blocked
-								</ListItem>
-								<ListItem
-									onClick={(e: any) => tabChangeHandler(e, 'DELETE')}
-									value="DELETE"
-									className={value === 'DELETE' ? 'li on' : 'li'}
-								>
-									Deleted
-								</ListItem>
-							</List>
-							<Divider />
-							<Stack className={'search-area'} sx={{ m: '24px' }}>
-								<OutlinedInput
-									value={searchText}
-									onChange={(e: any) => textHandler(e.target.value)}
-									sx={{ width: '100%' }}
-									className={'search'}
-									placeholder="Search user name"
-									onKeyDown={(event) => {
-										if (event.key == 'Enter') searchTextHandler();
-									}}
-									endAdornment={
-										<>
-											{searchText && (
-												<CancelRoundedIcon
-													style={{ cursor: 'pointer' }}
-													onClick={async () => {
-														setSearchText('');
-														setMembersInquiry({
-															...membersInquiry,
-															search: {
-																...membersInquiry.search,
-																text: '',
-															},
-														});
-														getAllMembersRefetch({ input: membersInquiry });
-													}}
-												/>
-											)}
-											<InputAdornment position="end" onClick={() => searchTextHandler()}>
-												<img src="/img/icons/search_icon.png" alt={'searchIcon'} />
-											</InputAdornment>
-										</>
-									}
-								/>
-								<Select sx={{ width: '160px', ml: '20px' }} value={searchType}>
-									<MenuItem value={'ALL'} onClick={() => searchTypeHandler('ALL')}>
-										All
-									</MenuItem>
-									<MenuItem value={'USER'} onClick={() => searchTypeHandler('USER')}>
-										User
-									</MenuItem>
-									<MenuItem value={'AGENT'} onClick={() => searchTypeHandler('AGENT')}>
-										Store
-									</MenuItem>
-									<MenuItem value={'ADMIN'} onClick={() => searchTypeHandler('ADMIN')}>
-										Admin
-									</MenuItem>
-								</Select>
-							</Stack>
-							<Divider />
-						</Box>
-						<MemberPanelList
-							members={members}
-							anchorEl={anchorEl}
-							menuIconClickHandler={menuIconClickHandler}
-							menuIconCloseHandler={menuIconCloseHandler}
-							updateMemberHandler={updateMemberHandler}
-						/>
+		<>
+			<AdminPageHeader
+				title={'Member List'}
+				tag={`${totals.all} members`}
+				desc={'Customers, stores and admins on Navano. Change a member type or status from its pill in the table.'}
+			/>
 
-						<TablePagination
-							rowsPerPageOptions={[10, 20, 40, 60]}
-							component="div"
-							count={membersTotal}
-							rowsPerPage={membersInquiry?.limit}
-							page={membersInquiry?.page - 1}
-							onPageChange={changePageHandler}
-							onRowsPerPageChange={changeRowsPerPageHandler}
-						/>
-					</TabContext>
-				</Box>
-			</Box>
-		</Box>
+			<AdminStats
+				items={[
+					{ label: 'Total members', value: totals.all, note: 'Every account on Navano', icon: <GroupOutlinedIcon /> },
+					{ label: 'Stores', value: totals.stores, note: 'Florists, bakers and chocolatiers', icon: <StorefrontOutlinedIcon />, tone: 'info' },
+					{ label: 'Active', value: totals.active, note: 'Can sign in and use the site', icon: <TaskAltOutlinedIcon />, tone: 'success' },
+					{ label: 'Blocked', value: totals.block, note: 'Signed out of every page', icon: <BlockOutlinedIcon />, tone: 'danger' },
+				]}
+			/>
+
+			<AdminTabs
+				value={inquiry.search.memberStatus ?? 'ALL'}
+				onChange={(value) => setSearch({ memberStatus: value === 'ALL' ? undefined : (value as MemberStatus) })}
+				tabs={[
+					{ value: 'ALL', label: 'All', count: totals.all },
+					{ value: MemberStatus.ACTIVE, label: 'Active', count: totals.active },
+					{ value: MemberStatus.BLOCK, label: 'Blocked', count: totals.block },
+					{ value: MemberStatus.DELETE, label: 'Deleted', count: totals.delete },
+				]}
+			/>
+
+			<div className={'admin-filters'}>
+				<AdminSelect
+					label={'Member type'}
+					value={inquiry.search.memberType ?? 'ALL'}
+					options={TYPE_OPTIONS}
+					onChange={(value) => setSearch({ memberType: value === 'ALL' ? undefined : (value as MemberType) })}
+				/>
+				<AdminSearch
+					value={searchText}
+					placeholder={'Search by nickname'}
+					onChange={setSearchText}
+					onSubmit={() => setSearch({ text: searchText.trim() || undefined })}
+					onClear={() => {
+						setSearchText('');
+						setSearch({ text: undefined });
+					}}
+				/>
+			</div>
+
+			<div className={'admin-table-card'}>
+				<MemberPanelList members={members} updateMemberHandler={updateMemberHandler} />
+				<AdminPager
+					total={total}
+					page={inquiry.page}
+					limit={inquiry.limit}
+					onPage={(page) => setInquiry({ ...inquiry, page })}
+					onLimit={(limit) => setInquiry({ ...inquiry, page: 1, limit })}
+				/>
+			</div>
+		</>
 	);
-};
-
-AdminUsers.defaultProps = {
-	initialInquiry: {
-		page: 1,
-		limit: 10,
-		sort: 'createdAt',
-		search: {},
-	},
 };
 
 export default withAdminLayout(AdminUsers);
