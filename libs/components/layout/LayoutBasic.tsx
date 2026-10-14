@@ -47,9 +47,9 @@ const withLayoutBasic = (Component: any) => {
 					bgImage = '/img/banner/header2.svg';
 					break;
 				case '/mypage':
-					title = 'my page';
-					desc = 'Home / For Rent';
-					bgImage = '/img/banner/mypage.jpg';
+					title = 'My Page';
+					desc = 'Your profile, products, favorites and articles in one place';
+					bgImage = '/img/banner/stores-hero.jpg';
 					break;
 				case '/community':
 					title = 'Community';
@@ -58,8 +58,8 @@ const withLayoutBasic = (Component: any) => {
 					break;
 				case '/community/detail':
 					title = 'Community Detail';
-					desc = 'Home / For Rent';
-					bgImage = '/img/banner/header2.svg';
+					desc = 'Stories from florists, bakers and chocolatiers';
+					bgImage = '/img/banner/stores-hero.jpg';
 					break;
 				case '/cs':
 					title = 'CS';
@@ -68,8 +68,8 @@ const withLayoutBasic = (Component: any) => {
 					break;
 				case '/account/join':
 					title = 'Login/Signup';
-					desc = 'Authentication Process';
-					bgImage = '/img/banner/header2.svg';
+					desc = 'Sign in or create an account to shop and sell on Navano';
+					bgImage = '/img/banner/stores-hero.jpg';
 					setAuthHeader(true);
 					break;
 				case '/member':
@@ -127,19 +127,17 @@ const withLayoutBasic = (Component: any) => {
 						</Stack>
 
 						{!PAGES_WITHOUT_BANNER.includes(router.pathname) && (
-							<Stack
-								className={`header-basic ${authHeader && 'auth'}`}
-								style={{
-									backgroundImage: `url(${memoizedValues.bgImage})`,
-									backgroundSize: 'cover',
-									boxShadow: 'inset 10px 40px 150px 40px rgb(24 22 36)',
-								}}
-							>
-								<Stack className={'container'}>
-									<strong>{t(memoizedValues.title)}</strong>
-									<span>{t(memoizedValues.desc)}</span>
-								</Stack>
-							</Stack>
+							<section className={`header-basic ${authHeader ? 'auth' : ''}`}>
+								<div className={'header-basic-media'} aria-hidden>
+									<img src={memoizedValues.bgImage} alt="" />
+								</div>
+								<div className={'container'}>
+									<div className={'header-basic-copy'}>
+										<h1>{t(memoizedValues.title)}</h1>
+										<p>{t(memoizedValues.desc)}</p>
+									</div>
+								</div>
+							</section>
 						)}
 
 						<Stack id={'main'}>
