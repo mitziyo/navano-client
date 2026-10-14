@@ -175,11 +175,11 @@ const ProductList: NextPage = () => {
 
 	return (
 		<div id="product-list-page">
-			<div className="container">
-				<header className={'catalog-header'}>
-					<div className={'catalog-hero-media'} aria-hidden>
-						<img src={'/img/banner/product-hero.jpg'} alt="" />
-					</div>
+			<header className={'catalog-header'}>
+				<div className={'catalog-hero-media'} aria-hidden>
+					<img src={'/img/banner/product-hero.jpg'} alt="" />
+				</div>
+				<div className={'container'}>
 					<div className={'catalog-intro'}>
 						<nav className={'breadcrumb'} aria-label={'breadcrumb'}>
 							<Link href={'/'}>{t('Home')}</Link>
@@ -209,8 +209,10 @@ const ProductList: NextPage = () => {
 							</li>
 						</ul>
 					</div>
-				</header>
+				</div>
+			</header>
 
+			<div className="container">
 				<div className={'catalog-toolbar'}>
 					<div className={'active-filters'}>
 						<span className={'toolbar-label'}>

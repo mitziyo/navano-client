@@ -158,11 +158,11 @@ const AgentList: NextPage = () => {
 
 	return (
 		<div id="store-list-page">
-			<div className="container">
-				<section className={'store-hero'}>
-					<div className={'store-hero-media'} aria-hidden>
-						<img src={'/img/banner/stores-hero.jpg'} alt="" />
-					</div>
+			<section className={'store-hero'}>
+				<div className={'store-hero-media'} aria-hidden>
+					<img src={'/img/banner/stores-hero.jpg'} alt="" />
+				</div>
+				<div className={'container'}>
 					<div className={'store-hero-copy'}>
 						<nav className={'breadcrumb'} aria-label={'breadcrumb'}>
 							<Link href={'/'}>{t('Home')}</Link>
@@ -202,8 +202,10 @@ const AgentList: NextPage = () => {
 							</div>
 						</dl>
 					</div>
-				</section>
+				</div>
+			</section>
 
+			<div className="container">
 				{/* Product counts per category from the live facets */}
 				<dl className={'network-strip'} aria-label={t('Store network')}>
 					{Object.values(ProductType).map((value) => (

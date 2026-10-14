@@ -15,7 +15,7 @@
 #pc-wrap {
 	#store-list-page {
 		width: 100%;
-		padding: 112px 0 96px;
+		padding: 80px 0 96px;
 		background-color: var(--nv-bg);
 		font-family: $nv-font-body;
 		color: var(--nv-ink);
@@ -26,20 +26,25 @@
 		}
 
 		/* ---------- Hero ---------- */
+		/* Full-bleed band under the navbar (same as /product); the copy stays in the page container */
 		.store-hero {
 			position: relative;
-			display: grid;
-			grid-template-columns: minmax(0, 1fr);
+			display: flex;
 			align-items: center;
-			gap: 40px;
-			padding: 36px 40px;
+			width: 100%;
+			min-height: 420px;
+			margin-bottom: 32px;
+			padding: 40px 0;
 			overflow: hidden;
-			border-radius: 20px;
-			border: 1px solid var(--nv-line-soft);
+			border-bottom: 1px solid var(--nv-line-soft);
 			background: radial-gradient(ellipse at 85% 0%, var(--nv-hero-glow), transparent 60%), var(--nv-surface);
-			box-shadow: $nv-glow;
+			> .container {
+				position: relative;
+				z-index: 1;
+				flex-direction: column;
+			}
 		}
-		/* Lit flower shop at dusk on the right, fading into the card behind the copy */
+		/* Lit flower shop at dusk on the right, fading into the band behind the copy */
 		.store-hero-media {
 			position: absolute;
 			inset: 0 0 0 auto;
