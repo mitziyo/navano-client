@@ -1,5 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
-import { Box, Button, FormControl, MenuItem, Stack, Typography, Select, TextField } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useTranslation } from 'next-i18next';
 import { BoardArticleCategory } from '../../enums/board-article.enum';
 import { Editor } from '@toast-ui/react-editor';
 import { getJwtToken } from '../../auth';
@@ -17,6 +18,7 @@ const TuiEditor = () => {
 	const editorRef = useRef<Editor>(null),
 		token = getJwtToken(),
 		router = useRouter();
+	const { t } = useTranslation('common');
 	const [articleCategory, setArticleCategory] = useState<BoardArticleCategory>(BoardArticleCategory.FREE);
 
 	/** APOLLO REQUESTS **/
@@ -117,77 +119,65 @@ const TuiEditor = () => {
 	};
 
 	return (
-		<Stack>
-			<Stack direction="row" style={{ margin: '40px' }} justifyContent="space-evenly">
-				<Box component={'div'} className={'form_row'} style={{ width: '300px' }}>
-					<Typography style={{ color: '#7f838d', margin: '10px' }} variant="h3">
-						Category
-					</Typography>
-					<FormControl sx={{ width: '100%', background: 'white' }}>
-						<Select
-							value={articleCategory}
-							onChange={changeCategoryHandler}
-							displayEmpty
-							inputProps={{ 'aria-label': 'Without label' }}
-						>
-							<MenuItem value={BoardArticleCategory.FREE}>
-								<span>Free</span>
-							</MenuItem>
-							<MenuItem value={BoardArticleCategory.HUMOR}>Humor</MenuItem>
-							<MenuItem value={BoardArticleCategory.NEWS}>News</MenuItem>
-							<MenuItem value={BoardArticleCategory.RECOMMEND}>Recommendation</MenuItem>
-						</Select>
-					</FormControl>
-				</Box>
-				<Box component={'div'} style={{ width: '300px', flexDirection: 'column' }}>
-					<Typography style={{ color: '#7f838d', margin: '10px' }} variant="h3">
-						Title
-					</Typography>
-					<TextField
-						onChange={articleTitleHandler}
-						id="filled-basic"
-						label="Type Title"
-						style={{ width: '300px', background: 'white' }}
-					/>
-				</Box>
-			</Stack>
+		<div className={'article-editor'}>
+			<div className={'form-grid'}>
+				<label className={'field'}>
+					<span className={'field-label'}>{t('Board')}</span>
+					<span className={'input-wrap select-wrap'}>
+						<select value={articleCategory} onChange={changeCategoryHandler}>
+							<option value={BoardArticleCategory.FREE}>{t('Free Board')}</option>
+							<option value={BoardArticleCategory.RECOMMEND}>{t('Recommendation')}</option>
+							<option value={BoardArticleCategory.NEWS}>{t('News')}</option>
+							<option value={BoardArticleCategory.HUMOR}>{t('Humor')}</option>
+						</select>
+						<ExpandMoreIcon className={'suffix-icon'} aria-hidden />
+					</span>
+				</label>
+				<label className={'field'}>
+					<span className={'field-label'}>
+						{t('Title')}
+						<span className={'field-hint'}>3–50</span>
+					</span>
+					<span className={'input-wrap'}>
+						<input type="text" maxLength={50} placeholder={t('Give your article a title')} onChange={articleTitleHandler} />
+					</span>
+				</label>
+			</div>
 
-			<Editor
-				initialValue={'Type here'}
-				placeholder={'Type here'}
-				previewStyle={'vertical'}
-				height={'640px'}
-				// @ts-ignore
-				initialEditType={'WYSIWYG'}
-				toolbarItems={[
-					['heading', 'bold', 'italic', 'strike'],
-					['image', 'table', 'link'],
-					['ul', 'ol', 'task'],
-				]}
-				ref={editorRef}
-				hooks={{
-					addImageBlobHook: async (image: any, callback: any) => {
-						const uploadedImageURL = await uploadImage(image);
-						callback(uploadedImageURL);
-						return false;
-					},
-				}}
-				events={{
-					load: function (param: any) {},
-				}}
-			/>
+			<div className={'editor-frame'}>
+				<Editor
+					initialValue={'Type here'}
+					placeholder={t('Write your story here')}
+					previewStyle={'vertical'}
+					height={'560px'}
+					// @ts-ignore
+					initialEditType={'WYSIWYG'}
+					toolbarItems={[
+						['heading', 'bold', 'italic', 'strike'],
+						['image', 'table', 'link'],
+						['ul', 'ol', 'task'],
+					]}
+					ref={editorRef}
+					hooks={{
+						addImageBlobHook: async (image: any, callback: any) => {
+							const uploadedImageURL = await uploadImage(image);
+							callback(uploadedImageURL);
+							return false;
+						},
+					}}
+					events={{
+						load: function (param: any) {},
+					}}
+				/>
+			</div>
 
-			<Stack direction="row" justifyContent="center">
-				<Button
-					variant="contained"
-					color="primary"
-					style={{ margin: '30px', width: '250px', height: '45px' }}
-					onClick={handleRegisterButton}
-				>
-					Register
-				</Button>
-			</Stack>
-		</Stack>
+			<div className={'save-bar'}>
+				<span>{t('The first image you add becomes the article cover')}</span>
+				<button type="button" className={'mp-btn mp-btn-primary'} onClick={handleRegisterButton}>
+					{t('Publish article')}
+				</button>
+			</div>
+		</div>
 	);
 };
 
