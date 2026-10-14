@@ -60,6 +60,14 @@
 										letter-spacing: 0.14em;
 										text-transform: uppercase;
 										color: $nv-primary;
+										align-self: flex-start;
+										text-underline-offset: 3px;
+										&:hover {
+											text-decoration: underline;
+										}
+										&:focus-visible {
+											@include nv-focus;
+										}
 									}
 								}
 							}

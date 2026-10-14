@@ -32,6 +32,13 @@ export const memberRoleLabel = (memberType?: string) => {
 	return 'Customer';
 };
 
+// Where the role label leads: the admin panel, the public store page or the public member page
+export const memberRoleHref = (memberType?: string, memberId?: string) => {
+	if (memberType === MemberType.ADMIN) return '/_admin';
+	if (memberType === MemberType.AGENT) return { pathname: '/agent/detail', query: { agentId: memberId } };
+	return { pathname: '/member', query: { memberId } };
+};
+
 interface MenuItem {
 	category: string;
 	label: string;
@@ -99,7 +106,9 @@ const MyMenu = () => {
 					</Box>
 					<Stack className={'menu-identity'}>
 						<Typography className={'menu-name'}>{user?.memberNick}</Typography>
-						<Typography className={'menu-role'}>{t(memberRoleLabel(user?.memberType))}</Typography>
+						<Link href={memberRoleHref(user?.memberType, user?._id)} className={'menu-role'}>
+							{t(memberRoleLabel(user?.memberType))}
+						</Link>
 					</Stack>
 				</Stack>
 
