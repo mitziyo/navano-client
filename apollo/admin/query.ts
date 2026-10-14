@@ -29,7 +29,6 @@ export const GET_ALL_MEMBERS_BY_ADMIN = gql`
 				deletedAt
 				createdAt
 				updatedAt
-				accessToken
 			}
 			metaCounter {
 				total
@@ -85,7 +84,6 @@ export const GET_ALL_PRODUCTS_BY_ADMIN = gql`
 					deletedAt
 					createdAt
 					updatedAt
-					accessToken
 				}
 			}
 			metaCounter {
@@ -135,7 +133,6 @@ export const GET_ALL_BOARD_ARTICLES_BY_ADMIN = gql`
 					deletedAt
 					createdAt
 					updatedAt
-					accessToken
 				}
 			}
 			metaCounter {
@@ -182,7 +179,6 @@ export const GET_COMMENTS = gql`
 					deletedAt
 					createdAt
 					updatedAt
-					accessToken
 				}
 			}
 			metaCounter {
