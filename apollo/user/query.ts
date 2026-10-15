@@ -4,6 +4,13 @@ import { gql } from '@apollo/client';
  *         MEMBER         *
  *************************/
 
+// AuthGuard-only ping: tells whether the stored token is still accepted by the server
+export const CHECK_AUTH = gql`
+	query CheckAuth {
+		checkAuth
+	}
+`;
+
 export const GET_AGENTS = gql`
 	query GetAgents($input: AgentsInquiry!) {
 		getAgents(input: $input) {
@@ -608,6 +615,89 @@ export const GET_MEMBER_FOLLOWINGS = gql`
 					followingId
 					followerId
 					myFollowing
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+/**************************
+ *           CS           *
+ *************************/
+
+export const GET_NOTICES = gql`
+	query GetNotices($input: NoticesInquiry!) {
+		getNotices(input: $input) {
+			list {
+				_id
+				noticeCategory
+				noticeStatus
+				noticeTopic
+				noticeTitle
+				noticeContent
+				noticeTeam
+				noticeLink
+				createdAt
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+export const GET_MY_INQUIRIES = gql`
+	query GetMyInquiries($input: InquiriesInquiry!) {
+		getMyInquiries(input: $input) {
+			list {
+				_id
+				inquiryType
+				inquiryStatus
+				inquiryTitle
+				inquiryContent
+				inquiryAnswer
+				answeredAt
+				createdAt
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+/**************************
+ *      NOTIFICATIONS     *
+ *************************/
+
+export const GET_UNREAD_NOTIFICATIONS = gql`
+	query GetUnreadNotifications {
+		getUnreadNotifications
+	}
+`;
+
+export const GET_NOTIFICATIONS = gql`
+	query GetNotifications($input: NotificationsInquiry!) {
+		getNotifications(input: $input) {
+			list {
+				_id
+				notificationType
+				notificationStatus
+				notificationGroup
+				notificationTitle
+				notificationDesc
+				authorId
+				productId
+				articleId
+				createdAt
+				authorData {
+					_id
+					memberNick
+					memberImage
+					memberType
 				}
 			}
 			metaCounter {

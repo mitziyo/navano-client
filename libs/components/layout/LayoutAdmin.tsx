@@ -8,10 +8,11 @@ import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
 import AdminMenuList from '../admin/AdminMenuList';
 import NavanoLogo from '../common/NavanoLogo';
-import { getJwtToken, logOut, updateUserInfo } from '../../auth';
-import { userVar } from '../../../apollo/store';
+import { logOut } from '../../auth';
+import { sessionReadyVar, userVar } from '../../../apollo/store';
 import { REACT_APP_API_URL } from '../../config';
 import { MemberType } from '../../enums/member.enum';
 import { sweetConfirmAlert } from '../../sweetAlert';
@@ -19,6 +20,7 @@ import useThemeMode from '../../hooks/useThemeMode';
 
 // Breadcrumb of each admin route: section / page
 const CRUMBS: Record<string, [string, string]> = {
+	'/_admin': ['Dashboard', 'Overview'],
 	'/_admin/users': ['Users', 'Member List'],
 	'/_admin/products': ['Products', 'Product List'],
 	'/_admin/community': ['Community', 'Article List'],
@@ -31,21 +33,21 @@ const withAdminLayout = (Component: ComponentType) => {
 	return (props: object) => {
 		const router = useRouter();
 		const user = useReactiveVar(userVar);
-		const [loading, setLoading] = useState(true);
+		const sessionReady = useReactiveVar(sessionReadyVar);
 		const { mode, toggleMode } = useThemeMode();
+		// Below 1024px the side rail slides in from the left
+		const [asideOpen, setAsideOpen] = useState(false);
 
 		/** LIFECYCLES **/
 		useEffect(() => {
-			const jwt = getJwtToken();
-			if (jwt) updateUserInfo(jwt);
-			setLoading(false);
-		}, []);
-
-		useEffect(() => {
-			if (!loading && user.memberType !== MemberType.ADMIN) {
+			if (sessionReady && user.memberType !== MemberType.ADMIN) {
 				router.push('/').then();
 			}
-		}, [loading, user, router]);
+		}, [sessionReady, user, router]);
+
+		useEffect(() => {
+			setAsideOpen(false);
+		}, [router.asPath]);
 
 		/** HANDLERS **/
 		const logoutHandler = async () => {
@@ -65,7 +67,7 @@ const withAdminLayout = (Component: ComponentType) => {
 					<title>{page ? `${page} · Navano Admin` : 'Navano Admin'}</title>
 				</Head>
 				<main id="admin-shell">
-					<aside className={'admin-aside'}>
+					<aside className={`admin-aside ${asideOpen ? 'is-open' : ''}`} id={'admin-aside'}>
 						<Link href={'/'} className={'aside-brand'}>
 							<NavanoLogo variant={'mark'} width={40} height={40} />
 							<span>
@@ -100,8 +102,20 @@ const withAdminLayout = (Component: ComponentType) => {
 						</div>
 					</aside>
 
+					{asideOpen && <div className={'aside-backdrop'} aria-hidden onClick={() => setAsideOpen(false)} />}
+
 					<div className={'admin-main'}>
 						<header className={'admin-topbar'}>
+							<button
+								type="button"
+								className={'topbar-icon topbar-menu'}
+								aria-label={'Open the admin menu'}
+								aria-expanded={asideOpen}
+								aria-controls={'admin-aside'}
+								onClick={() => setAsideOpen(true)}
+							>
+								<MenuRoundedIcon />
+							</button>
 							<nav className={'topbar-crumbs'} aria-label={'breadcrumb'}>
 								<span>Admin console</span>
 								<span aria-hidden>/</span>

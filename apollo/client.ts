@@ -4,8 +4,7 @@ import createUploadLink from 'apollo-upload-client/public/createUploadLink.js';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
-import { getJwtToken } from '../libs/auth';
-import { TokenRefreshLink } from 'apollo-link-token-refresh';
+import { expireSession, getJwtToken } from '../libs/auth';
 import { sweetErrorAlert } from '../libs/sweetAlert';
 import { socketVar } from './store';
 let apolloClient: ApolloClient<NormalizedCacheObject>;
@@ -18,16 +17,8 @@ function getHeaders() {
 	return headers;
 }
 
-const tokenRefreshLink = new TokenRefreshLink({
-	accessTokenField: 'accessToken',
-	isTokenValidOrUndefined: () => {
-		return true;
-	}, // @ts-ignore
-	fetchAccessToken: () => {
-		// execute refresh token
-		return null;
-	},
-});
+// One "session expired" alert even when several queries fail with the same 401
+let sessionExpiredShown = false;
 
 // Custom Websocket client
 class LoggingWebSocket {
@@ -68,7 +59,6 @@ function createIsomorphicLink() {
 					...getHeaders(),
 				},
 			}));
-			console.warn('requesting.. ', operation);
 			return forward(operation);
 		});
 
@@ -90,11 +80,21 @@ function createIsomorphicLink() {
 			webSocketImpl: LoggingWebSocket,
 		});
 
-		const errorLink = onError(({ graphQLErrors, networkError, response }) => {
+		const errorLink = onError(({ graphQLErrors, networkError, response, operation }) => {
+			if (graphQLErrors?.some(({ extensions }) => extensions?.code === 'UNAUTHENTICATED') && getJwtToken()) {
+				// The stored token was rejected (expired or signed with an old secret): log out quietly, tell the user once
+				expireSession();
+				if (!sessionExpiredShown) {
+					sessionExpiredShown = true;
+					sweetErrorAlert('Your session has expired, please log in again').then(() => (sessionExpiredShown = false));
+				}
+				return;
+			}
 			if (graphQLErrors) {
 				graphQLErrors.map(({ message, locations, path, extensions }) => {
 					console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`);
-					if (!message.includes('input')) sweetErrorAlert(message);
+					// Navano AI shows its errors inside the chat panel
+					if (!message.includes('input') && operation.operationName !== 'AskAssistant') sweetErrorAlert(message);
 				});
 			}
 			if (networkError) console.log(`[Network error]: ${networkError}`);
@@ -112,7 +112,7 @@ function createIsomorphicLink() {
 			authLink.concat(link),
 		);
 
-		return from([errorLink, tokenRefreshLink, splitLink]);
+		return from([errorLink, splitLink]);
 	}
 }
 

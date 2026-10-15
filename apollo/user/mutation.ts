@@ -323,3 +323,63 @@ export const UNSUBSCRIBE = gql`
 		}
 	}
 `;
+
+/**************************
+ *       NAVANO AI       *
+ *************************/
+
+export const ASK_ASSISTANT = gql`
+	mutation AskAssistant($input: AssistantInput!) {
+		askAssistant(input: $input) {
+			text
+			products {
+				_id
+				productType
+				productStatus
+				productLocation
+				productOccasion
+				productTitle
+				productPrice
+				productImages
+			}
+		}
+	}
+`;
+
+/**************************
+ *           CS           *
+ *************************/
+
+export const CREATE_INQUIRY = gql`
+	mutation CreateInquiry($input: InquiryInput!) {
+		createInquiry(input: $input) {
+			_id
+			inquiryStatus
+		}
+	}
+`;
+
+export const REMOVE_INQUIRY = gql`
+	mutation RemoveInquiry($input: String!) {
+		removeInquiry(inquiryId: $input) {
+			_id
+			inquiryStatus
+		}
+	}
+`;
+
+/**************************
+ *      NOTIFICATIONS     *
+ *************************/
+
+export const READ_NOTIFICATIONS = gql`
+	mutation ReadNotifications($input: ReadNotificationsInput!) {
+		readNotifications(input: $input)
+	}
+`;
+
+export const READ_ALL_NOTIFICATIONS = gql`
+	mutation ReadAllNotifications {
+		readAllNotifications
+	}
+`;

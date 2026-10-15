@@ -3423,11 +3423,6 @@ anymatch@^3.0.0, anymatch@^3.0.3, anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apollo-link-token-refresh@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/apollo-link-token-refresh/-/apollo-link-token-refresh-0.4.0.tgz#5ba6c3f46509e64c95f20fb719b8abeddc09fad6"
-  integrity sha512-5P5nH//asgoz01r6tUYiBbHIuVwEEsBmA9WJ8LEiNtZcOq8AXdfR8aV4Pw/B86P3lRi1ykd8xyZLCHpLro9v+Q==
-
 apollo-upload-client@^17.0.0:
   version "17.0.0"
   resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-17.0.0.tgz#d9baaff8d14e54510de9f2855b487e75ca63b392"

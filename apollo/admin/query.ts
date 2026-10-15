@@ -187,3 +187,99 @@ export const GET_COMMENTS = gql`
 		}
 	}
 `;
+
+/**************************
+ *           CS           *
+ *************************/
+
+export const GET_ALL_NOTICES_BY_ADMIN = gql`
+	query GetAllNoticesByAdmin($input: AllNoticesInquiry!) {
+		getAllNoticesByAdmin(input: $input) {
+			list {
+				_id
+				noticeCategory
+				noticeStatus
+				noticeTopic
+				noticeTitle
+				noticeContent
+				noticeTeam
+				noticeLink
+				createdAt
+				updatedAt
+				memberData {
+					_id
+					memberNick
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+export const GET_ALL_INQUIRIES_BY_ADMIN = gql`
+	query GetAllInquiriesByAdmin($input: AllInquiriesInquiry!) {
+		getAllInquiriesByAdmin(input: $input) {
+			list {
+				_id
+				inquiryType
+				inquiryStatus
+				inquiryTitle
+				inquiryContent
+				inquiryAnswer
+				answeredAt
+				createdAt
+				memberData {
+					_id
+					memberNick
+					memberType
+					memberImage
+					memberPhone
+				}
+			}
+			metaCounter {
+				total
+			}
+		}
+	}
+`;
+
+/**************************
+ *        DASHBOARD       *
+ *************************/
+
+export const GET_ADMIN_STATS = gql`
+	query GetAdminStats {
+		getAdminStats {
+			members {
+				...CollectionStatsFields
+			}
+			products {
+				...CollectionStatsFields
+			}
+			articles {
+				...CollectionStatsFields
+			}
+			inquiries {
+				...CollectionStatsFields
+			}
+			notices {
+				...CollectionStatsFields
+			}
+		}
+	}
+
+	fragment CollectionStatsFields on CollectionStats {
+		total
+		newThisWeek
+		byStatus {
+			value
+			count
+		}
+		byType {
+			value
+			count
+		}
+	}
+`;

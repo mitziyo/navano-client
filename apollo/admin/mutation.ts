@@ -145,3 +145,43 @@ export const REMOVE_COMMENT_BY_ADMIN = gql`
 		}
 	}
 `;
+
+/**************************
+ *           CS           *
+ *************************/
+
+export const CREATE_NOTICE = gql`
+	mutation CreateNotice($input: NoticeInput!) {
+		createNotice(input: $input) {
+			_id
+		}
+	}
+`;
+
+export const UPDATE_NOTICE = gql`
+	mutation UpdateNotice($input: NoticeUpdate!) {
+		updateNotice(input: $input) {
+			_id
+			noticeStatus
+		}
+	}
+`;
+
+export const REMOVE_NOTICE = gql`
+	mutation RemoveNotice($input: String!) {
+		removeNotice(noticeId: $input) {
+			_id
+		}
+	}
+`;
+
+export const ANSWER_INQUIRY_BY_ADMIN = gql`
+	mutation AnswerInquiryByAdmin($input: InquiryAnswerInput!) {
+		answerInquiryByAdmin(input: $input) {
+			_id
+			inquiryStatus
+			inquiryAnswer
+			answeredAt
+		}
+	}
+`;

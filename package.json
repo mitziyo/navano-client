@@ -31,7 +31,6 @@
 		"@toast-ui/react-editor": "^3.1.7",
 		"@types/three": "0.150.0",
 		"animate.css": "^4.1.1",
-		"apollo-link-token-refresh": "^0.4.0",
 		"apollo-upload-client": "^17.0.0",
 		"assert": "^2.0.0",
 		"axios": "^0.27.2",

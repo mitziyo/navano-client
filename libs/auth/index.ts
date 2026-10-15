@@ -1,17 +1,35 @@
 import decodeJWT from 'jwt-decode';
 import { initializeApollo } from '../../apollo/client';
-import { userVar } from '../../apollo/store';
+import { sessionReadyVar, userVar } from '../../apollo/store';
 import { CustomJwtPayload } from '../types/customJwtPayload';
 import { LOGIN, SIGN_UP } from '../../apollo/user/mutation';
+import { CHECK_AUTH } from '../../apollo/user/query';
 
-export function getJwtToken(): any {
-	if (typeof window !== 'undefined') {
-		return localStorage.getItem('accessToken') ?? '';
+const TOKEN_KEY = 'accessToken';
+
+// A token that cannot be decoded counts as expired
+export const isTokenExpired = (token: string): boolean => {
+	try {
+		const { exp } = decodeJWT<{ exp?: number }>(token);
+		return typeof exp === 'number' && exp * 1000 <= Date.now();
+	} catch {
+		return true;
 	}
+};
+
+// Returns '' (and drops the stored token) when the token is missing or expired
+export function getJwtToken(): any {
+	if (typeof window === 'undefined') return;
+	const token = localStorage.getItem(TOKEN_KEY) ?? '';
+	if (token && isTokenExpired(token)) {
+		localStorage.removeItem(TOKEN_KEY);
+		return '';
+	}
+	return token;
 }
 
 export function setJwtToken(token: string) {
-	localStorage.setItem('accessToken', token);
+	localStorage.setItem(TOKEN_KEY, token);
 }
 
 // Errors are not caught here: the Apollo error link already shows the server message once, and the caller decides the rest
@@ -43,7 +61,38 @@ const saveToken = (jwtToken?: string) => {
 
 export const updateStorage = ({ jwtToken }: { jwtToken: any }) => {
 	setJwtToken(jwtToken);
-	window.localStorage.setItem('login', Date.now().toString());
+};
+
+// Single place that turns the stored token into userVar; runs once from pages/_app.tsx
+export const restoreSession = () => {
+	const jwt = getJwtToken();
+	if (jwt) {
+		updateUserInfo(jwt);
+		verifySession();
+	} else deleteUserInfo();
+	sessionReadyVar(true);
+};
+
+// Public pages accept a bad token as a guest, so ask the server once; a 401 is handled by the Apollo error link (expireSession)
+const verifySession = () => {
+	initializeApollo()
+		.query({ query: CHECK_AUTH, fetchPolicy: 'network-only' })
+		.catch(() => undefined);
+};
+
+// Login / logout in another tab changes localStorage; mirror it here
+export const watchSession = () => {
+	const onStorage = (e: StorageEvent) => {
+		if (e.key === TOKEN_KEY || e.key === null) restoreSession();
+	};
+	window.addEventListener('storage', onStorage);
+	return () => window.removeEventListener('storage', onStorage);
+};
+
+// The server rejected the token (expired or signed with an old secret): drop it without a reload
+export const expireSession = () => {
+	deleteStorage();
+	deleteUserInfo();
 };
 
 export const updateUserInfo = (jwtToken: any) => {
@@ -82,8 +131,7 @@ export const logOut = () => {
 };
 
 const deleteStorage = () => {
-	localStorage.removeItem('accessToken');
-	window.localStorage.setItem('logout', Date.now().toString());
+	localStorage.removeItem(TOKEN_KEY);
 };
 
 const deleteUserInfo = () => {
