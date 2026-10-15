@@ -20,6 +20,7 @@ $bp-small: 480px;
 
 		/* Sidebar + content layouts become one column */
 		#product-list-page .catalog-layout,
+		#community-list-page .community-layout,
 		#community-detail-page .community-layout,
 		#product-detail-page .pd-layout,
 		#product-detail-page .pd-loading,
@@ -41,6 +42,7 @@ $bp-small: 480px;
 			width: 100%;
 		}
 		#product-list-page .catalog-layout > aside,
+		#community-list-page .community-layout > aside,
 		#community-detail-page .community-layout > aside {
 			position: static;
 			max-height: none;
@@ -74,6 +76,15 @@ $bp-small: 480px;
 		}
 		#product-detail-page .pd-tiles {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		/* CS notice table: the team column goes first, the date stays visible */
+		#cs-page .notice-table .col-team {
+			display: none;
+		}
+		/* Long linked titles wrap (links are nowrap globally) */
+		#cs-page .notice-table a {
+			white-space: normal;
 		}
 
 		/* Toolbars wrap instead of pushing the page wider */
@@ -323,6 +334,87 @@ $bp-small: 480px;
 		#about-page .about-stats,
 		#about-page .store-row {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+}
+
+/* ================= PHONE: toolbars and action rows wrap instead of widening the page ================= */
+@media (max-width: $bp-phone) {
+	#pc-wrap {
+		#store-list-page {
+			.toolbar-row {
+				flex-wrap: wrap;
+			}
+			.toolbar-search {
+				flex-basis: 100%;
+			}
+			.join-banner {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+			.join-actions {
+				flex-wrap: wrap;
+			}
+		}
+		#community-list-page,
+		#community-detail-page {
+			.board-header {
+				flex-wrap: wrap;
+			}
+			.board-toolbar {
+				flex-direction: column;
+				align-items: stretch;
+			}
+			.toolbar-search,
+			.toolbar-select {
+				width: 100%;
+				min-width: 0;
+			}
+			.article-grid {
+				grid-template-columns: minmax(0, 1fr);
+			}
+			.share-banner {
+				flex-direction: column;
+				align-items: flex-start;
+				padding: 24px 20px;
+			}
+			.share-actions {
+				flex-wrap: wrap;
+			}
+		}
+		#about-page {
+			.about-help {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 16px;
+			}
+			.help-actions {
+				flex-wrap: wrap;
+			}
+		}
+		#my-page {
+			.profile-header,
+			.profile-header .header-actions,
+			.mp-tab .profile-header .header-actions,
+			#my-profile-page .save-bar,
+			#my-profile-page .save-bar .save-actions {
+				flex-wrap: wrap;
+			}
+		}
+	}
+
+	#admin-shell {
+		.admin-page-head {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 12px;
+		}
+		.head-actions {
+			flex-wrap: wrap;
+		}
+		/* Tabs scroll sideways inside the card instead of widening the page */
+		.admin-tabs {
+			overflow-x: auto;
 		}
 	}
 }
