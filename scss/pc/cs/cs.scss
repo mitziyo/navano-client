@@ -817,3 +817,217 @@
 		}
 	}
 }
+
+/* ---------- 1:1 INQUIRY ---------- */
+#pc-wrap #cs-page {
+	.inquiry-locked {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 10px;
+		padding: 48px 24px 56px;
+		text-align: center;
+		strong {
+			font-family: $nv-font-head;
+			font-size: 18px;
+			color: var(--nv-ink);
+		}
+		p {
+			margin: 0 0 6px;
+			font-size: 14px;
+			color: var(--nv-text);
+		}
+		.locked-icon {
+			display: grid;
+			place-items: center;
+			width: 52px;
+			height: 52px;
+			border-radius: 50%;
+			background: var(--nv-primary-light);
+			color: var(--nv-primary);
+		}
+	}
+	.inquiry-grid {
+		display: grid;
+		grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+		gap: 24px;
+		padding: 20px 24px 24px;
+	}
+	.inquiry-form {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		label {
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+			> span {
+				display: flex;
+				justify-content: space-between;
+				font-family: $nv-font-label;
+				font-size: 12px;
+				font-weight: 700;
+				color: var(--nv-label);
+				small {
+					font-weight: 400;
+					color: var(--nv-subtle);
+				}
+			}
+		}
+		input,
+		select,
+		textarea {
+			width: 100%;
+			padding: 11px 14px;
+			border: 1px solid var(--nv-line);
+			border-radius: 12px;
+			background: var(--nv-surface);
+			color: var(--nv-ink);
+			font-family: $nv-font-body;
+			font-size: 14px;
+			outline: none;
+			&:focus {
+				border-color: var(--nv-primary);
+			}
+			&::placeholder {
+				color: var(--nv-subtle);
+			}
+		}
+		textarea {
+			resize: vertical;
+			line-height: 1.5;
+		}
+		.form-hint {
+			margin: -4px 0 0;
+			font-size: 12px;
+			color: var(--nv-subtle);
+		}
+		button:disabled {
+			opacity: 0.55;
+			cursor: default;
+		}
+	}
+	.inquiry-list {
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		min-width: 0;
+		h4 {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin: 0;
+			font-family: $nv-font-head;
+			font-size: 16px;
+			color: var(--nv-ink);
+			span {
+				padding: 1px 8px;
+				border-radius: 999px;
+				background: var(--nv-primary-light);
+				font-family: $nv-font-label;
+				font-size: 12px;
+				color: var(--nv-primary);
+			}
+		}
+	}
+	.inquiry-item {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		padding: 14px 16px;
+		border: 1px solid var(--nv-line-soft);
+		border-radius: 14px;
+		background: var(--nv-surface-tint);
+		strong {
+			font-family: $nv-font-head;
+			font-size: 15px;
+			color: var(--nv-ink);
+		}
+		> p {
+			margin: 0;
+			font-size: 13px;
+			line-height: 1.55;
+			color: var(--nv-text);
+			white-space: pre-wrap;
+			overflow-wrap: anywhere;
+		}
+	}
+	.inquiry-meta {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 12px;
+		color: var(--nv-muted);
+		time {
+			margin-left: auto;
+		}
+	}
+	.inquiry-status {
+		padding: 2px 8px;
+		border-radius: 999px;
+		font-family: $nv-font-label;
+		font-size: 11px;
+		font-weight: 700;
+		&.waiting {
+			background: rgba(245, 158, 11, 0.12);
+			color: #b45309;
+		}
+		&.answered {
+			background: rgba(16, 185, 129, 0.12);
+			color: #059669;
+		}
+	}
+	.inquiry-answer {
+		margin-top: 4px;
+		padding: 12px 14px;
+		border-left: 3px solid var(--nv-primary);
+		border-radius: 10px;
+		background: var(--nv-surface);
+		.answer-head {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			font-family: $nv-font-label;
+			font-size: 12px;
+			font-weight: 700;
+			color: var(--nv-primary);
+			svg {
+				font-size: 18px;
+			}
+			time {
+				margin-left: auto;
+				font-weight: 400;
+				color: var(--nv-subtle);
+			}
+		}
+		p {
+			margin: 6px 0 0;
+			font-size: 13px;
+			line-height: 1.55;
+			color: var(--nv-ink);
+			white-space: pre-wrap;
+		}
+	}
+	.inquiry-withdraw {
+		align-self: flex-start;
+		padding: 0;
+		border: 0;
+		background: none;
+		font-size: 12px;
+		color: var(--nv-muted);
+		text-decoration: underline;
+		cursor: pointer;
+		&:hover {
+			color: var(--nv-primary);
+		}
+	}
+}
+
+[data-theme='dark'] #pc-wrap #cs-page {
+	.inquiry-status.waiting {
+		color: #fbbf24;
+	}
+	.inquiry-status.answered {
+		color: #34d399;
+	}
+}

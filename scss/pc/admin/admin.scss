@@ -953,3 +953,244 @@ $admin-rail: 288px;
 		}
 	}
 }
+
+/* ---------- CS boards: primary / small buttons ---------- */
+#admin-shell {
+	.admin-btn.primary {
+		border-color: transparent;
+		background: var(--nv-primary);
+		color: var(--nv-on-primary);
+		svg {
+			color: inherit;
+		}
+		&:hover {
+			background: var(--nv-primary-hover);
+			color: var(--nv-on-primary);
+		}
+		&:disabled {
+			background: var(--nv-disabled);
+			cursor: default;
+		}
+	}
+	.admin-btn.small {
+		height: 30px;
+		padding: 0 10px;
+		font-size: 12px;
+	}
+}
+
+/* Notice / FAQ editor and inquiry answer dialogs render in a portal outside #admin-shell */
+.admin-dialog-paper {
+	border-radius: 16px !important;
+	border: 1px solid var(--nv-line-soft);
+	background: var(--nv-surface) !important;
+	color: var(--nv-ink) !important;
+	box-shadow: var(--nv-shadow-lg) !important;
+}
+.admin-dialog {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: 24px;
+	font-family: $nv-font-body;
+	h2 {
+		margin: 0;
+		font-family: $nv-font-head;
+		font-size: 20px;
+		color: var(--nv-ink);
+	}
+	.dialog-meta {
+		margin: -6px 0 0;
+		font-size: 12px;
+		color: var(--nv-muted);
+	}
+	.dialog-quote {
+		margin: 0;
+		padding: 12px 14px;
+		border-left: 3px solid var(--nv-line-strong);
+		border-radius: 8px;
+		background: var(--nv-surface-sunken);
+		font-size: 14px;
+		line-height: 1.55;
+		color: var(--nv-text);
+		white-space: pre-wrap;
+	}
+	.dialog-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px;
+	}
+	label {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		> span {
+			display: flex;
+			justify-content: space-between;
+			font-family: $nv-font-label;
+			font-size: 12px;
+			font-weight: 700;
+			color: var(--nv-label);
+			small {
+				font-weight: 400;
+				color: var(--nv-subtle);
+			}
+		}
+	}
+	input,
+	select,
+	textarea {
+		width: 100%;
+		padding: 10px 12px;
+		border: 1px solid var(--nv-line);
+		border-radius: 10px;
+		background: var(--nv-surface);
+		color: var(--nv-ink);
+		font-family: $nv-font-body;
+		font-size: 14px;
+		outline: none;
+		&:focus {
+			border-color: var(--nv-primary);
+		}
+		&[aria-invalid='true'] {
+			border-color: #dc2626;
+		}
+	}
+	textarea {
+		resize: vertical;
+		line-height: 1.5;
+	}
+	.field-error {
+		font-size: 12px;
+		color: #dc2626;
+	}
+	.dialog-hint {
+		margin: 0;
+		font-size: 12px;
+		color: var(--nv-subtle);
+	}
+	.dialog-actions {
+		display: flex;
+		justify-content: flex-end;
+		gap: 10px;
+	}
+	.admin-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		height: 38px;
+		padding: 0 16px;
+		border-radius: 10px;
+		border: 1px solid var(--nv-line-soft);
+		background: var(--nv-surface);
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--nv-ink);
+		cursor: pointer;
+		&.primary {
+			border-color: transparent;
+			background: var(--nv-primary);
+			color: var(--nv-on-primary);
+			&:disabled {
+				background: var(--nv-disabled);
+				cursor: default;
+			}
+		}
+		&:focus-visible {
+			@include nv-focus;
+		}
+	}
+}
+
+/* ---------- Dashboard ---------- */
+#admin-shell {
+	.dash-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 16px;
+		margin-bottom: 20px;
+	}
+	.dash-card {
+		padding: 18px 20px;
+		border: 1px solid var(--nv-line-soft);
+		border-radius: 16px;
+		background: var(--nv-surface);
+		header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 14px;
+		}
+		h3 {
+			margin: 0;
+			font-family: $nv-font-head;
+			font-size: 16px;
+			color: var(--nv-ink);
+		}
+	}
+	.dash-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		font-size: 12px;
+		font-weight: 700;
+		color: var(--nv-primary);
+		svg {
+			font-size: 16px;
+		}
+	}
+	.dash-empty {
+		margin: 0;
+		font-size: 13px;
+		color: var(--nv-muted);
+	}
+	.dash-bars {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		li {
+			display: grid;
+			grid-template-columns: 120px 1fr 40px;
+			align-items: center;
+			gap: 12px;
+			font-size: 13px;
+		}
+		.bar-label {
+			color: var(--nv-text);
+		}
+		.bar-track {
+			height: 8px;
+			border-radius: 999px;
+			background: var(--nv-surface-sunken);
+			overflow: hidden;
+		}
+		.bar-fill {
+			display: block;
+			height: 100%;
+			border-radius: inherit;
+			background: var(--nv-primary);
+		}
+		.bar-value {
+			font-family: $nv-font-mono;
+			font-weight: 700;
+			text-align: right;
+			color: var(--nv-ink);
+		}
+	}
+	.dash-table-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 16px 20px;
+		border-bottom: 1px solid var(--nv-line-soft);
+		h3 {
+			margin: 0;
+			font-family: $nv-font-head;
+			font-size: 16px;
+			color: var(--nv-ink);
+		}
+	}
+}

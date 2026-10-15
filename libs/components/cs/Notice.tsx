@@ -6,46 +6,52 @@ import SearchIcon from '@mui/icons-material/Search';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { NOTICE_CATEGORIES, NOTICES, NoticeCategory } from './csContent';
+import { NOTICE_CATEGORIES } from './csContent';
+import { Notice as NoticeItem } from '../../types/notice/notice';
+import { NoticeTopic } from '../../enums/notice.enum';
 
 const PAGE_SIZE = 4;
 
-const Notice = () => {
-	const device = useDeviceDetect();
+interface NoticeProps {
+	notices: NoticeItem[];
+	loading: boolean;
+}
+
+// Notice board; the list comes from getNotices (NOTICE category), newest first
+const Notice = ({ notices, loading }: NoticeProps) => {
 	const { t } = useTranslation('common');
-	const [category, setCategory] = useState<NoticeCategory | 'ALL'>('ALL');
+	const [category, setCategory] = useState<NoticeTopic | 'ALL'>('ALL');
 	const [text, setText] = useState<string>('');
 	const [page, setPage] = useState<number>(1);
 
 	const query = text.trim().toLowerCase();
 	const list = useMemo(
 		() =>
-			NOTICES.filter((item) => category === 'ALL' || item.category === category).filter(
-				(item) =>
-					!query ||
-					t(item.title).toLowerCase().includes(query) ||
-					t(item.summary).toLowerCase().includes(query),
-			),
-		[category, query, t],
+			notices
+				// Board numbers count down from the newest notice
+				.map((item, index) => ({ ...item, no: notices.length - index }))
+				.filter((item) => category === 'ALL' || item.noticeTopic === category)
+				.filter(
+					(item) =>
+						!query ||
+						t(item.noticeTitle).toLowerCase().includes(query) ||
+						t(item.noticeContent).toLowerCase().includes(query),
+				),
+		[notices, category, query, t],
 	);
 
 	/** HANDLERS **/
-	const categoryHandler = (value: NoticeCategory | 'ALL') => {
+	const categoryHandler = (value: NoticeTopic | 'ALL') => {
 		setCategory(value);
 		setPage(1);
 	};
-
-	if (device === 'mobile') {
-		return <div>NOTICE MOBILE</div>;
-	}
 
 	const pageCount = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
 	const current = Math.min(page, pageCount);
 	const rows = list.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
 	const from = list.length ? (current - 1) * PAGE_SIZE + 1 : 0;
 	const to = Math.min(list.length, current * PAGE_SIZE);
-	const countOf = (value: NoticeCategory) => NOTICES.filter((item) => item.category === value).length;
+	const countOf = (value: NoticeTopic) => notices.filter((item) => item.noticeTopic === value).length;
 
 	return (
 		<section className={'cs-panel'} id={'notice-section'} aria-label={t('Notice')}>
@@ -56,7 +62,7 @@ const Notice = () => {
 						{t('Notice')}
 					</span>
 					<span className={'panel-meta'}>
-						{t('Total')} {NOTICES.length} {t('notices')}
+						{t('Total')} {notices.length} {t('notices')}
 					</span>
 				</div>
 				<label className={'panel-search'}>
@@ -80,7 +86,7 @@ const Notice = () => {
 					aria-pressed={category === 'ALL'}
 					onClick={() => categoryHandler('ALL')}
 				>
-					{t('All')} ({NOTICES.length})
+					{t('All')} ({notices.length})
 				</button>
 				{NOTICE_CATEGORIES.map((item) => (
 					<button
@@ -108,32 +114,32 @@ const Notice = () => {
 					{rows.length === 0 ? (
 						<tr>
 							<td colSpan={4} className={'empty-row'}>
-								{t('No notices match this search')}
+								{loading ? t('Loading...') : t('No notices match this search')}
 							</td>
 						</tr>
 					) : (
 						rows.map((item) => (
-							<tr key={item.id} className={item.category === 'EVENT' ? 'is-event' : ''}>
-								<td className={'col-no'}>{String(item.id).padStart(2, '0')}</td>
+							<tr key={item._id} className={item.noticeTopic === NoticeTopic.EVENT ? 'is-event' : ''}>
+								<td className={'col-no'}>{String(item.no).padStart(2, '0')}</td>
 								<td>
 									<div className={'notice-cell'}>
-										<span className={`notice-tag tag-${item.category.toLowerCase()}`}>{t(item.category)}</span>
+										<span className={`notice-tag tag-${item.noticeTopic.toLowerCase()}`}>{t(item.noticeTopic)}</span>
 										<div>
-											{item.href ? (
-												<Link href={item.href} className={'notice-title'}>
-													{t(item.title)}
+											{item.noticeLink ? (
+												<Link href={item.noticeLink} className={'notice-title'}>
+													{t(item.noticeTitle)}
 													<ArrowForwardIcon aria-hidden />
 												</Link>
 											) : (
-												<strong className={'notice-title'}>{t(item.title)}</strong>
+												<strong className={'notice-title'}>{t(item.noticeTitle)}</strong>
 											)}
-											<p>{t(item.summary)}</p>
+											<p>{t(item.noticeContent)}</p>
 										</div>
 									</div>
 								</td>
-								<td className={'col-team'}>{t(item.team)}</td>
+								<td className={'col-team'}>{t(item.noticeTeam ?? 'Navano Team')}</td>
 								<td className={'col-date'}>
-									<time dateTime={item.date}>{moment(item.date).format('DD.MM.YYYY')}</time>
+									<time dateTime={moment(item.createdAt).format('YYYY-MM-DD')}>{moment(item.createdAt).format('DD.MM.YYYY')}</time>
 								</td>
 							</tr>
 						))

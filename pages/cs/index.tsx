@@ -3,6 +3,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { useQuery } from '@apollo/client';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined';
 import HeadsetMicOutlinedIcon from '@mui/icons-material/HeadsetMicOutlined';
@@ -12,12 +13,15 @@ import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import Notice from '../../libs/components/cs/Notice';
 import Faq from '../../libs/components/cs/Faq';
-import { CS_PHONE, CS_PHONE_HREF, FAQS, FAQ_CATEGORIES, NOTICES } from '../../libs/components/cs/csContent';
+import Inquiry from '../../libs/components/cs/Inquiry';
+import { CS_PHONE, CS_PHONE_HREF, FAQ_CATEGORIES } from '../../libs/components/cs/csContent';
 import { chatOpenVar } from '../../apollo/store';
+import { GET_NOTICES } from '../../apollo/user/query';
+import { Notices } from '../../libs/types/notice/notice';
+import { NoticeCategory } from '../../libs/enums/notice.enum';
 
 export const getStaticProps = async ({ locale }: any) => ({
 	props: {
@@ -25,14 +29,23 @@ export const getStaticProps = async ({ locale }: any) => ({
 	},
 });
 
-type Tab = 'notice' | 'faq';
+type Tab = 'notice' | 'faq' | 'inquiry';
+const TABS: Tab[] = ['notice', 'faq', 'inquiry'];
+
+// Both lists are small, so the page loads them once and the panels filter and page on the client
+const listInput = (noticeCategory: NoticeCategory) => ({ input: { page: 1, limit: 100, search: { noticeCategory } } });
 
 const CS: NextPage = () => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
-	// Footer and FAQ links use ?tab=notice|faq; anything else falls back to notices
-	const tab: Tab = router.query.tab === 'faq' ? 'faq' : 'notice';
+	// Footer and FAQ links use ?tab=notice|faq|inquiry; anything else falls back to notices
+	const tab: Tab = TABS.includes(router.query.tab as Tab) ? (router.query.tab as Tab) : 'notice';
+
+	/** APOLLO REQUESTS **/
+	const notices = useQuery<{ getNotices: Notices }>(GET_NOTICES, { variables: listInput(NoticeCategory.NOTICE) });
+	const faqs = useQuery<{ getNotices: Notices }>(GET_NOTICES, { variables: listInput(NoticeCategory.FAQ) });
+	const noticeList = notices.data?.getNotices?.list ?? [];
+	const faqList = faqs.data?.getNotices?.list ?? [];
 
 	/** HANDLERS **/
 	const changeTabHandler = (next: Tab) => {
@@ -40,10 +53,6 @@ const CS: NextPage = () => {
 	};
 
 	const openChat = () => chatOpenVar(true);
-
-	if (device === 'mobile') {
-		return <h1>CS PAGE MOBILE</h1>;
-	}
 
 
 	return (
@@ -74,10 +83,10 @@ const CS: NextPage = () => {
 								<CampaignOutlinedIcon aria-hidden />
 								{t('Notices')}
 							</button>
-							<a href={'#cs-channels'} className={'cs-btn primary'}>
+							<button type="button" className={'cs-btn primary'} onClick={() => changeTabHandler('inquiry')}>
 								<HeadsetMicOutlinedIcon aria-hidden />
-								{t('Contact us')}
-							</a>
+								{t('Ask us')}
+							</button>
 						</div>
 						<a href={CS_PHONE_HREF} className={'hero-hotline'}>
 							<span className={'hotline-icon'}>
@@ -106,7 +115,7 @@ const CS: NextPage = () => {
 							onClick={() => changeTabHandler('notice')}
 						>
 							{t('Notice')}
-							<span>{NOTICES.length}</span>
+							<span>{noticeList.length}</span>
 						</button>
 						<button
 							type="button"
@@ -116,7 +125,16 @@ const CS: NextPage = () => {
 							onClick={() => changeTabHandler('faq')}
 						>
 							{t('FAQ')}
-							<span>{FAQS.length}</span>
+							<span>{faqList.length}</span>
+						</button>
+						<button
+							type="button"
+							role={'tab'}
+							aria-selected={tab === 'inquiry'}
+							className={tab === 'inquiry' ? 'active' : ''}
+							onClick={() => changeTabHandler('inquiry')}
+						>
+							{t('One-to-one inquiry')}
 						</button>
 					</div>
 					<div className={'cs-quick'}>
@@ -137,7 +155,9 @@ const CS: NextPage = () => {
 					</div>
 				</section>
 
-				{tab === 'notice' ? <Notice /> : <Faq />}
+				{tab === 'notice' && <Notice notices={noticeList} loading={notices.loading} />}
+				{tab === 'faq' && <Faq faqs={faqList} loading={faqs.loading} />}
+				{tab === 'inquiry' && <Inquiry />}
 
 				<section className={'cs-channels'} id={'cs-channels'}>
 					<span className={'channels-eyebrow'}>

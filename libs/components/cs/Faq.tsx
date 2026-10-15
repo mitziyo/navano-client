@@ -2,31 +2,39 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import SearchIcon from '@mui/icons-material/Search';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
-import { FAQ_CATEGORIES, FAQS, FaqCategory } from './csContent';
+import { FAQ_CATEGORIES } from './csContent';
+import { Notice as FaqItem } from '../../types/notice/notice';
+import { NoticeTopic } from '../../enums/notice.enum';
 
-const Faq = () => {
-	const device = useDeviceDetect();
+interface FaqProps {
+	faqs: FaqItem[];
+	loading: boolean;
+}
+
+// FAQ accordion; questions are FAQ-category notices (title = question, content = answer)
+const Faq = ({ faqs, loading }: FaqProps) => {
 	const { t } = useTranslation('common');
-	const [category, setCategory] = useState<FaqCategory | 'ALL'>('ALL');
+	const [category, setCategory] = useState<NoticeTopic | 'ALL'>('ALL');
 	const [text, setText] = useState<string>('');
-	const [expanded, setExpanded] = useState<string | null>(FAQS[0].id);
+	// undefined = the first question is open until the visitor picks one
+	const [expanded, setExpanded] = useState<string | null | undefined>(undefined);
 
 	const query = text.trim().toLowerCase();
 	const list = useMemo(
 		() =>
-			FAQS.filter((item) => category === 'ALL' || item.category === category).filter(
-				(item) =>
-					!query || t(item.question).toLowerCase().includes(query) || t(item.answer).toLowerCase().includes(query),
-			),
-		[category, query, t],
+			faqs
+				.filter((item) => category === 'ALL' || item.noticeTopic === category)
+				.filter(
+					(item) =>
+						!query ||
+						t(item.noticeTitle).toLowerCase().includes(query) ||
+						t(item.noticeContent).toLowerCase().includes(query),
+				),
+		[faqs, category, query, t],
 	);
 
-	if (device === 'mobile') {
-		return <div>FAQ MOBILE</div>;
-	}
-
-	const countOf = (value: FaqCategory) => FAQS.filter((item) => item.category === value).length;
+	const countOf = (value: NoticeTopic) => faqs.filter((item) => item.noticeTopic === value).length;
+	const openId = expanded === undefined ? faqs[0]?._id ?? null : expanded;
 
 	return (
 		<section className={'cs-panel'} id={'faq-section'} aria-label={t('FAQ')}>
@@ -37,7 +45,7 @@ const Faq = () => {
 						{t('FAQ')}
 					</span>
 					<span className={'panel-meta'}>
-						{FAQS.length} {t('answers in')} {FAQ_CATEGORIES.length} {t('topics')}
+						{faqs.length} {t('answers in')} {FAQ_CATEGORIES.length} {t('topics')}
 					</span>
 				</div>
 				<label className={'panel-search'}>
@@ -58,7 +66,7 @@ const Faq = () => {
 					aria-pressed={category === 'ALL'}
 					onClick={() => setCategory('ALL')}
 				>
-					{t('All')} ({FAQS.length})
+					{t('All')} ({faqs.length})
 				</button>
 				{FAQ_CATEGORIES.map((item) => (
 					<button
@@ -75,34 +83,34 @@ const Faq = () => {
 
 			<div className={'faq-list'}>
 				{list.length === 0 ? (
-					<p className={'empty-row'}>{t('No questions match this search')}</p>
+					<p className={'empty-row'}>{loading ? t('Loading...') : t('No questions match this search')}</p>
 				) : (
 					list.map((item) => {
-						const open = expanded === item.id;
+						const open = openId === item._id;
 						return (
-							<div className={`faq-item ${open ? 'open' : ''}`} key={item.id}>
+							<div className={`faq-item ${open ? 'open' : ''}`} key={item._id}>
 								<button
 									type="button"
 									className={'faq-question'}
 									aria-expanded={open}
-									aria-controls={`faq-${item.id}`}
-									onClick={() => setExpanded(open ? null : item.id)}
+									aria-controls={`faq-${item._id}`}
+									onClick={() => setExpanded(open ? null : item._id)}
 								>
 									<span className={'faq-badge'} aria-hidden>
 										Q
 									</span>
-									<span className={'faq-text'}>{t(item.question)}</span>
+									<span className={'faq-text'}>{t(item.noticeTitle)}</span>
 									<span className={'faq-topic'}>
-										{t(FAQ_CATEGORIES.find((cat) => cat.value === item.category)?.label ?? '')}
+										{t(FAQ_CATEGORIES.find((cat) => cat.value === item.noticeTopic)?.label ?? 'General')}
 									</span>
 									<KeyboardArrowDownRoundedIcon className={'faq-arrow'} aria-hidden />
 								</button>
 								{open && (
-									<div className={'faq-answer'} id={`faq-${item.id}`}>
+									<div className={'faq-answer'} id={`faq-${item._id}`}>
 										<span className={'faq-badge answer'} aria-hidden>
 											A
 										</span>
-										<p>{t(item.answer)}</p>
+										<p>{t(item.noticeContent)}</p>
 									</div>
 								)}
 							</div>
