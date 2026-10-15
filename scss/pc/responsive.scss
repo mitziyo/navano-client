@@ -1,0 +1,322 @@
+/** RESPONSIVE: tablet (<= 1023px) and phone (<= 767px, <= 480px) overrides for the desktop layouts.
+    The pages render one layout (#pc-wrap) everywhere; this file only re-flows it. Imported last in main.scss. **/
+
+$bp-tablet: 1023px;
+$bp-phone: 767px;
+$bp-small: 480px;
+
+/* ================= TABLET ================= */
+@media (max-width: $bp-tablet) {
+	#pc-wrap {
+		/* Hero bands: copy keeps the left half, the photo stays behind it */
+		.about-hero-copy,
+		.store-hero-copy,
+		.community-hero-copy,
+		.cs-hero-copy,
+		.header-basic-copy,
+		.catalog-intro {
+			max-width: 70%;
+		}
+
+		/* Sidebar + content layouts become one column */
+		#product-list-page .catalog-layout,
+		#community-detail-page .community-layout,
+		#product-detail-page .pd-layout,
+		#product-detail-page .pd-loading,
+		#my-page #my-profile-page .profile-grid,
+		#join-page .join-panel,
+		#about-page .about-mission,
+		#cs-page .inquiry-grid,
+		.site-footer .footer-top {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		#my-page .container .my-page .back-frame,
+		.nv-profile .nv-shell {
+			flex-direction: column;
+			align-items: stretch;
+		}
+		#my-page .container .my-page .back-frame .left-config,
+		.nv-profile .nv-side {
+			position: static;
+			width: 100%;
+		}
+		#product-list-page .catalog-layout > aside,
+		#community-detail-page .community-layout > aside {
+			position: static;
+			max-height: none;
+		}
+
+		/* Card grids: two per row */
+		.trend-grid,
+		.events-grid,
+		.card-skeletons,
+		#store-list-page .hero-stats,
+		#store-list-page .network-strip,
+		#about-page .about-stats,
+		#about-page .store-row {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.popular-grid,
+		#store-list-page .store-grid,
+		#store-list-page .card-skeletons,
+		#product-list-page .catalog-grid,
+		#product-list-page .card-skeletons,
+		#product-detail-page .similar-grid,
+		#about-page .category-grid,
+		#cs-page .channel-grid,
+		#my-page .mp-grid,
+		#my-page #my-profile-page .tile-grid,
+		.nv-profile .tab-grid.three {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.search-console {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		#product-detail-page .pd-tiles {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+
+		/* Toolbars wrap instead of pushing the page wider */
+		#store-list-page .toolbar-select,
+		#store-list-page .toolbar-select.sort,
+		#community-detail-page .toolbar-select {
+			min-width: 0;
+		}
+		#store-list-page .store-toolbar,
+		#community-detail-page .board-toolbar {
+			flex-wrap: wrap;
+		}
+	}
+
+	/* Admin: the side rail slides in over the page */
+	#admin-shell {
+		.admin-aside {
+			transform: translateX(-100%);
+			transition: transform 0.25s $nv-ease;
+			box-shadow: var(--nv-shadow-lg);
+			&.is-open {
+				transform: none;
+			}
+		}
+		.admin-main {
+			margin-left: 0;
+		}
+		.aside-backdrop {
+			position: fixed;
+			inset: 0;
+			z-index: 45;
+			background: rgba(0, 0, 0, 0.35);
+		}
+		.dash-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+}
+
+#admin-shell .topbar-menu {
+	display: none;
+}
+@media (max-width: $bp-tablet) {
+	#admin-shell .topbar-menu {
+		display: grid;
+	}
+}
+
+/* ================= PHONE ================= */
+@media (max-width: $bp-phone) {
+	#pc-wrap {
+		/* Long link texts may wrap on narrow screens */
+		a {
+			white-space: normal;
+		}
+
+		/* Hero bands: full-width faded photo behind the copy */
+		.about-hero,
+		.store-hero,
+		.community-hero,
+		.cs-hero,
+		.catalog-header,
+		.header-basic {
+			min-height: 0;
+		}
+		.about-hero-media,
+		.store-hero-media,
+		.community-hero-media,
+		.cs-hero-media,
+		.header-basic-media,
+		.catalog-hero-media {
+			width: 100%;
+			opacity: 0.35;
+		}
+		.about-hero-copy,
+		.store-hero-copy,
+		.community-hero-copy,
+		.cs-hero-copy,
+		.header-basic-copy,
+		.catalog-intro {
+			max-width: 100%;
+			padding: 36px 0 40px;
+			h1 {
+				font-size: 34px;
+				line-height: 40px;
+			}
+		}
+
+		/* Home hero */
+		.home-hero {
+			h1 {
+				font-size: 36px;
+				line-height: 42px;
+			}
+		}
+		.search-console {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.field-dropdown.city-grid {
+			width: min(560px, calc(100vw - 32px));
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		/* Card grids: one per row */
+		.trend-grid,
+		.popular-grid,
+		.events-grid,
+		.card-skeletons,
+		#store-list-page .store-grid,
+		#store-list-page .card-skeletons,
+		#product-list-page .catalog-grid,
+		#product-list-page .card-skeletons,
+		#product-detail-page .similar-grid,
+		#about-page .category-grid,
+		#about-page .mission-cards,
+		#about-page .about-how,
+		#cs-page .channel-grid,
+		#my-page .mp-grid,
+		#my-page .mp-grid.two,
+		#my-page #my-profile-page .tile-grid,
+		.nv-profile .tab-grid.three,
+		.nv-profile .tab-grid.two,
+		#community-detail-page .card-skeletons,
+		.site-footer .footer-columns {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		#product-detail-page .details-grid,
+		#my-page .form-grid,
+		.form-grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		#my-page #my-profile-page .profile-hero .hero-metrics,
+		#product-detail-page .pd-tiles,
+		#my-page .upload-gallery {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		/* CS: notice table keeps number + text */
+		#cs-page {
+			.panel-head {
+				flex-direction: column;
+				align-items: stretch;
+			}
+			.panel-search {
+				width: 100%;
+			}
+			.notice-table .col-team,
+			.notice-table .col-date {
+				display: none;
+			}
+			.cs-tabs {
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+			.cs-quick {
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+		}
+
+		/* My Page tables: rows stack, the header row is not needed */
+		#my-page .mp-table-head {
+			display: none;
+		}
+		#my-page .product-card-box {
+			grid-template-columns: minmax(0, 1fr);
+			gap: 10px;
+		}
+		#my-page .container .my-page .back-frame .main-config .list-config .card-config,
+		#my-page .list-config .catalog-card {
+			width: 100%;
+		}
+
+		/* Member follow lists */
+		#member-follows-page .follows-list-box .listing-title-box {
+			display: none;
+		}
+		#member-follows-page .follows-list-box .follows-card-box {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		/* Page heads with actions: actions go under the title */
+		.mp-page-head,
+		.nv-profile .profile-head {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+	}
+
+	/* Advanced search modal (portal) */
+	.advanced-filter-modal {
+		width: calc(100vw - 32px) !important;
+		max-height: calc(100vh - 32px);
+		overflow-y: auto;
+		.top,
+		.middle,
+		.bottom {
+			width: 100% !important;
+		}
+		.middle .row-box .box,
+		.bottom button {
+			width: 100% !important;
+		}
+	}
+
+	/* Floating dock: panels take the screen width */
+	#pc-wrap .ai-panel,
+	#pc-wrap .chatting .chat-frame {
+		width: calc(100vw - 16px);
+		&.open {
+			right: 8px;
+		}
+	}
+	#pc-wrap .ai-btn {
+		right: 16px;
+	}
+	#pc-wrap .chatting .chat-button {
+		right: 16px;
+	}
+
+	#admin-shell {
+		.admin-content {
+			padding: 16px;
+		}
+		.topbar-crumbs {
+			display: none;
+		}
+		.admin-dialog .dialog-row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+	.admin-dialog .dialog-row {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+@media (max-width: $bp-small) {
+	#pc-wrap {
+		#store-list-page .hero-stats,
+		#store-list-page .network-strip,
+		#about-page .about-stats,
+		#about-page .store-row {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+}

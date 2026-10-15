@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
@@ -32,7 +31,6 @@ const typeIcon = (type: ProductType) => {
 
 const ProductCard = (props: ProductCardType) => {
 	const { product, likeProductHandler, myFavorites, recentlyVisited } = props;
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const imagePath: string = product?.productImages[0]
@@ -41,10 +39,6 @@ const ProductCard = (props: ProductCardType) => {
 	const detailHref = { pathname: '/product/detail', query: { id: product?._id } };
 	const liked = Boolean(myFavorites || product?.meLiked?.[0]?.myFavorite);
 	const status = statusLabel(product?.productStatus);
-
-	if (device === 'mobile') {
-		return <div>PRODUCT CARD</div>;
-	}
 
 	return (
 		<article className="catalog-card">

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Pagination } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import ProductCard from '../product/ProductCard';
 import { useTranslation } from 'next-i18next';
 import { Product } from '../../types/product/product';
@@ -12,7 +11,6 @@ import { GET_PRODUCTS } from '../../../apollo/user/query';
 import { useQuery } from '@apollo/client';
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const { memberId } = router.query;
@@ -52,47 +50,43 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 		setSearchFilter({ ...searchFilter, page: value });
 	};
 
-	if (device === 'mobile') {
-		return <div>NAVANO PRODUCTS MOBILE</div>;
-	} else {
-		return (
-			<div className={'member-tab'}>
-				<header className={'panel-head'}>
-					<div>
-						<h2>{t('Products')}</h2>
-						<p>{t('Bouquets, cakes and chocolates from this store')}</p>
-					</div>
-					<span className={'panel-count'}>
+	return (
+		<div className={'member-tab'}>
+			<header className={'panel-head'}>
+				<div>
+					<h2>{t('Products')}</h2>
+					<p>{t('Bouquets, cakes and chocolates from this store')}</p>
+				</div>
+				<span className={'panel-count'}>
+					{total} {t('products')}
+				</span>
+			</header>
+			{agentProducts?.length === 0 ? (
+				<div className={'panel-empty'}>
+					<p>{t('No products yet')}</p>
+				</div>
+			) : (
+				<div className={'tab-grid three'}>
+					{agentProducts?.map((product: Product) => (
+						<ProductCard product={product} recentlyVisited key={product?._id} />
+					))}
+				</div>
+			)}
+			{agentProducts.length !== 0 && (
+				<footer className={'panel-pagination'}>
+					<Pagination
+						count={Math.ceil(total / searchFilter.limit)}
+						page={searchFilter.page}
+						shape="rounded"
+						onChange={paginationHandler}
+					/>
+					<span>
 						{total} {t('products')}
 					</span>
-				</header>
-				{agentProducts?.length === 0 ? (
-					<div className={'panel-empty'}>
-						<p>{t('No products yet')}</p>
-					</div>
-				) : (
-					<div className={'tab-grid three'}>
-						{agentProducts?.map((product: Product) => (
-							<ProductCard product={product} recentlyVisited key={product?._id} />
-						))}
-					</div>
-				)}
-				{agentProducts.length !== 0 && (
-					<footer className={'panel-pagination'}>
-						<Pagination
-							count={Math.ceil(total / searchFilter.limit)}
-							page={searchFilter.page}
-							shape="rounded"
-							onChange={paginationHandler}
-						/>
-						<span>
-							{total} {t('products')}
-						</span>
-					</footer>
-				)}
-			</div>
-		);
-	}
+				</footer>
+			)}
+		</div>
+	);
 };
 
 MyProducts.defaultProps = {

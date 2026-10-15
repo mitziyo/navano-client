@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import MemberMenu from '../../libs/components/member/MemberMenu';
 import ProfileHero, { ProfileMetric } from '../../libs/components/member/ProfileHero';
@@ -28,7 +27,6 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const MemberPage: NextPage = () => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const category: any = router.query?.category;
 	const memberId = typeof router.query?.memberId === 'string' ? router.query.memberId : '';
@@ -121,9 +119,7 @@ const MemberPage: NextPage = () => {
 
 	const memberMissing = mounted && router.isReady && (!memberId || Boolean(memberError));
 
-	if (device === 'mobile') {
-		return <>MEMBER PAGE MOBILE</>;
-	} else if (memberMissing) {
+	if (memberMissing) {
 		return (
 			<div id="member-page" className={'nv-profile'}>
 				<div className="container member-missing">

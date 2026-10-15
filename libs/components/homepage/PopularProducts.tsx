@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Stack } from '@mui/material';
 import { useTranslation } from 'next-i18next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
@@ -20,7 +19,6 @@ interface PopularProductsProps {
 
 const PopularProducts = (props: PopularProductsProps) => {
 	const { initialInput } = props;
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 
 	/** APOLLO REQUESTS **/
@@ -29,33 +27,6 @@ const PopularProducts = (props: PopularProductsProps) => {
 		variables: { input: initialInput },
 	});
 	const popularProducts: Product[] = data?.getProducts?.list ?? [];
-
-	if (device === 'mobile') {
-		return (
-			<Stack className={'popular-products'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<span>{t('Popular Products')}</span>
-					</Stack>
-					<Stack className={'card-box'}>
-						<Swiper
-							className={'popular-product-swiper'}
-							slidesPerView={'auto'}
-							centeredSlides={true}
-							spaceBetween={25}
-							modules={[Autoplay]}
-						>
-							{popularProducts.map((product: Product) => (
-								<SwiperSlide key={product._id} className={'popular-product-slide'}>
-									<PopularProductCard product={product} />
-								</SwiperSlide>
-							))}
-						</Swiper>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
 
 	return (
 		<section className={'home-section popular-section tinted'} aria-labelledby="popular-title">

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import AddIcon from '@mui/icons-material/Add';
 import MyPageHeader from './MyPageHeader';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductCard } from './ProductCard';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { Product } from '../../types/product/product';
@@ -19,7 +18,6 @@ import { GET_AGENT_PRODUCTS } from '../../../apollo/user/query';
 import { sweetConfirmAlert, sweetErrorHandling } from '../../sweetAlert';
 
 const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
-	const device = useDeviceDetect();
 	const [searchFilter, setSearchFilter] = useState<AgentProductsInquiry>(initialInput);
 	const [agentProducts, setAgentProducts] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
@@ -97,94 +95,90 @@ const MyProducts: NextPage = ({ initialInput, ...props }: any) => {
 		router.back();
 	}
 
-	if (device === 'mobile') {
-		return <div>NAVANO PRODUCTS MOBILE</div>;
-	} else {
-		return (
-			<div id="my-product-page" className={'mp-tab'}>
-				<MyPageHeader
-					group={'Manage Listings'}
-					title={'My Products'}
-					desc={'Manage your bouquets, cakes and chocolates and mark them sold'}
-					actions={
-						<Link
-							href={{ pathname: '/mypage', query: { category: 'addProduct' } }}
-							scroll={false}
-							className={'mp-btn mp-btn-primary'}
+	return (
+		<div id="my-product-page" className={'mp-tab'}>
+			<MyPageHeader
+				group={'Manage Listings'}
+				title={'My Products'}
+				desc={'Manage your bouquets, cakes and chocolates and mark them sold'}
+				actions={
+					<Link
+						href={{ pathname: '/mypage', query: { category: 'addProduct' } }}
+						scroll={false}
+						className={'mp-btn mp-btn-primary'}
+					>
+						<AddIcon />
+						<span>{t('Add Product')}</span>
+					</Link>
+				}
+			/>
+			<section className={'mp-card'}>
+				<div className={'card-head'}>
+					<div className={'segmented'} role={'tablist'} aria-label={t('Status')}>
+						<button
+							type="button"
+							role={'tab'}
+							aria-selected={searchFilter.search.productStatus === 'ACTIVE'}
+							className={searchFilter.search.productStatus === 'ACTIVE' ? 'active' : ''}
+							onClick={() => changeStatusHandler(ProductStatus.ACTIVE)}
 						>
-							<AddIcon />
-							<span>{t('Add Product')}</span>
-						</Link>
-					}
-				/>
-				<section className={'mp-card'}>
-					<div className={'card-head'}>
-						<div className={'segmented'} role={'tablist'} aria-label={t('Status')}>
-							<button
-								type="button"
-								role={'tab'}
-								aria-selected={searchFilter.search.productStatus === 'ACTIVE'}
-								className={searchFilter.search.productStatus === 'ACTIVE' ? 'active' : ''}
-								onClick={() => changeStatusHandler(ProductStatus.ACTIVE)}
-							>
-								{t('On sale')}
-							</button>
-							<button
-								type="button"
-								role={'tab'}
-								aria-selected={searchFilter.search.productStatus === 'SOLD'}
-								className={searchFilter.search.productStatus === 'SOLD' ? 'active' : ''}
-								onClick={() => changeStatusHandler(ProductStatus.SOLD)}
-							>
-								{t('Sold out')}
-							</button>
+							{t('On sale')}
+						</button>
+						<button
+							type="button"
+							role={'tab'}
+							aria-selected={searchFilter.search.productStatus === 'SOLD'}
+							className={searchFilter.search.productStatus === 'SOLD' ? 'active' : ''}
+							onClick={() => changeStatusHandler(ProductStatus.SOLD)}
+						>
+							{t('Sold out')}
+						</button>
+					</div>
+					<span className={'card-tag'}>
+						{total} {t('products')}
+					</span>
+				</div>
+				<div className={`mp-table ${searchFilter.search.productStatus === 'ACTIVE' ? 'with-actions' : ''}`}>
+					<div className={'mp-table-head'}>
+						<span>{t('Product')}</span>
+						<span>{t('Published')}</span>
+						<span>{t('Status')}</span>
+						<span>{t('Views')}</span>
+						{searchFilter.search.productStatus === 'ACTIVE' && <span>{t('Actions')}</span>}
+					</div>
+					{agentProducts?.length === 0 ? (
+						<div className={'mp-empty'}>
+							<p>{t('No products here yet')}</p>
 						</div>
-						<span className={'card-tag'}>
+					) : (
+						agentProducts.map((product: Product) => {
+							return (
+								<ProductCard
+									key={product?._id}
+									product={product}
+									deleteProductHandler={deleteProductHandler}
+									updateProductHandler={updateProductHandler}
+								/>
+							);
+						})
+					)}
+				</div>
+				{agentProducts.length !== 0 && (
+					<footer className={'mp-pagination'}>
+						<Pagination
+							count={Math.ceil(total / searchFilter.limit)}
+							page={searchFilter.page}
+							shape="rounded"
+							onChange={paginationHandler}
+						/>
+						<span>
 							{total} {t('products')}
 						</span>
-					</div>
-					<div className={`mp-table ${searchFilter.search.productStatus === 'ACTIVE' ? 'with-actions' : ''}`}>
-						<div className={'mp-table-head'}>
-							<span>{t('Product')}</span>
-							<span>{t('Published')}</span>
-							<span>{t('Status')}</span>
-							<span>{t('Views')}</span>
-							{searchFilter.search.productStatus === 'ACTIVE' && <span>{t('Actions')}</span>}
-						</div>
-						{agentProducts?.length === 0 ? (
-							<div className={'mp-empty'}>
-								<p>{t('No products here yet')}</p>
-							</div>
-						) : (
-							agentProducts.map((product: Product) => {
-								return (
-									<ProductCard
-										key={product?._id}
-										product={product}
-										deleteProductHandler={deleteProductHandler}
-										updateProductHandler={updateProductHandler}
-									/>
-								);
-							})
-						)}
-					</div>
-					{agentProducts.length !== 0 && (
-						<footer className={'mp-pagination'}>
-							<Pagination
-								count={Math.ceil(total / searchFilter.limit)}
-								page={searchFilter.page}
-								shape="rounded"
-								onChange={paginationHandler}
-							/>
-							<span>
-								{total} {t('products')}
-							</span>
-						</footer>
-					)}
-				</section>
-			</div>
-		);
-	}
+					</footer>
+				)}
+			</section>
+		</div>
+	);
 };
 
 MyProducts.defaultProps = {

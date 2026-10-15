@@ -16,7 +16,6 @@ import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
 import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import ProductTypeIcon from '../../libs/components/common/ProductTypeIcon';
 import { toLabel } from '../../libs/components/homepage/productLabels';
@@ -73,7 +72,6 @@ const productsHref = (type: ProductType) => ({
 });
 
 const About: NextPage = () => {
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 
 	/** APOLLO REQUESTS **/
@@ -86,10 +84,6 @@ const About: NextPage = () => {
 	const storeCount: number = storesData?.getAgents?.metaCounter?.[0]?.total ?? 0;
 	const facets: ProductFacets | undefined = facetsData?.getProductFacets;
 	const countOf = (type: ProductType) => facets?.types?.find((item) => item.value === type)?.count ?? 0;
-
-	if (device === 'mobile') {
-		return <div>ABOUT PAGE MOBILE</div>;
-	}
 
 	const stats = [
 		{ label: t('Stores'), value: storeCount, note: t('Florists, bakers and chocolatiers') },

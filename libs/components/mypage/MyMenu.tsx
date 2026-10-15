@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Stack, Typography, Box } from '@mui/material';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
 import { useTranslation } from 'next-i18next';
@@ -46,7 +45,6 @@ interface MenuItem {
 }
 
 const MyMenu = () => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const category: any = router.query?.category ?? 'myProfile';
@@ -92,61 +90,57 @@ const MyMenu = () => {
 			</Link>
 		));
 
-	if (device === 'mobile') {
-		return <div>MY MENU</div>;
-	} else {
-		return (
-			<Stack className={'my-menu'}>
-				<Stack className={'menu-profile'}>
-					<Box component={'div'} className={'menu-avatar'}>
-						<img
-							src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'}
-							alt={user?.memberNick ?? 'member'}
-						/>
-					</Box>
-					<Stack className={'menu-identity'}>
-						<Typography className={'menu-name'}>{user?.memberNick}</Typography>
-						<Link href={memberRoleHref(user?.memberType, user?._id)} className={'menu-role'}>
-							{t(memberRoleLabel(user?.memberType))}
-						</Link>
-					</Stack>
-				</Stack>
-
-				<Stack className={'menu-group'}>
-					<Typography className={'menu-group-title'}>{t('Manage Listings')}</Typography>
-					{renderItems(listingItems)}
-				</Stack>
-
-				<Stack className={'menu-group'}>
-					<Typography className={'menu-group-title'}>{t('Community')}</Typography>
-					{renderItems(communityItems)}
-				</Stack>
-
-				<Stack className={'menu-group'}>
-					<Typography className={'menu-group-title'}>{t('Manage Account')}</Typography>
-					{renderItems([{ category: 'myProfile', label: 'My Profile', icon: <AccountCircleOutlinedIcon /> }])}
-					{user?.memberType === MemberType.ADMIN && (
-						<a href="/_admin/users" target={'_blank'} className={'menu-link'}>
-							<AdminPanelSettingsOutlinedIcon />
-							<span>{t('Admin Panel')}</span>
-						</a>
-					)}
-				</Stack>
-
-				<Stack className={'menu-footer'}>
-					<Link href={'/cs'} className={'menu-link small'}>
-						<HelpOutlineIcon />
-						<span>{t('Help Center')}</span>
+	return (
+		<Stack className={'my-menu'}>
+			<Stack className={'menu-profile'}>
+				<Box component={'div'} className={'menu-avatar'}>
+					<img
+						src={user?.memberImage ? `${REACT_APP_API_URL}/${user?.memberImage}` : '/img/profile/defaultUser.svg'}
+						alt={user?.memberNick ?? 'member'}
+					/>
+				</Box>
+				<Stack className={'menu-identity'}>
+					<Typography className={'menu-name'}>{user?.memberNick}</Typography>
+					<Link href={memberRoleHref(user?.memberType, user?._id)} className={'menu-role'}>
+						{t(memberRoleLabel(user?.memberType))}
 					</Link>
-					<button type={'button'} className={'menu-link small menu-logout'} onClick={logoutHandler}>
-						<LogoutIcon />
-						<span>{t('Logout')}</span>
-					</button>
-					<span className={'menu-ref'}>ID: {memberRef(user?._id)}</span>
 				</Stack>
 			</Stack>
-		);
-	}
+
+			<Stack className={'menu-group'}>
+				<Typography className={'menu-group-title'}>{t('Manage Listings')}</Typography>
+				{renderItems(listingItems)}
+			</Stack>
+
+			<Stack className={'menu-group'}>
+				<Typography className={'menu-group-title'}>{t('Community')}</Typography>
+				{renderItems(communityItems)}
+			</Stack>
+
+			<Stack className={'menu-group'}>
+				<Typography className={'menu-group-title'}>{t('Manage Account')}</Typography>
+				{renderItems([{ category: 'myProfile', label: 'My Profile', icon: <AccountCircleOutlinedIcon /> }])}
+				{user?.memberType === MemberType.ADMIN && (
+					<a href="/_admin/users" target={'_blank'} className={'menu-link'}>
+						<AdminPanelSettingsOutlinedIcon />
+						<span>{t('Admin Panel')}</span>
+					</a>
+				)}
+			</Stack>
+
+			<Stack className={'menu-footer'}>
+				<Link href={'/cs'} className={'menu-link small'}>
+					<HelpOutlineIcon />
+					<span>{t('Help Center')}</span>
+				</Link>
+				<button type={'button'} className={'menu-link small menu-logout'} onClick={logoutHandler}>
+					<LogoutIcon />
+					<span>{t('Logout')}</span>
+				</button>
+				<span className={'menu-ref'}>ID: {memberRef(user?._id)}</span>
+			</Stack>
+		</Stack>
+	);
 };
 
 export default MyMenu;

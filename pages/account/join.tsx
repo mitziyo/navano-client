@@ -13,7 +13,6 @@ import NorthEastIcon from '@mui/icons-material/NorthEast';
 import LocalFloristOutlinedIcon from '@mui/icons-material/LocalFloristOutlined';
 import CakeOutlinedIcon from '@mui/icons-material/CakeOutlined';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import NavanoLogo from '../../libs/components/common/NavanoLogo';
 import { logIn, signUp } from '../../libs/auth';
@@ -50,7 +49,6 @@ type FieldName = 'nick' | 'password' | 'phone';
 
 const Join: NextPage = () => {
 	const router = useRouter();
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 	const [input, setInput] = useState({ nick: '', password: '', phone: '', type: MemberType.USER as string });
 	const [loginView, setLoginView] = useState<boolean>(true);
@@ -90,10 +88,6 @@ const Join: NextPage = () => {
 			setSubmitting(false);
 		}
 	};
-
-	if (device === 'mobile') {
-		return <div>LOGIN MOBILE</div>;
-	}
 
 	return (
 		<div id="join-page">

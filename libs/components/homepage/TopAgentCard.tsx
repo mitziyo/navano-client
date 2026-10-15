@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { Stack } from '@mui/material';
 import { useTranslation } from 'next-i18next';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Member } from '../../types/member/member';
 import { REACT_APP_API_URL } from '../../config';
 
@@ -13,20 +12,9 @@ interface TopAgentProps {
 
 const TopAgentCard = (props: TopAgentProps) => {
 	const { agent } = props;
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 	const agentImage = agent?.memberImage ? `${REACT_APP_API_URL}/${agent?.memberImage}` : '/img/profile/defaultUser.svg';
 	const detailHref = { pathname: '/agent/detail', query: { agentId: agent?._id } };
-
-	if (device === 'mobile') {
-		return (
-			<Stack className="top-agent-card">
-				<img src={agentImage} alt="" />
-				<strong>{agent?.memberNick}</strong>
-				<span>{t('Store')}</span>
-			</Stack>
-		);
-	}
 
 	return (
 		<article className="store-card">

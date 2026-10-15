@@ -11,7 +11,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WorkspacePremiumOutlinedIcon from '@mui/icons-material/WorkspacePremiumOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import AgentCard from '../../libs/components/common/AgentCard';
 import { CardSkeletons } from '../../libs/components/homepage/SectionState';
@@ -64,7 +63,6 @@ const parseInput = (raw: unknown): AgentsInquiry => {
 };
 
 const AgentList: NextPage = () => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const searchFilter = useMemo(() => parseInput(router.query.input), [router.query.input]);
@@ -137,10 +135,6 @@ const AgentList: NextPage = () => {
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
-
-	if (device === 'mobile') {
-		return <h1>AGENTS PAGE MOBILE</h1>;
-	}
 
 	const { search } = searchFilter;
 	const location = search.locationList?.[0] ?? '';

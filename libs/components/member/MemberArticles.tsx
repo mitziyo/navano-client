@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import { Pagination } from '@mui/material';
 import { useTranslation } from 'next-i18next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { useRouter } from 'next/router';
 import ArticleCard from '../community/ArticleCard';
 import { T } from '../../types/common';
@@ -15,7 +14,6 @@ import { Messages } from '../../config';
 import { sweetErrorHandling, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 
 const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const [total, setTotal] = useState<number>(0);
@@ -67,54 +65,50 @@ const MemberArticles: NextPage = ({ initialInput, ...props }: any) => {
 		}
 	};
 
-	if (device === 'mobile') {
-		return <div>MEMBER ARTICLES MOBILE</div>;
-	} else {
-		return (
-			<div className={'member-tab'}>
-				<header className={'panel-head'}>
-					<div>
-						<h2>{t('Articles')}</h2>
-						<p>{t('Posts on the community boards')}</p>
-					</div>
-					<span className={'panel-count'}>
+	return (
+		<div className={'member-tab'}>
+			<header className={'panel-head'}>
+				<div>
+					<h2>{t('Articles')}</h2>
+					<p>{t('Posts on the community boards')}</p>
+				</div>
+				<span className={'panel-count'}>
+					{total} {t('articles')}
+				</span>
+			</header>
+			{memberBoArticles?.length === 0 ? (
+				<div className={'panel-empty'}>
+					<p>{t('No articles yet')}</p>
+				</div>
+			) : (
+				<div className={'tab-grid two'}>
+					{memberBoArticles?.map((boardArticle: BoardArticle) => (
+						<ArticleCard
+							article={boardArticle}
+							// ArticleCard passes (user, article); the existing handler takes (event, user, id)
+							likeArticleHandler={(current: any, article: BoardArticle) =>
+								likeArticleHandler({ stopPropagation: () => undefined }, current, article._id)
+							}
+							key={boardArticle?._id}
+						/>
+					))}
+				</div>
+			)}
+			{memberBoArticles?.length !== 0 && (
+				<footer className={'panel-pagination'}>
+					<Pagination
+						count={Math.ceil(total / searchFilter.limit) || 1}
+						page={searchFilter.page}
+						shape="rounded"
+						onChange={paginationHandler}
+					/>
+					<span>
 						{total} {t('articles')}
 					</span>
-				</header>
-				{memberBoArticles?.length === 0 ? (
-					<div className={'panel-empty'}>
-						<p>{t('No articles yet')}</p>
-					</div>
-				) : (
-					<div className={'tab-grid two'}>
-						{memberBoArticles?.map((boardArticle: BoardArticle) => (
-							<ArticleCard
-								article={boardArticle}
-								// ArticleCard passes (user, article); the existing handler takes (event, user, id)
-								likeArticleHandler={(current: any, article: BoardArticle) =>
-									likeArticleHandler({ stopPropagation: () => undefined }, current, article._id)
-								}
-								key={boardArticle?._id}
-							/>
-						))}
-					</div>
-				)}
-				{memberBoArticles?.length !== 0 && (
-					<footer className={'panel-pagination'}>
-						<Pagination
-							count={Math.ceil(total / searchFilter.limit) || 1}
-							page={searchFilter.page}
-							shape="rounded"
-							onChange={paginationHandler}
-						/>
-						<span>
-							{total} {t('articles')}
-						</span>
-					</footer>
-				)}
-			</div>
-		);
-	}
+				</footer>
+			)}
+		</div>
+	);
 };
 
 MemberArticles.defaultProps = {

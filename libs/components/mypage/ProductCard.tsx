@@ -1,6 +1,5 @@
 import { Menu, MenuItem, Stack, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import IconButton from '@mui/material/IconButton';
 import ModeIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
@@ -24,7 +23,6 @@ interface ProductCardProps {
 
 export const ProductCard = (props: ProductCardProps) => {
 	const { product, deleteProductHandler, memberPage, updateProductHandler } = props;
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -56,86 +54,81 @@ export const ProductCard = (props: ProductCardProps) => {
 		setAnchorEl(null);
 	};
 
-	if (device === 'mobile') {
-		return <div>MOBILE PRODUCT CARD</div>;
-	} else
-		return (
-			<Stack className="product-card-box">
-				<Stack className="image-box" onClick={() => pushProductDetail(product?._id)}>
-					<img src={`${process.env.REACT_APP_API_URL}/${product.productImages[0]}`} alt="" />
-				</Stack>
-				<Stack className="information-box" onClick={() => pushProductDetail(product?._id)}>
-					<Typography className="name">{product.productTitle}</Typography>
-					<Typography className="address">{product.productAddress}</Typography>
-					<Typography className="price">
-						<strong>${formatterStr(product?.productPrice)}</strong>
-					</Typography>
-				</Stack>
-				<Stack className="date-box">
-					<Typography className="date">
-						<Moment format="DD MMMM, YYYY">{product.createdAt}</Moment>
-					</Typography>
-				</Stack>
-				<Stack className="status-box">
-					<button
-						type="button"
-						className={`coloured-box status-${product.productStatus.toLowerCase()}`}
-						onClick={handleClick}
-						aria-haspopup={!memberPage && product.productStatus === 'ACTIVE' ? 'menu' : undefined}
-					>
-						<span className="status">{t(statusText(product.productStatus))}</span>
-					</button>
-				</Stack>
-				{!memberPage && product.productStatus !== 'SOLD' && (
-					<Menu
-						anchorEl={anchorEl}
-						open={open}
-						onClose={handleClose}
-						PaperProps={{
-							elevation: 0,
-							sx: {
-								minWidth: '140px',
-								mt: 1,
-								ml: '10px',
-								overflow: 'visible',
-								filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-							},
-							style: {
-								padding: 0,
-								display: 'flex',
-								justifyContent: 'center',
-							},
-						}}
-					>
-						{product.productStatus === 'ACTIVE' && (
-							<>
-								<MenuItem
-									disableRipple
-									onClick={() => {
-										handleClose();
-										updateProductHandler(ProductStatus.SOLD, product?._id);
-									}}
-								>
-									{t('Mark as sold out')}
-								</MenuItem>
-							</>
-						)}
-					</Menu>
-				)}
-
-				<Stack className="views-box">
-					<Typography className="views">{product.productViews.toLocaleString()}</Typography>
-				</Stack>
-				{!memberPage && product.productStatus === ProductStatus.ACTIVE && (
-					<Stack className="action-box">
-						<IconButton className="icon-button" aria-label={t('Edit')} onClick={() => pushEditProduct(product._id)}>
-							<ModeIcon className="buttons" />
-						</IconButton>
-						<IconButton className="icon-button delete" aria-label={t('Delete')} onClick={() => deleteProductHandler(product._id)}>
-							<DeleteIcon className="buttons" />
-						</IconButton>
-					</Stack>
-				)}
+	return (
+		<Stack className="product-card-box">
+			<Stack className="image-box" onClick={() => pushProductDetail(product?._id)}>
+				<img src={`${process.env.REACT_APP_API_URL}/${product.productImages[0]}`} alt="" />
 			</Stack>
-		);
+			<Stack className="information-box" onClick={() => pushProductDetail(product?._id)}>
+				<Typography className="name">{product.productTitle}</Typography>
+				<Typography className="address">{product.productAddress}</Typography>
+				<Typography className="price">
+					<strong>${formatterStr(product?.productPrice)}</strong>
+				</Typography>
+			</Stack>
+			<Stack className="date-box">
+				<Typography className="date">
+					<Moment format="DD MMMM, YYYY">{product.createdAt}</Moment>
+				</Typography>
+			</Stack>
+			<Stack className="status-box">
+				<button
+					type="button"
+					className={`coloured-box status-${product.productStatus.toLowerCase()}`}
+					onClick={handleClick}
+					aria-haspopup={!memberPage && product.productStatus === 'ACTIVE' ? 'menu' : undefined}
+				>
+					<span className="status">{t(statusText(product.productStatus))}</span>
+				</button>
+			</Stack>
+			{!memberPage && product.productStatus !== 'SOLD' && (
+				<Menu
+					anchorEl={anchorEl}
+					open={open}
+					onClose={handleClose}
+					PaperProps={{
+						elevation: 0,
+						sx: {
+							minWidth: '140px',
+							mt: 1,
+							ml: '10px',
+							overflow: 'visible',
+							filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+						},
+						style: {
+							padding: 0,
+							display: 'flex',
+							justifyContent: 'center',
+						},
+					}}
+				>
+					{product.productStatus === 'ACTIVE' && (
+						<MenuItem
+							disableRipple
+							onClick={() => {
+								handleClose();
+								updateProductHandler(ProductStatus.SOLD, product?._id);
+							}}
+						>
+							{t('Mark as sold out')}
+						</MenuItem>
+					)}
+				</Menu>
+			)}
+
+			<Stack className="views-box">
+				<Typography className="views">{product.productViews.toLocaleString()}</Typography>
+			</Stack>
+			{!memberPage && product.productStatus === ProductStatus.ACTIVE && (
+				<Stack className="action-box">
+					<IconButton className="icon-button" aria-label={t('Edit')} onClick={() => pushEditProduct(product._id)}>
+						<ModeIcon className="buttons" />
+					</IconButton>
+					<IconButton className="icon-button delete" aria-label={t('Delete')} onClick={() => deleteProductHandler(product._id)}>
+						<DeleteIcon className="buttons" />
+					</IconButton>
+				</Stack>
+			)}
+		</Stack>
+	);
 };

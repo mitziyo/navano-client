@@ -1,70 +1,64 @@
 import React from 'react';
 import { useTranslation } from 'next-i18next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import SectionHeading from './SectionHeading';
 
 interface EventData {
-	eventTitle: string;
-	city: string;
+	date: string;
+	title: string;
 	description: string;
 	imageSrc: string;
 }
 
-// Static content: the backend has no events API yet
+// Static gifting calendar: the backend has no events API
 const eventsData: EventData[] = [
 	{
-		eventTitle: 'Paradise City Theme Park',
-		city: 'Incheon',
-		description:
-			'Experience magic and wonder in Incheon with a visit to the night-themed indoor theme park Wonderbox at Paradise City!',
-		imageSrc: '/img/events/INCHEON.webp',
+		date: 'Feb 14 · Mar 14',
+		title: "Valentine's & White Day",
+		description: 'Handmade chocolates and red roses for the two sweetest days of spring.',
+		imageSrc: '/img/banner/product-hero.jpg',
 	},
 	{
-		eventTitle: 'Taebaeksan Snow Festival',
-		city: 'Seoul',
-		description: 'If you have the opportunity to travel to South Korea, do not miss the Taebaeksan Snow Festival!',
-		imageSrc: '/img/events/SEOUL.webp',
+		date: 'May 8',
+		title: "Parents' Day",
+		description: 'Carnations and a cake from a local bakery to say thank you.',
+		imageSrc: '/img/banner/hero-florist.jpg',
 	},
 	{
-		eventTitle: 'Suseong Lake Event',
-		city: 'Daegu',
-		description: 'The Suseong Lake Festival is a culture and arts festival held alongside Suseongmot Lake!',
-		imageSrc: '/img/events/DAEGU.webp',
+		date: 'Nov 11',
+		title: 'Pepero Day',
+		description: 'Chocolate sticks and sweet boxes to share with friends and colleagues.',
+		imageSrc: '/img/banner/hero-chocolatier.jpg',
 	},
 	{
-		eventTitle: 'Sand Festival',
-		city: 'Busan',
-		description:
-			'Haeundae Sand Festival, the nation’s largest eco-friendly exhibition on sand, is held at Haeundae Beach!',
-		imageSrc: '/img/events/BUSAN.webp',
+		date: 'Dec 25',
+		title: 'Christmas',
+		description: 'Celebration cakes and winter bouquets for the end of the year.',
+		imageSrc: '/img/banner/hero-atelier.jpg',
 	},
 ];
 
 const Events = () => {
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
-
-	if (device === 'mobile') return null;
 
 	return (
 		<section className={'home-section events-section tinted'} aria-labelledby="events-title">
 			<div className={'container'}>
 				<SectionHeading
 					id="events-title"
-					eyebrow={t('● Around Korea')}
+					eyebrow={t('● Gifting calendar')}
 					title={t('Events')}
-					subtitle={t('Seasonal festivals worth a bouquet or a box of chocolates')}
+					subtitle={t('Dates worth a bouquet, a box of chocolates or a cake')}
 				/>
 				<div className={'events-grid'}>
 					{eventsData.map((event) => (
-						<article className={'event-card'} key={event.eventTitle}>
+						<article className={'event-card'} key={event.title}>
 							<img src={event.imageSrc} alt="" loading="lazy" />
 							<div className={'event-shade'} aria-hidden />
 							<div className={'event-top'}>
-								<h3>{event.city}</h3>
-								<p>{event.eventTitle}</p>
+								<p>{event.date}</p>
+								<h3>{t(event.title)}</h3>
 							</div>
-							<p className={'event-desc'}>{event.description}</p>
+							<p className={'event-desc'}>{t(event.description)}</p>
 						</article>
 					))}
 				</div>

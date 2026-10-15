@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination } from '@mui/material';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
@@ -18,7 +17,6 @@ import { Messages } from '../../config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 
 const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const [searchCommunity, setSearchCommunity] = useState({
@@ -65,65 +63,62 @@ const MyArticles: NextPage = ({ initialInput, ...props }: T) => {
 		}
 	};
 
-	if (device === 'mobile') {
-		return <>ARTICLE PAGE MOBILE</>;
-	} else
-		return (
-			<div className={'mp-tab'}>
-				<MyPageHeader group={'Community'} title={'My Articles'} desc={'Your posts on the community boards'} actions={
-						<Link
-							href={{ pathname: '/mypage', query: { category: 'writeArticle' } }}
-							scroll={false}
-							className={'mp-btn mp-btn-primary'}
-						>
-							<EditNoteOutlinedIcon />
-							<span>{t('Write Article')}</span>
-						</Link>
-					} />
-				<section className={'mp-card'}>
-					<div className={'card-head'}>
-						<div className={'card-title'}>
-							<ArticleOutlinedIcon aria-hidden />
-							<h3>{t('Published articles')}</h3>
-						</div>
-						<span className={'card-tag'}>
+	return (
+		<div className={'mp-tab'}>
+			<MyPageHeader group={'Community'} title={'My Articles'} desc={'Your posts on the community boards'} actions={
+					<Link
+						href={{ pathname: '/mypage', query: { category: 'writeArticle' } }}
+						scroll={false}
+						className={'mp-btn mp-btn-primary'}
+					>
+						<EditNoteOutlinedIcon />
+						<span>{t('Write Article')}</span>
+					</Link>
+				} />
+			<section className={'mp-card'}>
+				<div className={'card-head'}>
+					<div className={'card-title'}>
+						<ArticleOutlinedIcon aria-hidden />
+						<h3>{t('Published articles')}</h3>
+					</div>
+					<span className={'card-tag'}>
+						{(totalCount ?? 0)} {t('articles')}
+					</span>
+				</div>
+				{boardArticles?.length ? (
+					<div className={'mp-grid two'}>
+						{boardArticles?.map((boardArticle: BoardArticle) => (
+							<ArticleCard
+								article={boardArticle}
+								key={boardArticle?._id}
+								// ArticleCard passes (user, article); the existing handler takes (event, user, id)
+								likeArticleHandler={(current: any, article: BoardArticle) =>
+									likeBoardArticleHandler({ stopPropagation: () => undefined }, current, article._id)
+								}
+							/>
+						))}
+					</div>
+				) : (
+					<div className={'mp-empty'}>
+						<p>{t('You have not written any articles yet')}</p>
+					</div>
+				)}
+				{boardArticles?.length ? (
+					<footer className={'mp-pagination'}>
+						<Pagination
+							count={Math.ceil((totalCount ?? 0) / searchCommunity.limit)}
+							page={searchCommunity.page}
+							shape="rounded"
+							onChange={paginationHandler}
+						/>
+						<span>
 							{(totalCount ?? 0)} {t('articles')}
 						</span>
-					</div>
-					{boardArticles?.length ? (
-						<div className={'mp-grid two'}>
-							{boardArticles?.map((boardArticle: BoardArticle) => (
-								<ArticleCard
-									article={boardArticle}
-									key={boardArticle?._id}
-									// ArticleCard passes (user, article); the existing handler takes (event, user, id)
-									likeArticleHandler={(current: any, article: BoardArticle) =>
-										likeBoardArticleHandler({ stopPropagation: () => undefined }, current, article._id)
-									}
-								/>
-							))}
-						</div>
-					) : (
-						<div className={'mp-empty'}>
-							<p>{t('You have not written any articles yet')}</p>
-						</div>
-					)}
-					{boardArticles?.length ? (
-						<footer className={'mp-pagination'}>
-							<Pagination
-								count={Math.ceil((totalCount ?? 0) / searchCommunity.limit)}
-								page={searchCommunity.page}
-								shape="rounded"
-								onChange={paginationHandler}
-							/>
-							<span>
-								{(totalCount ?? 0)} {t('articles')}
-							</span>
-						</footer>
-					) : null}
-				</section>
-			</div>
-		);
+					</footer>
+				) : null}
+			</section>
+		</div>
+	);
 };
 
 MyArticles.defaultProps = {

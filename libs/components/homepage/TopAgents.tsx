@@ -2,7 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Stack } from '@mui/material';
 import { useTranslation } from 'next-i18next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
@@ -22,7 +21,6 @@ interface TopAgentsProps {
 
 const TopAgents = (props: TopAgentsProps) => {
 	const { initialInput } = props;
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 
 	/** APOLLO REQUESTS **/
@@ -31,33 +29,6 @@ const TopAgents = (props: TopAgentsProps) => {
 		variables: { input: initialInput },
 	});
 	const topAgents: Member[] = data?.getAgents?.list ?? [];
-
-	if (device === 'mobile') {
-		return (
-			<Stack className={'top-agents'}>
-				<Stack className={'container'}>
-					<Stack className={'info-box'}>
-						<span>{t('Top Stores')}</span>
-					</Stack>
-					<Stack className={'wrapper'}>
-						<Swiper
-							className={'top-agents-swiper'}
-							slidesPerView={'auto'}
-							centeredSlides={true}
-							spaceBetween={29}
-							modules={[Autoplay]}
-						>
-							{topAgents.map((agent: Member) => (
-								<SwiperSlide className={'top-agents-slide'} key={agent?._id}>
-									<TopAgentCard agent={agent} />
-								</SwiperSlide>
-							))}
-						</Swiper>
-					</Stack>
-				</Stack>
-			</Stack>
-		);
-	}
 
 	const canSlide = topAgents.length > 4;
 

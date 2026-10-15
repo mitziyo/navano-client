@@ -5,7 +5,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductLocation, ProductOccasion, ProductType } from '../../enums/product.enum';
 import { ProductsInquiry } from '../../types/product/product.input';
 import { FacetCount, ProductFacets } from '../../types/product/product';
@@ -27,7 +26,6 @@ const countOf = (list: FacetCount[] | undefined, value: string) => list?.find((i
 
 const Filter = (props: FilterProps) => {
 	const { searchFilter, facets, onApply, onReset } = props;
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 	// Edits stay in a draft until "Apply filters"
 	const [draft, setDraft] = useState<Search>(searchFilter.search);
@@ -83,10 +81,6 @@ const Filter = (props: FilterProps) => {
 			})}
 		</fieldset>
 	);
-
-	if (device === 'mobile') {
-		return <div>PRODUCTS FILTER</div>;
-	}
 
 	const price = draft.pricesRange ?? DEFAULT_PRICE_RANGE;
 

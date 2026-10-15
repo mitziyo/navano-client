@@ -17,7 +17,6 @@ import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
 import PostAddOutlinedIcon from '@mui/icons-material/PostAddOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import VerifiedIcon from '@mui/icons-material/Verified';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import ArticleCard from '../../libs/components/community/ArticleCard';
 import NavanoLogo from '../../libs/components/common/NavanoLogo';
@@ -71,7 +70,6 @@ const parseQuery = (query: Record<string, unknown>): CommunityQuery => {
 };
 
 const Community: NextPage = () => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
@@ -157,10 +155,6 @@ const Community: NextPage = () => {
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
-
-	if (device === 'mobile') {
-		return <h1>COMMUNITY PAGE MOBILE</h1>;
-	}
 
 	const board = BOARDS.find((item) => item.value === state.board) ?? BOARDS[0];
 	const pageCount = Math.max(1, Math.ceil(total / PAGE_SIZE));

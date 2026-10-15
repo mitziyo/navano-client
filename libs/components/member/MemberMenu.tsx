@@ -9,7 +9,6 @@ import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import HowToRegOutlinedIcon from '@mui/icons-material/HowToRegOutlined';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Member } from '../../types/member/member';
 import { REACT_APP_API_URL } from '../../config';
 import { GET_MEMBER } from '../../../apollo/user/query';
@@ -23,7 +22,6 @@ interface MemberMenuProps {
 
 const MemberMenu = (props: MemberMenuProps) => {
 	const { subscribeHandler, unsubscribeHandler } = props;
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const category: any = router.query?.category;
@@ -45,10 +43,6 @@ const MemberMenu = (props: MemberMenuProps) => {
 			setMember(data?.getMember);
 		},
 	});
-
-	if (device === 'mobile') {
-		return <div>MEMBER MENU MOBILE</div>;
-	}
 
 	const following = Boolean(member?.meFollowed && member?.meFollowed[0]?.myFollowing);
 	const tabHref = (value: string) => ({ pathname: '/member', query: { ...router.query, category: value } });

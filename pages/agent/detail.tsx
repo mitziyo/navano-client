@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import ProductCard from '../../libs/components/product/ProductCard';
 import ProfileHero, { ProfileMetric } from '../../libs/components/member/ProfileHero';
@@ -39,7 +38,6 @@ export const getStaticProps = async ({ locale }: any) => ({
 });
 
 const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	// The server render never knows the query, so the missing-store check waits until after hydration
@@ -198,9 +196,7 @@ const AgentDetail: NextPage = ({ initialInput, initialComment, ...props }: any) 
 			Boolean(getMemberError) ||
 			(getMemberData?.getMember && getMemberData.getMember.memberType !== MemberType.AGENT));
 
-	if (device === 'mobile') {
-		return <div>AGENT DETAIL PAGE MOBILE</div>;
-	} else if (storeMissing) {
+	if (storeMissing) {
 		return (
 			<Stack className={'agent-detail-page nv-profile'}>
 				<Stack className={'container store-missing'}>

@@ -21,7 +21,6 @@ import CallOutlinedIcon from '@mui/icons-material/CallOutlined';
 import NorthEastIcon from '@mui/icons-material/NorthEast';
 import StorefrontOutlinedIcon from '@mui/icons-material/StorefrontOutlined';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutFull from '../../libs/components/layout/LayoutFull';
 import ProductCard from '../../libs/components/product/ProductCard';
 import ProductTypeIcon from '../../libs/components/common/ProductTypeIcon';
@@ -52,7 +51,6 @@ const COMMENT_LIMIT = 5;
 const imageUrl = (path?: string) => (path ? `${REACT_APP_API_URL}/${path}` : '/img/banner/product-hero.jpg');
 
 const ProductDetail: NextPage = () => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
@@ -164,10 +162,6 @@ const ProductDetail: NextPage = () => {
 		const lines = [contact.message.trim(), contact.name && `— ${contact.name}`, contact.phone && `${t('Phone')}: ${contact.phone}`];
 		window.location.href = `sms:${phone}?&body=${encodeURIComponent(lines.filter(Boolean).join('\n'))}`;
 	};
-
-	if (device === 'mobile') {
-		return <div>PRODUCT DETAIL PAGE</div>;
-	}
 
 	// Without an id there is nothing to load; the check waits for hydration so server and client HTML match
 	const missingId = mounted && router.isReady && !productId;

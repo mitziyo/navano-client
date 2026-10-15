@@ -5,7 +5,6 @@ import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import TwitterIcon from '@mui/icons-material/Twitter';
-import useDeviceDetect from '../hooks/useDeviceDetect';
 import { Stack, Box } from '@mui/material';
 import moment from 'moment';
 import NavanoLogo from './common/NavanoLogo';
@@ -46,38 +45,7 @@ const socials = [
 ];
 
 const Footer = () => {
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
-
-	if (device == 'mobile') {
-		return (
-			<Stack className={'footer-container'}>
-				<Stack className={'main'}>
-					<Stack className={'left'}>
-						<Box component={'div'} className={'footer-box'}>
-							<NavanoLogo className={'logo'} />
-						</Box>
-						<Box component={'div'} className={'footer-box'}>
-							<span>total free customer care</span>
-							<p>+82 10 4867 2909</p>
-						</Box>
-						<Box component={'div'} className={'footer-box'}>
-							<p>follow us on social media</p>
-							<div className={'media-box'}>
-								<FacebookOutlinedIcon />
-								<TelegramIcon />
-								<InstagramIcon />
-								<TwitterIcon />
-							</div>
-						</Box>
-					</Stack>
-				</Stack>
-				<Stack className={'second'}>
-					<span>© Navano - All rights reserved. Navano {moment().year()}</span>
-				</Stack>
-			</Stack>
-		);
-	}
 
 	return (
 		<footer className={'site-footer'}>

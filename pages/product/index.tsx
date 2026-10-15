@@ -16,7 +16,6 @@ import ProductCard from '../../libs/components/product/ProductCard';
 import Filter, { DEFAULT_PRICE_RANGE } from '../../libs/components/product/Filter';
 import { CardSkeletons } from '../../libs/components/homepage/SectionState';
 import { toLabel } from '../../libs/components/homepage/productLabels';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import { ProductsInquiry } from '../../libs/types/product/product.input';
 import { Product, ProductFacets } from '../../libs/types/product/product';
@@ -67,7 +66,6 @@ const parseInput = (raw: unknown): ProductsInquiry => {
 type ListKey = 'locationList' | 'typeList' | 'occasionList';
 
 const ProductList: NextPage = () => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const [sortAnchor, setSortAnchor] = useState<null | HTMLElement>(null);
@@ -131,10 +129,6 @@ const ProductList: NextPage = () => {
 			sweetMixinErrorAlert(err.message).then();
 		}
 	};
-
-	if (device === 'mobile') {
-		return <h1>PRODUCTS MOBILE</h1>;
-	}
 
 	const { search } = searchFilter;
 	const currentSort =

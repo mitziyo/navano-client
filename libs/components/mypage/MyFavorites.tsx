@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { NextPage } from 'next';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { Pagination } from '@mui/material';
 import { useTranslation } from 'next-i18next';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -15,7 +14,6 @@ import { Messages } from '../../config';
 import { sweetMixinErrorAlert, sweetTopSmallSuccessAlert } from '../../sweetAlert';
 
 const MyFavorites: NextPage = () => {
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 	const [myFavorites, setMyFavorites] = useState<Product[]>([]);
 	const [total, setTotal] = useState<number>(0);
@@ -59,50 +57,46 @@ const MyFavorites: NextPage = () => {
 		}
 	};
 
-	if (device === 'mobile') {
-		return <div>NAVANO MY FAVORITES MOBILE</div>;
-	} else {
-		return (
-			<div className={'mp-tab'}>
-				<MyPageHeader group={'Manage Listings'} title={'My Favorites'} desc={'Products you liked, saved in one place'} />
-				<section className={'mp-card'}>
-					<div className={'card-head'}>
-						<div className={'card-title'}>
-							<FavoriteBorderIcon aria-hidden />
-							<h3>{t('Liked products')}</h3>
-						</div>
-						<span className={'card-tag'}>
+	return (
+		<div className={'mp-tab'}>
+			<MyPageHeader group={'Manage Listings'} title={'My Favorites'} desc={'Products you liked, saved in one place'} />
+			<section className={'mp-card'}>
+				<div className={'card-head'}>
+					<div className={'card-title'}>
+						<FavoriteBorderIcon aria-hidden />
+						<h3>{t('Liked products')}</h3>
+					</div>
+					<span className={'card-tag'}>
+						{total} {t('products')}
+					</span>
+				</div>
+				{myFavorites?.length ? (
+					<div className={'mp-grid'}>
+						{myFavorites?.map((product: Product) => (
+							<ProductCard product={product} likeProductHandler={likeProductHandler} myFavorites={true} key={product._id} />
+						))}
+					</div>
+				) : (
+					<div className={'mp-empty'}>
+						<p>{t('You have not liked any products yet')}</p>
+					</div>
+				)}
+				{myFavorites?.length ? (
+					<footer className={'mp-pagination'}>
+						<Pagination
+							count={Math.ceil(total / searchFavorites.limit)}
+							page={searchFavorites.page}
+							shape="rounded"
+							onChange={paginationHandler}
+						/>
+						<span>
 							{total} {t('products')}
 						</span>
-					</div>
-					{myFavorites?.length ? (
-						<div className={'mp-grid'}>
-							{myFavorites?.map((product: Product) => (
-								<ProductCard product={product} likeProductHandler={likeProductHandler} myFavorites={true} key={product._id} />
-							))}
-						</div>
-					) : (
-						<div className={'mp-empty'}>
-							<p>{t('You have not liked any products yet')}</p>
-						</div>
-					)}
-					{myFavorites?.length ? (
-						<footer className={'mp-pagination'}>
-							<Pagination
-								count={Math.ceil(total / searchFavorites.limit)}
-								page={searchFavorites.page}
-								shape="rounded"
-								onChange={paginationHandler}
-							/>
-							<span>
-								{total} {t('products')}
-							</span>
-						</footer>
-					) : null}
-				</section>
-			</div>
-		);
-	}
+					</footer>
+				) : null}
+			</section>
+		</div>
+	);
 };
 
 export default MyFavorites;

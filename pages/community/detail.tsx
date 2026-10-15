@@ -23,7 +23,6 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import ChatBubbleOutlineRoundedIcon from '@mui/icons-material/ChatBubbleOutlineRounded';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import useDeviceDetect from '../../libs/hooks/useDeviceDetect';
 import withLayoutBasic from '../../libs/components/layout/LayoutBasic';
 import NavanoLogo from '../../libs/components/common/NavanoLogo';
 import { BOARDS } from '../../libs/components/community/boards';
@@ -63,7 +62,6 @@ const BOARD_ICONS: Record<BoardArticleCategory, React.ReactNode> = {
 const avatarUrl = (image?: string) => (image ? `${REACT_APP_API_URL}/${image}` : '/img/profile/defaultUser.svg');
 
 const CommunityDetail: NextPage = () => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
@@ -173,10 +171,6 @@ const CommunityDetail: NextPage = () => {
 			await sweetMixinErrorAlert(err.message);
 		}
 	};
-
-	if (device === 'mobile') {
-		return <div>COMMUNITY DETAIL PAGE MOBILE</div>;
-	}
 
 	const board = BOARDS.find((item) => item.value === article?.articleCategory) ?? BOARDS[0];
 	const author = article?.memberData;

@@ -8,7 +8,6 @@ import PhotoLibraryOutlinedIcon from '@mui/icons-material/PhotoLibraryOutlined';
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined';
 import MyPageHeader from './MyPageHeader';
 import { toLabel } from '../homepage/productLabels';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import { ProductLocation, ProductOccasion, ProductType } from '../../enums/product.enum';
 import { REACT_APP_API_URL } from '../../config';
 import { ProductInput } from '../../types/product/product.input';
@@ -21,7 +20,6 @@ import { CREATE_PRODUCT, UPDATE_PRODUCT } from '../../../apollo/user/mutation';
 import { GET_PRODUCT } from '../../../apollo/user/query';
 
 const AddProduct = ({ initialValues, ...props }: any) => {
-	const device = useDeviceDetect();
 	const router = useRouter();
 	const { t } = useTranslation('common');
 	const inputRef = useRef<any>(null);
@@ -166,214 +164,210 @@ const AddProduct = ({ initialValues, ...props }: any) => {
 
 	console.log('+insertProductData', insertProductData);
 
-	if (device === 'mobile') {
-		return <div>ADD NEW PRODUCT MOBILE PAGE</div>;
-	} else {
-		const editing = Boolean(router.query.productId);
+	const editing = Boolean(router.query.productId);
 
-		return (
-			<div id="add-product-page" className={'mp-tab'}>
-				<MyPageHeader
-					group={'Manage Listings'}
-					title={editing ? 'Edit Product' : 'Add New Product'}
-					desc={'Fill in the details buyers see on the product page'}
-				/>
+	return (
+		<div id="add-product-page" className={'mp-tab'}>
+			<MyPageHeader
+				group={'Manage Listings'}
+				title={editing ? 'Edit Product' : 'Add New Product'}
+				desc={'Fill in the details buyers see on the product page'}
+			/>
 
-				<section className={'mp-card'}>
-					<div className={'card-head'}>
-						<div className={'card-title'}>
-							<Inventory2OutlinedIcon aria-hidden />
-							<h3>{t('Product details')}</h3>
-						</div>
-						<span className={'card-tag'}>{t('All fields required')}</span>
+			<section className={'mp-card'}>
+				<div className={'card-head'}>
+					<div className={'card-title'}>
+						<Inventory2OutlinedIcon aria-hidden />
+						<h3>{t('Product details')}</h3>
 					</div>
-					<div className={'form-grid'}>
-						<label className={'field span-2'}>
-							<span className={'field-label'}>{t('Title')}</span>
-							<span className={'input-wrap'}>
-								<input
-									type="text"
-									placeholder={t('e.g. Peach rose bouquet')}
-									value={insertProductData.productTitle}
-									onChange={({ target: { value } }) =>
-										setInsertProductData({ ...insertProductData, productTitle: value })
-									}
-								/>
-							</span>
-						</label>
-						<label className={'field'}>
-							<span className={'field-label'}>{t('Price')}</span>
-							<span className={'input-wrap'}>
-								<span className={'prefix'}>$</span>
-								<input
-									type="text"
-									placeholder={t('Price')}
-									value={insertProductData.productPrice}
-									onChange={({ target: { value } }) =>
-										setInsertProductData({ ...insertProductData, productPrice: parseInt(value) })
-									}
-								/>
-							</span>
-						</label>
-							<label className={'field'}>
-								<span className={'field-label'}>{t('Product type')}</span>
-								<span className={'input-wrap select-wrap'}>
-									<select
-										value={insertProductData.productType || 'select'}
-										onChange={({ target: { value } }) =>
-											// @ts-ignore
-											setInsertProductData({ ...insertProductData, productType: value })
-										}
-									>
-										<option disabled={true} value={'select'}>
-											{t('Select')}
-										</option>
-										{productType.map((type: any) => (
-											<option value={`${type}`} key={type}>
-												{t(toLabel(type))}
-											</option>
-										))}
-									</select>
-									<ExpandMoreIcon className={'suffix-icon'} aria-hidden />
-								</span>
-							</label>
-							<label className={'field'}>
-								<span className={'field-label'}>{t('Location')}</span>
-								<span className={'input-wrap select-wrap'}>
-									<select
-										value={insertProductData.productLocation || 'select'}
-										onChange={({ target: { value } }) =>
-											// @ts-ignore
-											setInsertProductData({ ...insertProductData, productLocation: value })
-										}
-									>
-										<option disabled={true} value={'select'}>
-											{t('Select')}
-										</option>
-										{productLocation.map((location: any) => (
-											<option value={`${location}`} key={location}>
-												{t(toLabel(location))}
-											</option>
-										))}
-									</select>
-									<ExpandMoreIcon className={'suffix-icon'} aria-hidden />
-								</span>
-							</label>
-						<label className={'field'}>
-							<span className={'field-label'}>{t('Address')}</span>
-							<span className={'input-wrap'}>
-								<input
-									type="text"
-									placeholder={t('Address')}
-									value={insertProductData.productAddress}
-									onChange={({ target: { value } }) =>
-										setInsertProductData({ ...insertProductData, productAddress: value })
-									}
-								/>
-							</span>
-						</label>
-						<label className={'field'}>
-							<span className={'field-label'}>{t('Item Count')}</span>
-							<span className={'input-wrap'}>
-								<input
-									type="number"
-									min={1}
-									placeholder={t('Item Count')}
-									value={insertProductData.productItemCount || ''}
-									onChange={({ target: { value } }) =>
-										setInsertProductData({ ...insertProductData, productItemCount: parseInt(value) || 0 })
-									}
-								/>
-							</span>
-						</label>
-							<label className={'field'}>
-								<span className={'field-label'}>{t('Occasion')}</span>
-								<span className={'input-wrap select-wrap'}>
-									<select
-										value={insertProductData.productOccasion || 'select'}
-										onChange={({ target: { value } }) =>
-											// @ts-ignore
-											setInsertProductData({ ...insertProductData, productOccasion: value })
-										}
-									>
-										<option disabled={true} value={'select'}>
-											{t('Select')}
-										</option>
-										{productOccasion.map((occasion: any) => (
-											<option value={`${occasion}`} key={occasion}>
-												{t(toLabel(occasion))}
-											</option>
-										))}
-									</select>
-									<ExpandMoreIcon className={'suffix-icon'} aria-hidden />
-								</span>
-							</label>
-						<label className={'field span-2'}>
-							<span className={'field-label'}>{t('Description')}</span>
-							<textarea
-								rows={5}
-								placeholder={t('What is in it, how big it is, how long it stays fresh')}
-								value={insertProductData.productDesc}
-								onChange={({ target: { value } }) =>
-									setInsertProductData({ ...insertProductData, productDesc: value })
-								}
-							></textarea>
-						</label>
-					</div>
-				</section>
-
-				<section className={'mp-card'}>
-					<div className={'card-head'}>
-						<div className={'card-title'}>
-							<PhotoLibraryOutlinedIcon aria-hidden />
-							<h3>{t('Photos')}</h3>
-						</div>
-						<span className={'card-tag'}>{insertProductData?.productImages.length} / 5</span>
-					</div>
-					<button type="button" className={'upload-zone'} onClick={() => inputRef.current.click()}>
-						<CloudUploadOutlinedIcon aria-hidden />
-						<strong>{t('Upload photos of your product')}</strong>
-						<span>{t('Up to 5 images, JPG or PNG')}</span>
-						<span className={'mp-btn mp-btn-secondary'}>{t('Browse Files')}</span>
-					</button>
-					<input
-						ref={inputRef}
-						type="file"
-						hidden={true}
-						onChange={uploadImages}
-						multiple={true}
-						accept="image/jpg, image/jpeg, image/png"
-					/>
-					{insertProductData?.productImages.length > 0 && (
-						<div className={'upload-gallery'}>
-							{insertProductData?.productImages.map((image: string, index: number) => {
-								const imagePath: string = `${REACT_APP_API_URL}/${image}`;
-								return (
-									<span className={'gallery-item'} key={image}>
-										<img src={imagePath} alt="" />
-										{index === 0 && <small>{t('Cover')}</small>}
-									</span>
-								);
-							})}
-						</div>
-					)}
-				</section>
-
-				<div className={'save-bar'}>
-					<span>{doDisabledCheck() ? t('Fill in every field and add at least one photo') : t('Ready to save')}</span>
-					{editing ? (
-						<Button className="mp-btn mp-btn-primary" disabled={doDisabledCheck()} onClick={updateProductHandler}>
-							{t('Save changes')}
-						</Button>
-					) : (
-						<Button className="mp-btn mp-btn-primary" disabled={doDisabledCheck()} onClick={insertProductHandler}>
-							{t('Publish product')}
-						</Button>
-					)}
+					<span className={'card-tag'}>{t('All fields required')}</span>
 				</div>
+				<div className={'form-grid'}>
+					<label className={'field span-2'}>
+						<span className={'field-label'}>{t('Title')}</span>
+						<span className={'input-wrap'}>
+							<input
+								type="text"
+								placeholder={t('e.g. Peach rose bouquet')}
+								value={insertProductData.productTitle}
+								onChange={({ target: { value } }) =>
+									setInsertProductData({ ...insertProductData, productTitle: value })
+								}
+							/>
+						</span>
+					</label>
+					<label className={'field'}>
+						<span className={'field-label'}>{t('Price')}</span>
+						<span className={'input-wrap'}>
+							<span className={'prefix'}>$</span>
+							<input
+								type="text"
+								placeholder={t('Price')}
+								value={insertProductData.productPrice}
+								onChange={({ target: { value } }) =>
+									setInsertProductData({ ...insertProductData, productPrice: parseInt(value) })
+								}
+							/>
+						</span>
+					</label>
+						<label className={'field'}>
+							<span className={'field-label'}>{t('Product type')}</span>
+							<span className={'input-wrap select-wrap'}>
+								<select
+									value={insertProductData.productType || 'select'}
+									onChange={({ target: { value } }) =>
+										// @ts-ignore
+										setInsertProductData({ ...insertProductData, productType: value })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										{t('Select')}
+									</option>
+									{productType.map((type: any) => (
+										<option value={`${type}`} key={type}>
+											{t(toLabel(type))}
+										</option>
+									))}
+								</select>
+								<ExpandMoreIcon className={'suffix-icon'} aria-hidden />
+							</span>
+						</label>
+						<label className={'field'}>
+							<span className={'field-label'}>{t('Location')}</span>
+							<span className={'input-wrap select-wrap'}>
+								<select
+									value={insertProductData.productLocation || 'select'}
+									onChange={({ target: { value } }) =>
+										// @ts-ignore
+										setInsertProductData({ ...insertProductData, productLocation: value })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										{t('Select')}
+									</option>
+									{productLocation.map((location: any) => (
+										<option value={`${location}`} key={location}>
+											{t(toLabel(location))}
+										</option>
+									))}
+								</select>
+								<ExpandMoreIcon className={'suffix-icon'} aria-hidden />
+							</span>
+						</label>
+					<label className={'field'}>
+						<span className={'field-label'}>{t('Address')}</span>
+						<span className={'input-wrap'}>
+							<input
+								type="text"
+								placeholder={t('Address')}
+								value={insertProductData.productAddress}
+								onChange={({ target: { value } }) =>
+									setInsertProductData({ ...insertProductData, productAddress: value })
+								}
+							/>
+						</span>
+					</label>
+					<label className={'field'}>
+						<span className={'field-label'}>{t('Item Count')}</span>
+						<span className={'input-wrap'}>
+							<input
+								type="number"
+								min={1}
+								placeholder={t('Item Count')}
+								value={insertProductData.productItemCount || ''}
+								onChange={({ target: { value } }) =>
+									setInsertProductData({ ...insertProductData, productItemCount: parseInt(value) || 0 })
+								}
+							/>
+						</span>
+					</label>
+						<label className={'field'}>
+							<span className={'field-label'}>{t('Occasion')}</span>
+							<span className={'input-wrap select-wrap'}>
+								<select
+									value={insertProductData.productOccasion || 'select'}
+									onChange={({ target: { value } }) =>
+										// @ts-ignore
+										setInsertProductData({ ...insertProductData, productOccasion: value })
+									}
+								>
+									<option disabled={true} value={'select'}>
+										{t('Select')}
+									</option>
+									{productOccasion.map((occasion: any) => (
+										<option value={`${occasion}`} key={occasion}>
+											{t(toLabel(occasion))}
+										</option>
+									))}
+								</select>
+								<ExpandMoreIcon className={'suffix-icon'} aria-hidden />
+							</span>
+						</label>
+					<label className={'field span-2'}>
+						<span className={'field-label'}>{t('Description')}</span>
+						<textarea
+							rows={5}
+							placeholder={t('What is in it, how big it is, how long it stays fresh')}
+							value={insertProductData.productDesc}
+							onChange={({ target: { value } }) =>
+								setInsertProductData({ ...insertProductData, productDesc: value })
+							}
+						></textarea>
+					</label>
+				</div>
+			</section>
+
+			<section className={'mp-card'}>
+				<div className={'card-head'}>
+					<div className={'card-title'}>
+						<PhotoLibraryOutlinedIcon aria-hidden />
+						<h3>{t('Photos')}</h3>
+					</div>
+					<span className={'card-tag'}>{insertProductData?.productImages.length} / 5</span>
+				</div>
+				<button type="button" className={'upload-zone'} onClick={() => inputRef.current.click()}>
+					<CloudUploadOutlinedIcon aria-hidden />
+					<strong>{t('Upload photos of your product')}</strong>
+					<span>{t('Up to 5 images, JPG or PNG')}</span>
+					<span className={'mp-btn mp-btn-secondary'}>{t('Browse Files')}</span>
+				</button>
+				<input
+					ref={inputRef}
+					type="file"
+					hidden={true}
+					onChange={uploadImages}
+					multiple={true}
+					accept="image/jpg, image/jpeg, image/png"
+				/>
+				{insertProductData?.productImages.length > 0 && (
+					<div className={'upload-gallery'}>
+						{insertProductData?.productImages.map((image: string, index: number) => {
+							const imagePath: string = `${REACT_APP_API_URL}/${image}`;
+							return (
+								<span className={'gallery-item'} key={image}>
+									<img src={imagePath} alt="" />
+									{index === 0 && <small>{t('Cover')}</small>}
+								</span>
+							);
+						})}
+					</div>
+				)}
+			</section>
+
+			<div className={'save-bar'}>
+				<span>{doDisabledCheck() ? t('Fill in every field and add at least one photo') : t('Ready to save')}</span>
+				{editing ? (
+					<Button className="mp-btn mp-btn-primary" disabled={doDisabledCheck()} onClick={updateProductHandler}>
+						{t('Save changes')}
+					</Button>
+				) : (
+					<Button className="mp-btn mp-btn-primary" disabled={doDisabledCheck()} onClick={insertProductHandler}>
+						{t('Publish product')}
+					</Button>
+				)}
 			</div>
-		);
-	}
+		</div>
+	);
 };
 
 AddProduct.defaultProps = {

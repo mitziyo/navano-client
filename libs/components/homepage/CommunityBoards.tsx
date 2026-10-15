@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import useDeviceDetect from '../../hooks/useDeviceDetect';
 import CommunityCard from './CommunityCard';
 import { CardSkeletons, EmptyState } from './SectionState';
 import { BoardArticle } from '../../types/board-article/board-article';
@@ -16,7 +15,6 @@ const tabs = [
 ];
 
 const CommunityBoards = () => {
-	const device = useDeviceDetect();
 	const { t } = useTranslation('common');
 	const [category, setCategory] = useState<BoardArticleCategory>(BoardArticleCategory.NEWS);
 
@@ -29,8 +27,6 @@ const CommunityBoards = () => {
 		},
 	});
 	const articles: BoardArticle[] = data?.getBoardArticles?.list ?? [];
-
-	if (device === 'mobile') return null;
 
 	return (
 		<section className={'home-section community-section'} aria-labelledby="community-title">
