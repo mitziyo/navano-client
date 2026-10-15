@@ -38,7 +38,7 @@ const ArticleCard = ({ article, likeArticleHandler }: ArticleCardProps) => {
 	const { t } = useTranslation('common');
 	const user = useReactiveVar(userVar);
 	const author = article.memberData;
-	const cover = article.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '/img/community/communityImg.png';
+	const cover = article.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '/img/banner/community-hero.jpg';
 	const avatar = author?.memberImage ? `${REACT_APP_API_URL}/${author.memberImage}` : '/img/profile/defaultUser.svg';
 	const excerpt = toPlainText(article.articleContent);
 	const liked = Boolean(article.meLiked?.[0]?.myFavorite);

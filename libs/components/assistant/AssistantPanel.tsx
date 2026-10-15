@@ -40,7 +40,7 @@ const loadChat = (memberId: string): AssistantMessage[] => {
 };
 
 const ProductChip = ({ product, onOpen }: { product: AssistantProduct; onOpen: () => void }) => {
-	const image = product.productImages?.[0] ? `${REACT_APP_API_URL}/${product.productImages[0]}` : '/img/banner/header1.svg';
+	const image = product.productImages?.[0] ? `${REACT_APP_API_URL}/${product.productImages[0]}` : '/img/banner/product-hero.jpg';
 	return (
 		<Link
 			href={{ pathname: '/product/detail', query: { id: product._id } }}

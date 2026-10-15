@@ -23,7 +23,7 @@ const CommunityCard = (props: CommunityCardProps) => {
 	const user = useReactiveVar(userVar);
 	const imagePath: string = boardArticle?.articleImage
 		? `${REACT_APP_API_URL}/${boardArticle?.articleImage}`
-		: '/img/community/communityImg.png';
+		: '/img/banner/community-hero.jpg';
 
 	/** HANDLERS **/
 	const chooseArticleHandler = (e: React.SyntheticEvent, boardArticle: BoardArticle) => {

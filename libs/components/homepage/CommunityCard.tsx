@@ -16,7 +16,7 @@ interface CommunityCardProps {
 const CommunityCard = (props: CommunityCardProps) => {
 	const { article } = props;
 	const { t } = useTranslation('common');
-	const articleImage = article?.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '/img/event.svg';
+	const articleImage = article?.articleImage ? `${REACT_APP_API_URL}/${article.articleImage}` : '/img/banner/community-hero.jpg';
 
 	return (
 		<Link
