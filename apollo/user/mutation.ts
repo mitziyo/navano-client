@@ -61,6 +61,21 @@ export const LOGIN = gql`
 	}
 `;
 
+// Both are sent with the httpOnly refresh cookie (libs/auth postWithCookie)
+export const REFRESH_TOKEN = gql`
+	mutation RefreshToken {
+		refreshToken {
+			accessToken
+		}
+	}
+`;
+
+export const LOGOUT = gql`
+	mutation Logout {
+		logout
+	}
+`;
+
 export const UPDATE_MEMBER = gql`
 	mutation UpdateMember($input: MemberUpdate!) {
 		updateMember(input: $input) {

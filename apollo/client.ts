@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
-import { ApolloClient, ApolloLink, InMemoryCache, split, from, NormalizedCacheObject } from '@apollo/client';
+import { ApolloClient, InMemoryCache, split, from, NormalizedCacheObject } from '@apollo/client';
 import createUploadLink from 'apollo-upload-client/public/createUploadLink.js';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { onError } from '@apollo/client/link/error';
-import { expireSession, getJwtToken } from '../libs/auth';
+import { setContext } from '@apollo/client/link/context';
+import { expireSession, getFreshJwtToken, getJwtToken } from '../libs/auth';
 import { sweetErrorAlert } from '../libs/sweetAlert';
 import { socketVar } from './store';
 let apolloClient: ApolloClient<NormalizedCacheObject>;
@@ -52,19 +53,16 @@ class LoggingWebSocket {
 
 function createIsomorphicLink() {
 	if (typeof window !== 'undefined') {
-		const authLink = new ApolloLink((operation, forward) => {
-			operation.setContext(({ headers = {} }) => ({
-				headers: {
-					...headers,
-					...getHeaders(),
-				},
-			}));
-			return forward(operation);
+		// An expired access token is renewed (refresh cookie) before the request goes out
+		const authLink = setContext(async (_, { headers = {} }) => {
+			const token = await getFreshJwtToken();
+			return { headers: token ? { ...headers, Authorization: `Bearer ${token}` } : headers };
 		});
 
 		// @ts-ignore
 		const link = new createUploadLink({
 			uri: process.env.REACT_APP_API_GRAPHQL_URL,
+			credentials: 'include', // login / signup set the refresh cookie
 		});
 
 		/* WEBSOCKET SUBSCRIPTION LINK */
