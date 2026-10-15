@@ -239,6 +239,8 @@ const Top = () => {
 						>
 							<MenuRoundedIcon />
 						</button>
+
+						<AssistantButton />
 					</div>
 				</div>
 			</header>
@@ -301,8 +303,7 @@ const Top = () => {
 					</Link>
 				)}
 			</Drawer>
-			{/* Floating dock above the chat button (bottom-right) */}
-			<AssistantButton />
+			{/* Opens under the navbar, right side */}
 			<AssistantPanel />
 		</MotionConfig>
 	);

@@ -287,8 +287,14 @@ $bp-small: 480px;
 			right: 8px;
 		}
 	}
+	/* Navano AI pill keeps only its icon in the narrow navbar */
 	#pc-wrap .ai-btn {
-		right: 16px;
+		width: 40px;
+		justify-content: center;
+		padding: 0;
+		span {
+			display: none;
+		}
 	}
 	#pc-wrap .chatting .chat-button {
 		right: 16px;

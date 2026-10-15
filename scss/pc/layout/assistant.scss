@@ -1,12 +1,14 @@
 /** NAVANO AI: navbar button and chat panel (light + dark via --nv-* variables) **/
 #pc-wrap {
-	/* Pill with a gradient border, pinned bottom-right above the chat button (.chat-button: bottom 90px) */
+	/* Pill with a gradient border, pinned to the right edge of the screen inside the navbar row
+	   (the header has backdrop-filter, so top/right are measured from the full-width header) */
 	.ai-btn {
 		position: fixed;
-		bottom: 150px;
-		right: 30px;
-		z-index: 999;
+		top: 20px;
+		right: 16px;
+		z-index: 100;
 		display: inline-flex;
+		flex-shrink: 0;
 		align-items: center;
 		gap: 8px;
 		height: 40px;
@@ -14,7 +16,7 @@
 		border: 1.5px solid transparent;
 		border-radius: 999px;
 		background: linear-gradient(var(--nv-surface), var(--nv-surface)) padding-box, var(--nv-ai-gradient) border-box;
-		box-shadow: 0 0 10px rgba(50, 50, 50, 0.2);
+		box-shadow: $nv-shadow-sm;
 		color: var(--nv-ink);
 		font-family: $nv-font-label;
 		font-size: 14px;
@@ -39,16 +41,16 @@
 		}
 	}
 
-	/* Same pattern as .chat-frame: off-screen on the right, slides in with .open */
+	/* Under the navbar on the right; slides in from the right edge with .open */
 	.ai-panel {
 		position: fixed;
-		bottom: 210px;
+		top: 92px;
 		right: -440px;
 		z-index: 120;
 		display: flex;
 		flex-direction: column;
-		width: min(400px, calc(100vw - 40px));
-		height: min(560px, calc(100vh - 310px));
+		width: min(400px, calc(100vw - 20px));
+		height: min(640px, calc(100vh - 110px));
 		visibility: hidden;
 		transition: right 0.5s $nv-ease, visibility 0s linear 0.5s;
 		&.open {

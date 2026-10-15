@@ -363,7 +363,7 @@
 	}
 }
 
-/* ---------- Responsive navbar: pills move into the drawer below 1024px ---------- */
+/* ---------- Responsive navbar: pills move into the drawer at 1180px and below ---------- */
 #pc-wrap #top .menu-btn {
 	display: none;
 }
@@ -377,7 +377,7 @@
 		}
 	}
 }
-@media (max-width: 1023px) {
+@media (max-width: 1180px) {
 	#pc-wrap #top {
 		.nav-pills {
 			display: none;
@@ -419,8 +419,8 @@
 		}
 	}
 }
-@media (max-width: 380px) {
-	#pc-wrap #top .brand-text {
+@media (max-width: 420px) {
+	#pc-wrap #top .brand .brand-text {
 		display: none;
 	}
 }
@@ -549,5 +549,17 @@
 				color: inherit;
 			}
 		}
+	}
+}
+
+/* Room for the Navano AI pill pinned at the right edge (pill 131px + 13px gap + 16px offset):
+   only added when the side margin of the 1300px container is narrower than that */
+#pc-wrap #top .navbar-inner {
+	padding-right: max(0px, calc(160px - max(16px, (100vw - 1300px) / 2)));
+}
+@media (max-width: 767px) {
+	/* Icon-only pill (40px) */
+	#pc-wrap #top .navbar-inner {
+		padding-right: 54px;
 	}
 }

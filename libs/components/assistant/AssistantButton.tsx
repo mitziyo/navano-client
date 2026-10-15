@@ -4,7 +4,7 @@ import { useReactiveVar } from '@apollo/client';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { assistantOpenVar, chatOpenVar } from '../../../apollo/store';
 
-// Floating "Navano AI" pill, pinned bottom-right right above the chat button; one panel open at a time
+// "Navano AI" pill, last item of the navbar actions; the panel and the live chat never open together
 const AssistantButton = () => {
 	const { t } = useTranslation('common');
 	const open = useReactiveVar(assistantOpenVar);
