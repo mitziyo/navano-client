@@ -229,3 +229,325 @@
 }
 
 /* Dark theme: blue logo mark, as in the dark design */
+
+/* Notification bell: badge on the navbar button, list in a MUI menu (portal, so global) */
+#pc-wrap .bell-btn {
+	position: relative;
+	.bell-badge {
+		position: absolute;
+		top: -6px;
+		right: -6px;
+		min-width: 18px;
+		height: 18px;
+		padding: 0 5px;
+		border-radius: 999px;
+		border: 2px solid var(--nv-surface);
+		background: var(--nv-primary);
+		color: var(--nv-on-primary);
+		font-family: $nv-font-label;
+		font-size: 10px;
+		font-weight: 800;
+		line-height: 14px;
+		text-align: center;
+	}
+}
+
+.bell-menu {
+	width: 360px;
+	max-width: calc(100vw - 32px);
+	max-height: min(480px, calc(100vh - 120px));
+	padding: 0 !important;
+	overflow-y: auto;
+	font-family: $nv-font-body;
+	.bell-head {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 12px 14px;
+		border-bottom: 1px solid var(--nv-line-soft);
+		background: var(--nv-surface);
+		strong {
+			font-family: $nv-font-head;
+			font-size: 15px;
+			color: var(--nv-ink);
+		}
+		button {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			padding: 4px 8px;
+			border: 0;
+			border-radius: 8px;
+			background: transparent;
+			color: var(--nv-primary);
+			font-family: $nv-font-label;
+			font-size: 12px;
+			font-weight: 700;
+			cursor: pointer;
+			svg {
+				font-size: 16px;
+			}
+			&:hover {
+				background: var(--nv-primary-light);
+			}
+		}
+	}
+	.bell-empty {
+		margin: 0;
+		padding: 28px 16px;
+		text-align: center;
+		font-size: 13px;
+		color: var(--nv-muted);
+	}
+	.bell-item {
+		position: relative;
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+		width: 100%;
+		padding: 12px 30px 12px 14px;
+		border: 0;
+		border-bottom: 1px solid var(--nv-line-soft);
+		background: transparent;
+		color: var(--nv-ink);
+		text-align: left;
+		cursor: pointer;
+		&:last-child {
+			border-bottom: 0;
+		}
+		&:hover,
+		&:focus-visible {
+			background: var(--nv-primary-light);
+			outline: none;
+		}
+		&.unread {
+			background: var(--nv-surface-tint);
+		}
+		img {
+			width: 34px;
+			height: 34px;
+			flex-shrink: 0;
+			border-radius: 50%;
+			object-fit: cover;
+		}
+	}
+	.bell-text {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+		min-width: 0;
+		font-size: 13px;
+		line-height: 1.45;
+		small {
+			font-size: 11px;
+			color: var(--nv-subtle);
+		}
+		.bell-quote {
+			overflow: hidden;
+			color: var(--nv-text);
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+	}
+	.bell-dot {
+		position: absolute;
+		top: 18px;
+		right: 14px;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: var(--nv-primary);
+	}
+}
+
+/* ---------- Responsive navbar: pills move into the drawer below 1024px ---------- */
+#pc-wrap #top .menu-btn {
+	display: none;
+}
+@media (max-width: 1180px) {
+	#pc-wrap #top {
+		.navbar-inner {
+			gap: 12px;
+		}
+		.nav-pills .nav-link {
+			padding: 6px 10px;
+		}
+	}
+}
+@media (max-width: 1023px) {
+	#pc-wrap #top {
+		.nav-pills {
+			display: none;
+		}
+		.menu-btn {
+			display: inline-flex;
+			justify-content: center;
+			width: 40px;
+			padding: 0;
+		}
+		.nav-actions {
+			gap: 8px;
+		}
+	}
+}
+@media (max-width: 767px) {
+	#pc-wrap #top {
+		.lang-btn,
+		.theme-btn {
+			display: none;
+		}
+		.brand-text small {
+			display: none;
+		}
+		.brand-text strong {
+			font-size: 18px;
+		}
+		.join-btn {
+			width: 40px;
+			justify-content: center;
+			padding: 0;
+			span {
+				display: none;
+			}
+		}
+		.avatar-btn {
+			width: 38px;
+			height: 38px;
+		}
+	}
+}
+@media (max-width: 380px) {
+	#pc-wrap #top .brand-text {
+		display: none;
+	}
+}
+
+/* Drawer renders in a portal, outside #pc-wrap */
+.nav-drawer {
+	width: min(320px, 86vw);
+	padding: 16px;
+	background: var(--nv-surface) !important;
+	color: var(--nv-ink) !important;
+	font-family: $nv-font-body;
+	.drawer-head {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding-bottom: 14px;
+		border-bottom: 1px solid var(--nv-line-soft);
+		strong {
+			flex: 1;
+			font-family: $nv-font-brand;
+			font-size: 18px;
+			letter-spacing: 0.16em;
+			background: $nv-gold-text;
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+		}
+	}
+	.drawer-close {
+		display: grid;
+		place-items: center;
+		width: 36px;
+		height: 36px;
+		border: 1px solid var(--nv-line-soft);
+		border-radius: 10px;
+		background: var(--nv-surface);
+		color: var(--nv-text);
+		cursor: pointer;
+	}
+	.drawer-links {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		padding: 14px 0;
+		border-bottom: 1px solid var(--nv-line-soft);
+		a {
+			padding: 12px 14px;
+			border-radius: 12px;
+			font-family: $nv-font-label;
+			font-size: 15px;
+			font-weight: 600;
+			color: var(--nv-ink);
+			&.active,
+			&:hover {
+				background: var(--nv-primary-light);
+				color: var(--nv-primary);
+			}
+		}
+	}
+	.drawer-section {
+		padding: 14px 0 6px;
+	}
+	.drawer-label {
+		display: block;
+		margin-bottom: 8px;
+		font-family: $nv-font-label;
+		font-size: 11px;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--nv-label);
+	}
+	.drawer-langs {
+		display: flex;
+		gap: 8px;
+		button {
+			display: inline-flex;
+			flex: 1;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			height: 40px;
+			border: 1px solid var(--nv-line-soft);
+			border-radius: 10px;
+			background: var(--nv-surface);
+			color: var(--nv-text);
+			font-family: $nv-font-label;
+			font-size: 12px;
+			font-weight: 700;
+			cursor: pointer;
+			img {
+				width: 20px;
+			}
+			&.active {
+				border-color: var(--nv-line-strong);
+				background: var(--nv-primary-light);
+				color: var(--nv-primary);
+			}
+		}
+	}
+	.drawer-row {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		width: 100%;
+		margin-top: 8px;
+		padding: 12px 14px;
+		border: 1px solid var(--nv-line-soft);
+		border-radius: 12px;
+		background: var(--nv-surface);
+		color: var(--nv-ink);
+		font-family: $nv-font-label;
+		font-size: 14px;
+		font-weight: 600;
+		text-align: left;
+		cursor: pointer;
+		svg {
+			font-size: 20px;
+			color: var(--nv-muted);
+		}
+		&.primary {
+			border-color: transparent;
+			background: var(--nv-primary);
+			color: var(--nv-on-primary);
+			svg {
+				color: inherit;
+			}
+		}
+	}
+}

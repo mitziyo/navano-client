@@ -49,6 +49,8 @@
 	--nv-btn-shadow: 0 10px 15px -3px rgba(244, 63, 94, 0.25);
 	--nv-focus: rgba(225, 29, 72, 0.55);
 	--nv-pink: #db2777;
+	/* Navano AI button border and avatar */
+	--nv-ai-gradient: linear-gradient(120deg, #e11d48 0%, #db2777 50%, #8b5cf6 100%);
 
 	/* Depth */
 	--nv-glow: 0 10px 30px -5px rgba(225, 29, 72, 0.08), 0 4px 12px -2px rgba(244, 114, 182, 0.06);
@@ -106,6 +108,7 @@
 	--nv-btn-shadow: 0 10px 20px -6px rgba(173, 198, 255, 0.25);
 	--nv-focus: rgba(173, 198, 255, 0.6);
 	--nv-pink: #adc6ff;
+	--nv-ai-gradient: linear-gradient(120deg, #adc6ff 0%, #4c8eff 50%, #c4b5fd 100%);
 
 	--nv-glow: 0 20px 40px -12px rgba(0, 0, 0, 0.55);
 	--nv-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);

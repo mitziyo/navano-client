@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import SpaceDashboardOutlinedIcon from '@mui/icons-material/SpaceDashboardOutlined';
 import Inventory2OutlinedIcon from '@mui/icons-material/Inventory2Outlined';
 import ForumOutlinedIcon from '@mui/icons-material/ForumOutlined';
 import SupportAgentOutlinedIcon from '@mui/icons-material/SupportAgentOutlined';
@@ -15,6 +16,7 @@ interface NavGroup {
 }
 
 const NAV: NavGroup[] = [
+	{ key: 'dashboard', title: 'Dashboard', icon: <SpaceDashboardOutlinedIcon />, links: [{ title: 'Overview', url: '/_admin' }] },
 	{ key: 'users', title: 'Users', icon: <BadgeOutlinedIcon />, links: [{ title: 'Member List', url: '/_admin/users' }] },
 	{ key: 'products', title: 'Products', icon: <Inventory2OutlinedIcon />, links: [{ title: 'Product List', url: '/_admin/products' }] },
 	{ key: 'community', title: 'Community', icon: <ForumOutlinedIcon />, links: [{ title: 'Article List', url: '/_admin/community' }] },
@@ -33,7 +35,7 @@ const NAV: NavGroup[] = [
 const AdminMenuList = () => {
 	const router = useRouter();
 	// The group of the current page starts open; others open on click
-	const current = NAV.find((group) => group.links.some((link) => link.url === router.pathname))?.key ?? 'users';
+	const current = NAV.find((group) => group.links.some((link) => link.url === router.pathname))?.key ?? 'dashboard';
 	const [open, setOpen] = useState<string[]>([current]);
 
 	const toggle = (key: string) => setOpen((prev) => (prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]));

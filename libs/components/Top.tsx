@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, withRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { getJwtToken, logOut, updateUserInfo } from '../auth';
-import { Stack } from '@mui/material';
+import { logOut } from '../auth';
+import { Drawer } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import { Logout } from '@mui/icons-material';
-import useDeviceDetect from '../hooks/useDeviceDetect';
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import useThemeMode from '../hooks/useThemeMode';
 import Link from 'next/link';
 import { useReactiveVar } from '@apollo/client';
@@ -20,6 +20,9 @@ import { userVar } from '../../apollo/store';
 import { REACT_APP_API_URL } from '../config';
 import NavanoLogo from './common/NavanoLogo';
 import { motion, MotionConfig } from 'framer-motion';
+import AssistantButton from './assistant/AssistantButton';
+import NotificationBell from './common/NotificationBell';
+import AssistantPanel from './assistant/AssistantPanel';
 
 const glassSpring = { type: 'spring' as const, stiffness: 380, damping: 32 };
 
@@ -45,7 +48,6 @@ const menuPaperSx = {
 };
 
 const Top = () => {
-	const device = useDeviceDetect();
 	const user = useReactiveVar(userVar);
 	const { t } = useTranslation('common');
 	const router = useRouter();
@@ -54,6 +56,8 @@ const Top = () => {
 	const [userAnchor, setUserAnchor] = useState<null | HTMLElement>(null);
 	const [scrolled, setScrolled] = useState(false);
 	const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+	// Below 1024px the pill navigation moves into this side drawer
+	const [drawerOpen, setDrawerOpen] = useState(false);
 	const { mode, toggleMode } = useThemeMode();
 
 	const navLinks = [
@@ -75,11 +79,6 @@ const Top = () => {
 		setLang(saved ?? 'en');
 	}, [router]);
 
-	useEffect(() => {
-		const jwt = getJwtToken();
-		if (jwt) updateUserInfo(jwt);
-	}, []);
-
 	// One scroll listener for the lifetime of the navbar
 	useEffect(() => {
 		const onScroll = () => setScrolled(window.scrollY >= 50);
@@ -88,6 +87,11 @@ const Top = () => {
 		return () => window.removeEventListener('scroll', onScroll);
 	}, []);
 
+	// Close the drawer after navigating
+	useEffect(() => {
+		setDrawerOpen(false);
+	}, [router.asPath]);
+
 	/** HANDLERS **/
 	const langChoice = async (code: string) => {
 		setLang(code);
@@ -95,28 +99,6 @@ const Top = () => {
 		setLangAnchor(null);
 		await router.push(router.asPath, router.asPath, { locale: code });
 	};
-
-	if (device == 'mobile') {
-		return (
-			<Stack className={'top'}>
-				<Link href={'/'}>
-					<div>{t('Home')}</div>
-				</Link>
-				<Link href={'/product'}>
-					<div>{t('Products')}</div>
-				</Link>
-				<Link href={'/agent'}>
-					<div> {t('Agents')} </div>
-				</Link>
-				<Link href={'/community?articleCategory=FREE'}>
-					<div> {t('Community')} </div>
-				</Link>
-				<Link href={'/cs'}>
-					<div> {t('CS')} </div>
-				</Link>
-			</Stack>
-		);
-	}
 
 	return (
 		<MotionConfig reducedMotion="user">
@@ -158,11 +140,7 @@ const Top = () => {
 					</nav>
 
 					<div className={'nav-actions'}>
-						{user?._id && (
-							<button type="button" className={'icon-btn'} aria-label={t('Notifications')}>
-								<NotificationsOutlinedIcon />
-							</button>
-						)}
+						{user?._id && <NotificationBell menuSx={menuPaperSx} />}
 
 						<button
 							type="button"
@@ -253,9 +231,82 @@ const Top = () => {
 								</span>
 							</Link>
 						)}
+
+						<button
+							type="button"
+							className={'icon-btn menu-btn'}
+							aria-label={t('Open menu')}
+							aria-expanded={drawerOpen}
+							aria-controls={'nav-drawer'}
+							onClick={() => setDrawerOpen(true)}
+						>
+							<MenuRoundedIcon />
+						</button>
 					</div>
 				</div>
 			</header>
+
+			<Drawer
+				anchor={'right'}
+				open={drawerOpen}
+				onClose={() => setDrawerOpen(false)}
+				PaperProps={{ id: 'nav-drawer', className: 'nav-drawer' }}
+			>
+				<div className={'drawer-head'}>
+					<NavanoLogo variant={'mark'} width={36} height={36} />
+					<strong>NAVANO</strong>
+					<button type="button" className={'drawer-close'} aria-label={t('Close')} onClick={() => setDrawerOpen(false)}>
+						<CloseRoundedIcon />
+					</button>
+				</div>
+				<nav className={'drawer-links'} aria-label={'Main'}>
+					{navLinks.map((link) => (
+						<Link
+							key={link.href}
+							href={link.href}
+							className={isActiveLink(link.match) ? 'active' : ''}
+							aria-current={isActiveLink(link.match) ? 'page' : undefined}
+						>
+							{link.label}
+						</Link>
+					))}
+				</nav>
+				<div className={'drawer-section'}>
+					<span className={'drawer-label'}>{t('Language')}</span>
+					<div className={'drawer-langs'}>
+						{LANGUAGES.map((item) => (
+							<button
+								type="button"
+								key={item.code}
+								className={item.code === lang ? 'active' : ''}
+								aria-pressed={item.code === lang}
+								onClick={() => langChoice(item.code)}
+							>
+								<img src={`/img/flag/lang${item.code}.png`} alt="" />
+								{item.short}
+							</button>
+						))}
+					</div>
+				</div>
+				<button type="button" className={'drawer-row'} onClick={toggleMode}>
+					{mode === 'dark' ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
+					{mode === 'dark' ? t('Switch to light mode') : t('Switch to dark mode')}
+				</button>
+				{user?._id ? (
+					<button type="button" className={'drawer-row'} onClick={() => logOut()}>
+						<Logout />
+						{t('Logout')}
+					</button>
+				) : (
+					<Link href={'/account/join'} className={'drawer-row primary'}>
+						<AccountCircleOutlinedIcon />
+						{t('Login')} / {t('Register')}
+					</Link>
+				)}
+			</Drawer>
+			{/* Floating dock above the chat button (bottom-right) */}
+			<AssistantButton />
+			<AssistantPanel />
 		</MotionConfig>
 	);
 };

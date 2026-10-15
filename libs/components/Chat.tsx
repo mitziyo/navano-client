@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import ScrollableFeed from 'react-scrollable-feed';
 import { RippleBadge } from '../../scss/MaterialTheme/styled';
 import { useReactiveVar } from '@apollo/client';
-import { chatOpenVar, socketVar, userVar } from '../../apollo/store';
+import { assistantOpenVar, chatOpenVar, socketVar, userVar } from '../../apollo/store';
 import { Member } from '../types/member/member';
 import { Messages, REACT_APP_API_URL } from '../config';
 import { sweetErrorAlert } from '../sweetAlert';
@@ -96,6 +96,7 @@ const Chat = () => {
 
 	/** HANDLERS **/
 	const handleOpenChat = () => {
+		if (!open) assistantOpenVar(false); // one panel at a time
 		chatOpenVar(!open);
 	};
 
@@ -135,7 +136,7 @@ const Chat = () => {
 			) : null}
 			<Stack className={`chat-frame ${open ? 'open' : ''}`}>
 				<Box className={'chat-top'} component={'div'}>
-					<div style={{ fontFamily: 'Nunito' }}>Online Chat</div>
+					<div>Online Chat</div>
 					<RippleBadge style={{ margin: '-18px 0 0 21px' }} badgeContent={onlineUsers} />
 				</Box>
 				<Box className={'chat-content'} id="chat-content" ref={chatContentRef} component={'div'}>
@@ -176,13 +177,13 @@ const Chat = () => {
 						type={'text'}
 						name={'messageInput'}
 						className={'msg-input'}
-						placeholder={'Type messageInput'}
+						placeholder={'Type a message'}
 						value={messageInput}
 						onChange={getInputMessageHandler}
 						onKeyDown={getKeyHandler}
 					/>
 					<button className={'send-msg-btn'} onClick={onClickHandler}>
-						<SendIcon style={{ color: '#fff' }} />
+						<SendIcon />
 					</button>
 				</Box>
 			</Stack>
