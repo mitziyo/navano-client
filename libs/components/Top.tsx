@@ -51,7 +51,8 @@ const Top = () => {
 	const user = useReactiveVar(userVar);
 	const { t } = useTranslation('common');
 	const router = useRouter();
-	const [lang, setLang] = useState<string>('en');
+	// The URL decides the language (/kr, /ru); localStorage only remembers the last choice
+	const lang = router.locale ?? 'en';
 	const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
 	const [userAnchor, setUserAnchor] = useState<null | HTMLElement>(null);
 	const [scrolled, setScrolled] = useState(false);
@@ -74,10 +75,8 @@ const Top = () => {
 
 	/** LIFECYCLES **/
 	useEffect(() => {
-		const saved = localStorage.getItem('locale');
-		if (saved === null) localStorage.setItem('locale', 'en');
-		setLang(saved ?? 'en');
-	}, [router]);
+		localStorage.setItem('locale', lang);
+	}, [lang]);
 
 	// One scroll listener for the lifetime of the navbar
 	useEffect(() => {
@@ -94,8 +93,6 @@ const Top = () => {
 
 	/** HANDLERS **/
 	const langChoice = async (code: string) => {
-		setLang(code);
-		localStorage.setItem('locale', code);
 		setLangAnchor(null);
 		await router.push(router.asPath, router.asPath, { locale: code });
 	};

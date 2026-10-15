@@ -307,7 +307,9 @@ const HeaderFilter = (props: HeaderFilterProps) => {
 											min={0}
 											placeholder="$ max"
 											style={{ width: '122px' }}
-											value={searchFilter?.search?.pricesRange?.end ?? ''}
+											value={
+												searchFilter?.search?.pricesRange?.end === DEFAULT_PRICE_END ? '' : searchFilter?.search?.pricesRange?.end ?? ''
+											}
 											onChange={(e) => priceChangeHandler('end', e.target.value)}
 										/>
 									</div>

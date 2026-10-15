@@ -137,7 +137,9 @@ const Filter = (props: FilterProps) => {
 							<input
 								type="number"
 								min={0}
-								value={price.end}
+								// The default upper bound means "no limit", so the field stays empty
+								value={price.end === DEFAULT_PRICE_RANGE.end ? '' : price.end}
+								placeholder={t('Any')}
 								aria-label={t('Maximum price')}
 								onChange={(e) => priceHandler('end', e.target.value)}
 							/>

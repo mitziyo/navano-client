@@ -160,7 +160,7 @@ const ProductList: NextPage = () => {
 			? [
 					{
 						key: 'price',
-						label: `$${price.start} – $${price.end}`,
+						label: price.end === DEFAULT_PRICE_RANGE.end ? `$${price.start}+` : `$${price.start} – $${price.end}`,
 						onRemove: () => applySearch({ ...search, pricesRange: DEFAULT_PRICE_RANGE }),
 					},
 			  ]
