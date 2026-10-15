@@ -12,7 +12,11 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 import { useMutation } from '@apollo/client';
 import { CREATE_BOARD_ARTICLE } from '../../../apollo/user/mutation';
 import { Message } from '../../enums/common.enum';
-import { sweetErrorHandling, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+import { sweetErrorAlert, sweetErrorHandling, sweetTopSmallSuccessAlert } from '../../sweetAlert';
+
+// Same limits as the API (libs/config validMimeTypes, graphqlUploadExpress maxFileSize)
+const IMAGE_TYPES = ['image/png', 'image/jpg', 'image/jpeg'];
+const MAX_IMAGE_BYTES = 15_000_000;
 
 const TuiEditor = () => {
 	const editorRef = useRef<Editor>(null),
@@ -33,7 +37,16 @@ const TuiEditor = () => {
 	}, []);
 
 	/** HANDLERS **/
-	const uploadImage = async (image: any) => {
+	// Returns the public URL, or null when the upload failed (the caller then inserts nothing)
+	const uploadImage = async (image: File): Promise<string | null> => {
+		if (!IMAGE_TYPES.includes(image.type)) {
+			await sweetErrorAlert(t('Please use a JPG or PNG image'));
+			return null;
+		}
+		if (image.size > MAX_IMAGE_BYTES) {
+			await sweetErrorAlert(t('The image must be smaller than 15 MB'));
+			return null;
+		}
 		try {
 			const formData = new FormData();
 			formData.append(
@@ -44,7 +57,7 @@ const TuiEditor = () => {
 				  }`,
 					variables: {
 						file: null,
-						target: 'articles',
+						target: 'article',
 					},
 				}),
 			);
@@ -64,13 +77,16 @@ const TuiEditor = () => {
 				},
 			});
 
-			const responseImage = response.data.data.imageUploader;
-			console.log('=responseImage: ', responseImage);
-			memoizedValues.articleImage = responseImage;
+			const responseImage = response.data?.data?.imageUploader;
+			if (!responseImage) throw new Error(response.data?.errors?.[0]?.message ?? 'Upload failed');
+			// The first image becomes the article cover
+			if (!memoizedValues.articleImage) memoizedValues.articleImage = responseImage;
 
 			return `${REACT_APP_API_URL}/${responseImage}`;
-		} catch (err) {
+		} catch (err: any) {
 			console.log('Error, uploadImage:', err);
+			await sweetErrorAlert(t('The image could not be uploaded, please try again'));
+			return null;
 		}
 	};
 
@@ -161,7 +177,7 @@ const TuiEditor = () => {
 					hooks={{
 						addImageBlobHook: async (image: any, callback: any) => {
 							const uploadedImageURL = await uploadImage(image);
-							callback(uploadedImageURL);
+							if (uploadedImageURL) callback(uploadedImageURL);
 							return false;
 						},
 					}}
