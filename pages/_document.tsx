@@ -4,7 +4,7 @@ import { Html, Head, Main, NextScript } from 'next/document';
 const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.setAttribute('data-theme',t)}catch(e){document.documentElement.setAttribute('data-theme','light')}})();`;
 
 // Link previews need absolute URLs: set REACT_APP_SITE_URL to the public domain
-const SITE_URL = process.env.REACT_APP_SITE_URL ?? 'http://localhost:3000';
+const SITE_URL = process.env.REACT_APP_SITE_URL ?? 'http://localhost:5072';
 const SHARE_IMAGE = `${SITE_URL}/img/og/navano-share.jpg`;
 
 const SITE_TITLE = 'Navano — Flowers, Chocolates & Cakes';

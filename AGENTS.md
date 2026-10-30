@@ -33,7 +33,7 @@ If anything in this client conflicts with those docs, the docs win (`DECISIONS.m
 ## Workflow
 
 1. Analyze before editing.
-2. Backend (`navano-api`) is running on http://localhost:3007/graphql now (WS: `ws://localhost:3007`).
+2. Backend (`navano-api`) is running on http://localhost:5070/graphql now (WS: `ws://localhost:5070`).
 3. Make small incremental changes.
 4. Run typecheck (`npx tsc --noEmit`) after each phase.
 5. Do not remove working logic unless replaced safely.
